@@ -77,7 +77,7 @@ linkcolor=red
 \usepackage[labelfont=bf]{caption}
 
 % increase spacing between paragraphs
-\setlength{\parskip}{2mm}
+\setlength{\parskip}{1mm}
 
 % colorbox
 % https://texdoc.org/serve/tcolorbox.pdf/0
@@ -216,7 +216,7 @@ linkcolor=red
 	
 	In the overlay image, green structures represent the fixed image and magenta structures represent the moved image. When the two images overlap perfectly, the intensity values are displayed.
 	
-	In this exemplary case, the \textit{larvalign} software was unable to accurately align the moving image with the fixed image, as indicated by the protruding magenta structure at the lower tip of the Ventral Nerve Cord (VNC) in the overlay. This is an example of a case where \textit{larvalign} struggles to handle large deformations at the lower tip of the Ventral Nerve Cord (VNC) and consistently produces registration errors in these situations. This issue occurs repeatedly whenever we attempt to register these image pairs again.
+	In this example case, the \textit{larvalign} software was unable to accurately align the moving image with the fixed image, as indicated by the protruding magenta structure at the lower tip of the Ventral Nerve Cord (VNC) in the overlay. This is an example of a case where \textit{larvalign} struggles to handle large deformations at the lower tip of the Ventral Nerve Cord (VNC) and consistently produces registration errors in these situations. This issue occurs repeatedly whenever we attempt to register these image pairs again.
 	
 	\textit{Larvalign} is a non-learning method for image registration, which means it cannot improve with experience. We are exploring the use of a learning-based method of registration that can adapt and potentially outperform larvalign. Deep learning techniques have been effective at learning to compute the deformation field between image pairs \cite{Balakrishnan_2019, de_Vos_2019, Wu, Fu_2020, 10.1007/978-3-319-66182-7_27}, and we expect this approach to be more efficient in terms of registration time compared to larvalign.
 	
@@ -827,7 +827,7 @@ linkcolor=red
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.5\columnwidth]{resources/chapter3/landmarks.jpg}
-		\caption{Maximum intensity projection (MIP) of an exemplary scan with annotated landmarks \cite{larvalign}.}
+		\caption{Maximum intensity projection (MIP) of an example scan with annotated landmarks \cite{larvalign}.}
 		\label{fig:landmark_annotations}
 	\end{figure}
 	
@@ -994,7 +994,7 @@ linkcolor=red
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
-		\caption{An exemplery moving sample image with larger deformation where the Method 1 type of deformable registration did not produce a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example moving sample image with larger deformation where the Method 1 type of deformable registration did not produce a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
 		\label{fig:method1_fail}
 	\end{figure}
 
@@ -1003,7 +1003,7 @@ linkcolor=red
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/np_brain7_scaled.tif.png}
-		\caption{An exemplery moving sample image with smaller deformation where the Method 1 type of deformable registration produced a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example moving sample image with smaller deformation where the Method 1 type of deformable registration produced a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
 		\label{fig:method1_pas}
 	\end{figure}
 	
@@ -1052,12 +1052,12 @@ linkcolor=red
 	\subsection{Results}
 	Using the same configurations as in Method 1, landmark points as auxiliary information was incorporated into the training. The model was retrained on the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was found that there is an improvement in the registration accuracy with landmark points as auxiliary information.
 	
-	The following figures, Figure~\ref{fig:method2_fail} and Figure~\ref{fig:method2_pas}, show the results of registration using Method 2 on the same exemplary samples used in Method 1.
+	The following figures, Figure~\ref{fig:method2_fail} and Figure~\ref{fig:method2_pas}, show the results of registration using Method 2 on the same example samples used in Method 1.
 	
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
-		\caption{An exemplery moving sample image with larger deformation where the Method 2 type of deformable registration could produce a successful result when large deformation is present in contrast to Method 1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example moving sample image with larger deformation where the Method 2 type of deformable registration could produce a successful result when large deformation is present in contrast to Method 1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
 		\label{fig:method2_fail}
 	\end{figure}
 		
@@ -1068,7 +1068,7 @@ linkcolor=red
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_brain7_scaled.tif.png}
-		\caption{An exemplery moving sample image with smaller deformation where the Method 2 type of deformable registration could contine to produce a successful result like Method 1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example moving sample image with smaller deformation where the Method 2 type of deformable registration could contine to produce a successful result like Method 1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
 		\label{fig:method2_pas}
 	\end{figure}
 	
@@ -1079,7 +1079,7 @@ linkcolor=red
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_52B07_52H01_MB262B_021713B_scaled.png}
-		\caption{An exemplery moving sample image with large deformations at the lower tip of Ventral Nerve Cord (VNC) where the Method 2 produced an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example moving sample image with large deformations at the lower tip of Ventral Nerve Cord (VNC) where the Method 2 produced an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
 		\label{fig:method2_artifact}
 	\end{figure}
 	
@@ -1151,21 +1151,21 @@ linkcolor=red
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method3/compare/np_52B07_52H01_MB262B_021713B_scaled.png}
-		\caption{An exemplery moving sample image with large deformations at the lower tip of Ventral Nerve Cord (VNC) where the Method 3 did not produce an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example moving sample image with large deformations at the lower tip of Ventral Nerve Cord (VNC) where the Method 3 did not produce an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
 		\label{fig:method3_artifact}
 	\end{figure}
 	
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method3/compare/np_brain7_scaled.tif.png}
-		\caption{An exemplery moving sample image with smaller deformation where the Method 3 type of deformable registration could continue to produce a successful result like Method 1 and Method 2. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example moving sample image with smaller deformation where the Method 3 type of deformable registration could continue to produce a successful result like Method 1 and Method 2. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
 		\label{fig:method3_pas}
 	\end{figure}
 
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method3/compare/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
-		\caption{An exemplery moving sample image with larger deformation where the Method 3 type of deformable registration could produce a successful result when large deformation is present in contrast to Method 1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example moving sample image with larger deformation where the Method 3 type of deformable registration could produce a successful result when large deformation is present in contrast to Method 1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
 		\label{fig:method3_fail}
 	\end{figure}
 	

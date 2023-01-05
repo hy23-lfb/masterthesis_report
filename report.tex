@@ -963,15 +963,22 @@ linkcolor=red
 		\item \textbf{Method4}: Enhancing Method 3 with Novel Landmark Information.
 	\end{itemize}
 
-	\subsection{Method1: Evaluating the Raw Voxelmorph Architecture}
+	\subsection{Method1: Evaluating the Raw Voxelmorph Architecture}\label{subsec:method1}
 	
 	As described in the Section~\ref{sec:vxm_architecture}, the architecture of the VoxelMorph network consists of a series of encoder-decoder blocks, which are inspired by the U-Net architecture.The encoder blocks down-sample the input images by applying convolutions and max pooling, while the decoder blocks up-sample the feature maps using transposed convolutions. The network also includes skip connections between the encoder and decoder blocks, which helps to preserve spatial resolution and fine details in the output image.
 	
-	Unlike the vanilla voxelmorph model, this method employed a U-Net architecture with 6 encoding layers and 6 corresponding decoding layers, connected by skip connections. The number of channels in the encoding layers was [16, 32, 32, 32, 32, 32], and the number of channels in the decoding layers was [32, 32, 32, 32, 32, 32]. In addition, there were 3 additional convolutional layers with [32, 16, 16] channels that were used to extract additional features at the end stages. Between each pair of consecutive encoding layers, the size of the feature maps was reduced by a factor of 2 using max pooling. Similarly, between each pair of consecutive decoding layers, the size of the feature maps was increased by a factor of 2 using upsampling. Leaky ReLu activation functions were used to introduce non-linearity between each layer.
+	Unlike the vanilla voxelmorph model, this method employs a U-Net architecture with 6 encoding layers and 6 corresponding decoding layers, connected by skip connections. The number of channels in the encoding layers is [16, 32, 32, 32, 32, 32], and the number of channels in the decoding layers is [32, 32, 32, 32, 32, 32]. In addition, from the output of the U-Net, there are 3 additional convolutional layers with [32, 16, 16] channels that are used to extract additional features at the end stages. Between each pair of consecutive encoding layers, the size of the feature maps is reduced by a factor of 2 using max pooling. Similarly, between each pair of consecutive decoding layers, the size of the feature maps is increased by a factor of 2 using upsampling. Leaky ReLu activation functions are used to introduce non-linearity between each layer.
 	
-	The U-Net produced a 3-channel feature map representing the 3D deformation field between the fixed and moving images. This deformation field, interpreted as displacement vectors, could be used to register the moving image to the fixed image using a spatial transformer network. This network applied the necessary transformations to the moving image based on the input deformation field, aligning it with the fixed image. After the moving image was registered to the fixed image using the U-Net and spatial transformer network, the resulting "warped" image was compared to the fixed image using a similarity score Normalized Cross Correlation. The network was trained for 100 epochs until the similarity score reached a maximum or saturated at a certain level, indicating satisfactory alignment of the moving and fixed images.
+	This configuration produces a 3-channel feature map representing the 3D deformation field between the fixed and moving images. This deformation field, interpreted as displacement vectors, is used to register the moving image to the fixed image using a spatial transformer network (STN). This network applies the necessary transformations to the moving image based on the input deformation field, aligning it with the fixed image. After the moving image is registered to the fixed image using the U-Net and spatial transformer network, the resulting "warped" image, also called as "moved" image, is compared to the fixed image using a similarity score Normalized Cross Correlation. The network is trained for 100 epochs until the similarity score reached a maximum or saturated at a certain level, indicating satisfactory alignment of the moving and fixed images. This whole process is described in the below Figure~\ref{fig:block_method1}
 	
-	The NCC was the metric that measured the similarity between two images by comparing the intensity values of corresponding pixels. It was normalized to have a specific range, independent of the images' overall intensity values. A higher NCC score meant higher similarity between the images, while a lower score meant lower similarity.
+	\begin{figure}[h!]
+		\centering
+		\includegraphics{resources/chapter4/methods/method1.pdf}
+		\caption{A visual guide to training Method 1 - the raw Voxelmorph model with the NCC optimization function.}
+		\label{fig:block_method1}
+	\end{figure}
+	
+	The NCC is the metric that measures the similarity between two images by comparing the intensity values of corresponding pixels. It is normalized to have a specific range, independent of the images' overall intensity values. A higher NCC score means higher similarity between the images, while a lower score meant lower similarity.
 	
 	\begin{equation}\label{eq:ncc_loss}
 	L = -\frac{1}{N} \sum_{i=1}^N \text{NCC}(Fixed, Moved_i)
@@ -981,14 +988,7 @@ linkcolor=red
 	
 	In this Equation~\ref{eq:ncc_loss}, N is the number of moving images, and $NCC(Fixed, Moved_i)$ is the normalized cross correlation between $Fixed$ and $Moved_i$. The loss function is the negative average of the normalized cross correlation between the fixed image and each of the moving images.
 	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.6\columnwidth]{resources/chapter4/block_diagram_method_1.png}
-		\caption{A visual guide to training Method 1 - the raw Voxelmorph model with the NCC optimization function.}
-		\label{fig:block_method1}
-	\end{figure}
-	
-	\subsection{Results}
+	\subsubsection{Results}
 	The model with the above mentioned configuration was trained with the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was found that this model performed poorly on images that contained large deformations. However, the model performed well on images that contained smaller deformations. This suggested that the voxelmorph model may have been less effective at registering images with large deformations, but effective for registering images with smaller deformations.
 	
 	\begin{figure}[h!]
@@ -1007,21 +1007,21 @@ linkcolor=red
 		\label{fig:method1_pas}
 	\end{figure}
 	
-	\subsection{Motivation for Method2}
+	\subsubsection{Motivation for Method2}
 	The model clearly struggled with handling large deformations, specifically in the lower ventricular nerve chord region of the brain. In order to improve the model's performance in these cases, we provided it with additional, manually annotated information for both the moving and fixed images. This helped guide the model towards achieving better alignment, particularly when dealing with large deformations. By including this extra information in the training process, we aimed to improve the model's ability to register brain images with significant deformations.
 	
 	The practice of adding additional, manually annotated information for both the moving images and fixed image is referred to as Method 2. This method is explained in further detail in the following section.
 	
-	\section{Method2: Enhancing Method 1 with Novel Landmark Information.}
-	As described in Section~\ref{sec:landmark_points}, in image registration, landmarks were considered to be the "Gold Standard" for determining the accuracy of the registration process. The goal was to align the fixed and moving images in such a way that the landmarks in both images matched perfectly, resulting in a landmark registration error (LRE) of zero. The LRE is the Euclidean distance between the landmarks in the registered and fixed images and to improve the accuracy of the registration, the LRE was used as an additional loss function for the network, and thus encouraging the model to learn the registration process to minimize the LRE.
+	\subsection{Method2: Enhancing Method 1 with Novel Landmark Information.}
+	As described in Section~\ref{sec:landmark_points}, in image registration, landmarks are considered to be the "Gold Standard" for determining the accuracy of the registration process. The goal is to align the fixed and moving images in such a way that the landmarks in both images matched perfectly, resulting in a landmark registration error (LRE) of zero. The LRE is the Euclidean distance between the landmarks in the registered and fixed images and to improve the accuracy of the registration, the LRE is used as an additional loss function for the network, and thus encouraging the model to learn the registration process to minimize the LRE.
 	
-	Biologists identified 30 points on the drosophila larva that could be used as landmarks for image registration (Figure~\ref{fig:landmark_annotations}). However, manually annotating all 30 landmarks on every training sample was time-consuming. For samples with minimal deformations, the raw Voxelmorph model already performed well, so additional annotations were not needed. Even in cases where the Voxelmorph model did not perform well, the poor performance was only observed in specific regions, such as the tip of the Ventral Nerve Cord. Therefore, we only annotated landmarks on samples where the raw Voxelmorph model had difficulty achieving accurate registration. To be more specific, we chose to annotate only in such samples and regions where we were certain that Voxelmorph would require assistance. This means that each training sample may have had a different number of landmarks, including zero for samples with minimal deformations where Voxelmorph already performed well. To address this issue, we developed a method that could take into account of the presence of variable number of landmarks between the training samples and calculate the average LRE. This allowed us to minimize the annotation effort while still obtaining good performance from the model.
+	Biologists identified 30 points on the drosophila larva that could be used as landmarks for image registration (Figure~\ref{fig:landmark_annotations}). However, manually annotating all 30 landmarks on every training sample is time-consuming. For samples with minimal deformations, the raw Voxelmorph model [Subsection \ref{subsec:method1}] already performed well, so additional annotations are not needed. Even in cases where the Voxelmorph model did not perform well, the poor performance is only observed in specific regions, such as the tip of the Ventral Nerve Cord (VNC). Therefore, we only need annotations on samples where the raw Voxelmorph model has difficulty achieving accurate registration. To be more specific, we choose to annotate only in such samples and in such regions where we are certain that Voxelmorph would require assistance. This means that each training sample may have a different number of landmarks, including zero. To address this issue, we developed a method that can take into account of the presence of variable number of landmarks between the training samples and calculate the average landmark registration error (LRE). This allowed us to minimize the annotation effort while still obtaining good performance from the model.
 	
-	Incorporating landmark points as auxiliary information is a novel method that has not been used previously. The original Voxelmorph paper utilized segmentation maps to help improve registration results. The following block diagram illustrates the training process.
+	Incorporating landmark points as auxiliary information is a novel method that has not been used previously. The original Voxelmorph paper utilized segmentation maps to help improve registration results. With the knowledge of how Method 1 worked, the following figure \ref{fig:block_method2} will illustrate the Method 2.
 	
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.6\columnwidth]{resources/chapter4/block_diagram_method_2.png}
+		\includegraphics[width=0.6\columnwidth]{resources/chapter4/methods/Method2.pdf}
 		\caption{A visual guide to training Method 2 - the raw Voxelmorph model with landmark points as auxiliary information.}
 		\label{fig:block_method2}
 	\end{figure}
@@ -1049,7 +1049,7 @@ linkcolor=red
 	In this Equation~\ref{eqn:aux_loss}, N is the number of moving images, L is the number of landmarks, p\_l is the coordinates of the l-th landmark in the fixed image, and q\_{n,l} is the coordinates of the l-th landmark in the n-th moving image. The auxiliary loss is the average of the euclidean distance between the landmarks in the fixed image and the landmarks in each of the moving images.
 	
 	
-	\subsection{Results}
+	\subsubsection{Results}
 	Using the same configurations as in Method 1, landmark points as auxiliary information was incorporated into the training. The model was retrained on the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was found that there is an improvement in the registration accuracy with landmark points as auxiliary information.
 	
 	The following figures, Figure~\ref{fig:method2_fail} and Figure~\ref{fig:method2_pas}, show the results of registration using Method 2 on the same example samples used in Method 1.
@@ -1083,19 +1083,19 @@ linkcolor=red
 		\label{fig:method2_artifact}
 	\end{figure}
 	
-	\subsection{Motivation for Method3}
+	\subsubsection{Motivation for Method3}
 	The artifact is commonly observed on moving images with large deformations and may be due to the model's inherent limitations in handling such large deformations. The addition of auxiliary information and loss is trying to enforce the model to achieve near perfect registration, while the model is not yet capable of doing it. This new force in play can cause the network to compromize on the qualitative features while gaining good scores in terms of error scores. To fix this problem, we need to make the model better at handling large deformations. We can also use the auxiliary information as a guide, but it should not be the main way to solve the problem.
 	
-	\section{Method3: Pyramid Gaussian Filtering and Cascaded Training.}
-	Image registration can be challenging because the optimization surface can be complex and lead to suboptimal results if the model gets stuck in local optima. However, literature study has shown that performing registration in a coarse-to-fine fashion can help the model escape local optima and achieve more accurate results. This approach has been effective in both the pre-deep learning and deep learning eras.
+	\subsection{Method3: Pyramid Gaussian Filtering and Cascaded Training.}
+	Image registration is a challenging task because the optimization surface can be complex and lead to suboptimal results if the model gets stuck in one such local optima. However, literature study has shown that performing registration in a coarse-to-fine fashion can help the model escape such local optima and reach one of the better global optima. This approach has been effective in both the pre-deep learning and deep learning eras.
 	
-	This technique is called "registration in pyramid fashion," which involves applying pyramid-style Gaussian filtering and aligning images from the lowest resolution to the highest resolution. This method is effective because it ensures that both the large and small structures in the images are accurately aligned, whereas the raw Voxelmorph model only aligns fine details and not larger structures.
+	This technique, called "pyramid registration," involves applying pyramid-style Gaussian filters and aligning images from the lowest resolution to the highest resolution. This method is effective because it ensures that the images are aligned starting with the large structures at the lowest resolutions, and then gradually aligning the finer structures as the resolution increases.
 		
-	The method involved processing an image at five different resolutions, and aligning the images in a coarse-to-fine manner, starting at the lowest resolution and gradually increasing the resolution at each stage. At each stage, the transformation learned in the previous stage was incorporated into the current stage. To decrease the resolution of the image, a Gaussian blur was applied using different values of $\sigma$, while keeping the width and height of the image constant. This process can be represented mathematically using the equation for Gaussian blurring.
+	Thus, the method involves processing an image at five different resolutions, and aligning the images in a coarse-to-fine manner, starting at the lowest resolution and gradually increasing the resolution at each stage. At each stage, the transformation learned in the previous stage is incorporated into the current stage in a cascaded manner. To decrease the resolution of the image, a Gaussian blur is applied using different values of $\sigma$, while keeping the width and height of the image constant. This process can be represented mathematically using the equation for Gaussian blurring.
 	
 	Let's say we have an input image with pixel values $I(x, y)$, and we want to apply Gaussian blurring to it using a kernel with size $n \times n$. The resulting image, $G(x, y)$, can be computed as follows:
 	
-	\begin{equation}
+	\begin{equation}\label{eqn:GaussBlur}
 		G(x, y) = \frac{1}{Z} \sum_{s=-\frac{n}{2}}^{\frac{n}{2}}\sum_{t=-\frac{n}{2}}^{\frac{n}{2}}I(x+s, y+t) \cdot K(s, t)
 	\end{equation}
 	
@@ -1106,28 +1106,24 @@ linkcolor=red
 	\end{equation}
 	
 	Here, $\sigma$ is a parameter that determines the amount of blur applied to the image. A larger value of $\sigma$ results in more blur. The size of the kernel, $n$, is usually chosen to be an odd number such as 3, 5, or 7. We start by processing the image at the lowest resolution, where the value of $\sigma$ is set to 4. In subsequent stages, we progressively increase the resolution of the image by decreasing the value of $\sigma$ to 2, 1, 0.5, and finally to 0, which is the original resolution of the image.
+	The process is illustrated in the Figure \ref{fig:block_method3}.
 	
-	The process is illustrated in the following block diagram.
-	
-	\begin{figure}[h!]
+    \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.6\columnwidth]{resources/chapter4/block_diagram_method_3.png}
-		\caption{A visual guide to training Method 3 - cascade of Voxelmorph models without auxiliary information.}
+		\includegraphics[width=\columnwidth]{resources/chapter4/methods/Method3.pdf}
+		\caption{This process involves 5 stages, each of which is trained independently. At any given time, only one stage (colored green) is being trained, while the other stages (colored white or gray) are either frozen or not in use. The input for the current stage (colored green) is selected from a list of Gaussian filtered images and passes through the previous stages (colored white) to be pre-registered before being used for training. The stages located after the current stage (colored gray) are not utilized during this training process.}
 		\label{fig:block_method3}
 	\end{figure}
 
+	This method for image registration uses multiple Voxelmorph model without auxiliary information and with the same configurations connected in a cascaded fashion. Both the moving and fixed images were pre-processed with Gaussian blurring using different sigma values for each stage.
 	
-	This method for image registration involved using the raw Voxelmorph model without auxiliary information and with the same configurations at each stage of the cascaded process. Both the moving and fixed images were pre-processed with Gaussian blurring using different sigma values for each stage. The inputs for each stage are labeled input0 through input4, with input0 representing the input images for stage 0 (blurred with sigma = 4), input1 representing the input images for stage 1 (blurred with sigma = 2), and so on. The final input, input4, consists of the original, unmodified images. The models at each stage are labeled model0 through model4.
-	
-	\subsection{Stages}
-	
-	\subsubsection{Stage 0}
-	In stage 0, the model was trained using input images that had been pre-processed with Gaussian blurring using sigma = 4. The predicted deformation field from this model was used to transform the moving image, creating a version called the "moved image." This moved image was then compared to the fixed image, which had also been pre-processed with Gaussian blurring using sigma = 4. The optimization function (Normalized Cross Correlation) used in this stage aimed to maximize the similarity between the moved and fixed images.
+	\subsubsection{Stages}
+	For each stage, the appropriate inputs (fixed image and moving image) are chosen from the Gaussian Pyramid. To help explain the process, we will refer to the inputs for each stage as input1 through input5, with input1 representing the input images for stage 1 (blurred with sigma = 4), input2 representing the input images for stage 2 (blurred with sigma = 2), and so on. The final input, input5, consists of the original, unmodified images. We will also refer to the models for each stage as model1 through model5. The optimization function (Normalized Cross Correlation) used in all these stage aims to maximize the similarity between the moved and fixed images.
 	
 	\begin{equation}
 		L = -\frac{1}{N} \sum_{i=1}^N \text{NCC}(Fixed, Moved_i)
 	\end{equation}
-
+	
 	where:
 	\begin{itemize}
 		\item $\text{L}$ is the loss function.
@@ -1137,13 +1133,16 @@ linkcolor=red
 		\item $NCC(\mathbf{Fixed}, \mathbf{Moved}_i)$ is the normalized cross correlation between the $i$th moved image and the fixed image.
 	\end{itemize}
 	
-	\subsubsection{Stage 1}
-	After the training was completed for stage 0, the trained model parameters were used to roughly align the input1 images, which had been pre-processed with Gaussian blurring using sigma = 2. These roughly aligned input1 images were then used to train model1 to predict a deformation field, which was then applied to the moving image using a spatial transformer network. The resulting transformed moving image was compared to the fixed image, which had also been pre-processed with Gaussian blurring using sigma = 2, to calculate the similarity score. The optimization function used in this stage was the same as the one used in the previous stage.
+	\paragraph{Stage 1}
+	In stage 1, the model is trained using input images that has been pre-processed with Gaussian blurring using sigma = 4. The predicted deformation field from this model is used to transform the input image, creating a version called the "moved image." This moved image is then compared to the fixed image, which has also been pre-processed with Gaussian blurring using sigma = 4. All other stages are not used and will be grayed out.
 	
-	\subsubsection{Stage 2, 3 and 4}
-	The aforementioned steps were repeated iteratively for all subsequent stages, incorporating the learned transformation from the previous stages into the current stage. This process followed a coarse-to-fine approach, meaning that the transformation was initially learned at a coarser resolution and then refined successively to the finer resolutions.
+	\paragraph{Stage 2}
+	In stage 2, the model is trained using input images that have been pre-processed with a Gaussian blur of sigma = 2. After completing the training for stage 1, the trained model parameters are frozen (white) and used for coarse alignment of input2 images. These coarsely aligned input2 images are then used to train stage 2 to predict a deformation field, which is applied to the input image using a spatial transformer network to produce a transformed moving image called the "moved" image. The moved image is compared to the fixed image, which has been pre-processed with a Gaussian blur of sigma = 2, to compute the similarity value. The other stages are unused.
 	
-	\subsection{Results}
+	\paragraph{Stage 3, 4 and 5}
+	The aforementioned steps are repeated iteratively for all subsequent stages, using the previously trained and frozen models to incorporate the learned transformation and coarsely align the images for the current training stage. This process follows a coarse-to-fine approach, meaning that the transformation is initially learned at a coarser resolution and then successively refined at finer resolutions.
+	
+	\subsubsection{Results}
 	There were no artifacts introduced when registering the moving sample using this model, as can be seen in the Figure~\ref{fig:method3_artifact}. This was confirmed by comparing the results to the reference image in Figure~\ref{fig:method2_artifact}
 	
 	Method 3 performed better than the previous two methods in terms of registering the moving samples with large and smaller deformations, as shown in Figure~\ref{fig:method3_pas} and Figure~\ref{fig:method3_fail}. However, there was room for improvement at the lower tip of the Ventral Nerve Cord (VNC) where the nerve entry points can be aligned more accurately.
@@ -1178,15 +1177,15 @@ linkcolor=red
 		\label{fig:method3_cascade}
 	\end{figure}
 	
-	\subsection{Motivation for Method4}
+	\subsubsection{Motivation for Method4}
 	This method was able to handle large deformations more effectively than the raw Voxelmorph model used in Method 1 and at the same time not producing any artifacts. The results demonstrated this. While the results were satisfactory, there was a clear potential for further improvement at the lower end of the Ventral Nerve Cord by incorporating landmark point information during training, as seen in the results of Method 2. Further experiments will be conducted to assess the benefits of adding this additional information in the next method.
 	
-	\section{Method4: Enhancing Method 3 with Novel Landmark Information.}
-	In the Method 2, it was found through experimentation that using landmark information improved the performance of Method 2. However, it was difficult to incorporate this landmark information into Method 4 because the input for each stage consisted of different pre-aligned image samples. This meant that the landmarks, which had been annotated on one stage, could not be used in later stages because the pre-alignment process caused the landmarks to move to different positions. Re-annotating the landmarks for each stage would be impractical especially if there were many stages or a large number of images.
-	
-	To address the issue of having to manually re-annotate landmarks for each stage in Method 4, we developed an approach that allowed us to incorporate landmark information at all stages without requiring manual re-annotation. Our idea was based on the fact that we knew the input images for each stage were the same, except that they had different levels of Gaussian blurring applied and had been pre-aligned using the deformation correction from the previous stage. This meant that the initial annotations made on any of these images could still be used at later stages if we were able to propagate the landmarks to their new positions using the predicted deformation field.
+	\subsection{Method4: Enhancing Method 3 with Novel Landmark Information.}
+	In Method 2, the use of landmark information was found to improve performance. However, incorporating this information into Method 4 is not straightforward because the input for each stage consists of different pre-aligned image samples, meaning that the landmarks annotated in one stage cannot be used in later stages due to the pre-alignment process moving them to different positions. Manually re-annotating the landmarks for each stage is impractical, especially if there are many stages or a large number of images. To solve this problem, we developed a method that allows us to incorporate the landmark information at all stages without requiring manual re-annotation. Our approach is based on the fact that the input images for each stage are the same except for the different levels of Gaussian blurring applied. This means that the initial annotations made on any of these images can still be used at later stages if we can propagate the landmarks to their new positions using the predicted deformation field, similar to the pre-alignment process for images.
 	
 	This is again a novel method that has been introduced in this theis work. These moved landmarks, called "pseudo-annotated" landmarks, may not be as accurate as manually annotated landmarks, but they were precise enough to work with the blurred images in the earlier stages where the structures were not clear to require precise manual annotation.
+	
+	The Equation~\ref{eq:ldm_prop} states that the new position of the landmark is obtained by subtracting the deformation field at that position from the old position of the landmark.
 	
 	\begin{equation}\label{eq:ldm_prop}
 		l_n^{new} = l_n^{old} - d_n
@@ -1194,26 +1193,19 @@ linkcolor=red
 	
 	where:
 	
-	$l_n^{new}$ is the new position of the landmark in image $n$
+	$l_n^{new}$ is the new position of the landmark in image $n$. $l_n^{old}$ is the old position of the landmark in image $n$. $d_n$ is the deformation field for image $n$ at the position of the landmark.
 	
-	$l_n^{old}$ is the old position of the landmark in image $n$
-	
-	$d_n$ is the deformation field for image $n$ at the position of the landmark
-	
-	This Equation~\ref{eq:ldm_prop} states that the new position of the landmark is obtained by subtracting the deformation field at that position from the old position of the landmark. The process of using the predicted deformation field to move both the image and the landmark points for the next stage is illustrated in the block diagram below.
+	Method 4 combines aspects of Method 2 and Method 3 in an attempt to take advantage of the strengths of both approaches. Like Method 3, it involves processing an image at five different resolutions and aligning the images in a coarse-to-fine manner, starting at the lowest resolution and gradually increasing it at each stage. The transformation learned in the previous stage is incorporated into the current stage in a cascaded manner. To decrease the resolution of the image, a Gaussian blur is applied using different values of sigma, while the width and height of the image remain constant. This process is represented mathematically using equation \ref{eqn:GaussBlur}. And like Method 2, we use the auxiliary information in the form of landmark points to help neural network train in the right direction.
 	
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.6\columnwidth]{resources/chapter4/block_diagram_method_4.png}
-		\caption{A visual guide to training Method 4 - cascade of Voxelmorph model with pseudo-landmark points as auxiliary information.}
+		\includegraphics[width=\columnwidth]{resources/chapter4/methods/Method4.pdf}
+		\caption{This process consists of 5 stages, each of which is trained separately. Only one stage (indicated by the color green) is being trained at a given time, while the other stages (colored white or gray) are either inactive or not being used. The input for the current stage (colored green) is selected from a list of Gaussian filtered images and passes through the previous stages (colored white) to be pre-registered before being used for training. The stages that come after the current stage (colored gray) are not used during this training process. In addition to the images, the landmark points are also used to calculate the landmark registration error (LRE) at each stage during training.}
 		\label{fig:block_method4}
 	\end{figure}
 	
-	In each stage of this cascaded layer, the Voxelmorph model with auxiliary landmark information incorporated and configured in the same way as in Method 2 was used. Both the moving and fixed images were pre-processed with Gaussian blurring using different sigma values for each stage. The inputs for each stage are labeled input0 through input4, with input0 representing the input images for stage 0 (blurred with sigma = 4), input1 representing the input images for stage 1 (blurred with sigma = 2), and so on. The final input, input4, consists of the original, unmodified images. The models at each stage are labeled model0 through model4.
-	
-	\section{Stages}
-	\subsubsection{Stage 0}
-	In this stage, the model was trained to predict a deformation field that warped the moving image to align it with the fixed image. The model used manually annotated landmarks and input images that had been blurred using Gaussian blur with a sigma of 4. The transformed version of the moving image, called the "moved image," was then compared to the fixed image, which had also been blurred using Gaussian blur with a sigma of 4, to calculate a similarity score using normalized cross correlation. Additionally, the model was also evaluated based on the landmark registration error to guide the learning process.
+	\subsubsection{Stages}
+	For each stage, the appropriate inputs (fixed image and moving image) are chosen from the Gaussian Pyramid. To help explain the process, we will refer to the inputs for each stage as input1 through input5, with input1 representing the input images for stage 1 (blurred with sigma = 4), input2 representing the input images for stage 2 (blurred with sigma = 2), and so on. The final input, input5, consists of the original, unmodified images. We will also refer to the models for each stage as model1 through model5. The optimization function (Normalized Cross Correlation) used in all these stage aims to maximize the similarity between the moved and fixed images. Additionally, the model is also evaluated based on the landmark registration error to guide the learning process.
 	
 	Therefore, the optimization function attempted to minimize was:
 	\begin{equation}\label{eq:aux_loss_combined}
@@ -1226,7 +1218,7 @@ linkcolor=red
 	\begin{equation}\label{eq:aux_loss_main}
 		L_\text{main} = -\frac{1}{N} \sum_{i=1}^N \text{NCC}(Fixed, Moved_i)
 	\end{equation}
-		
+	
 	\textbf{Landmark registration error:}
 	\begin{equation}\label{eq:aux_loss_aux}
 		L_\text{aux} = \frac{1}{NL} \sum_{n=1}^N \sum_{l=1}^L \sqrt{(p_l - q_{n,l})^2}
@@ -1236,24 +1228,31 @@ linkcolor=red
 	
 	In this Equation~\ref{eq:aux_loss_aux}, N is the number of moving images, L is the number of landmarks, p\_l is the coordinates of the l-th landmark in the fixed image, and q\_{n,l} is the coordinates of the l-th landmark in the n-th moving image. The auxiliary loss is the average of the euclidean distance between the landmarks in the fixed image and the landmarks in each of the moving images.
 	
-	\subsubsection{Stage 1}
-	After training was completed for stage 0, the trained model parameters were used to roughly align the input1 images, which had been pre-processed with Gaussian blurring using a sigma value of 2. These roughly aligned input1 images were then used to train model1 to predict a deformation field, which was then applied to the moving image using a spatial transformer network. The resulting transformed moving image was compared to the fixed image, which had also been pre-processed with Gaussian blurring using a sigma value of 2, to calculate the similarity score. The optimization function used in this stage was the same as the one used in the previous stage. In this stage, "pseudo-annotated" landmark points were used. These landmark points had been obtained by propagating manually annotated landmarks from the previous stage using the deformation field predicted by model0.
+    The whole process is described in the Figure~\ref{fig:block_method4}
+	
+	\paragraph{Stage 1}
+	In stage 1, the model is trained using input images that has been pre-processed with Gaussian blurring using sigma = 4. The predicted deformation field from this model is used to transform the input image, creating a version called the "moved image." This moved image is then compared to the fixed image, which has also been pre-processed with Gaussian blurring using sigma = 4. All other stages are not used and will be grayed out.
+
+	\paragraph{Stage 2}
+	In stage 2 of this process, the model is trained on input images that have been blurred using a Gaussian blur with a sigma value of 2. The trained model from stage 1 is then frozen and used to coarsely align the input2 images. These aligned images are used to train stage 2 to predict a deformation field, which is applied to the input image using a spatial transformer network to create a transformed image called the "moved" image. The moved image is compared to a fixed image, which has also been blurred using a Gaussian blur with a sigma value of 2, to calculate a similarity value. The later stages are not used in this process. Stage 2 uses "pseudo-annotated" landmarks, which are obtained by propagating manually annotated landmarks from the previous stage using the deformation field predicted by model1.
 	
 	\begin{equation}\label{eq:pseudoldm}
-		landmark_{stage1,m,n} = landmark_{stage0,m,n} - deformation\_field_{stage0,m,n}
+		landmark_{stage2,m,n} = landmark_{stage1,m,n} - deformation\_field_{stage1,m,n}
 	\end{equation}
 	
 	Here, 
 	\begin{itemize}
+		\item "$landmark_{stage2,m,n}$" is the landmark point for stage 2 at pixel m for image n.
 		\item "$landmark_{stage1,m,n}$" is the landmark point for stage 1 at pixel m for image n.
-		\item "$landmark_{stage0,m,n}$" is the landmark point for stage 0 at pixel m for image n.
-		\item "$deformation\_field_{stage0,m,n}$" is the deformation field from stage 0 at pixel m for image n.    
+		\item "$deformation\_field_{stage1,m,n}$" is the deformation field from stage 1 at pixel m for image n.    
 	\end{itemize}
 	
-	This Equation~\ref{eq:pseudoldm} is valid for all values of m such that m is a landmark point for an image in stage 0, and for all values of n such that n belongs to N, where N is the number of images in stage 1.
+	This Equation~\ref{eq:pseudoldm} is valid for all values of m such that m is a landmark point for an image in stage 1, and for all values of n such that n belongs to N, where N is the number of images in stage 2.
 	
-	\subsubsection{Stage 2 and 3}
-	The aforementioned steps were repeated iteratively for all subsequent stages, gradually incorporating the learned transformation from the previous stage into the current stage. This process followed a coarse-to-fine approach of registration using landmark. The landmark points were propagated from stage 0 to stage s by using the deformation field predicted by each model.
+	\paragraph{Stage 3 and 4}
+	The aforementioned steps are repeated iteratively for all subsequent stages, using the previously trained and frozen models to incorporate the learned transformation and coarsely align the images for the current training stage. This process follows a coarse-to-fine approach, meaning that the transformation is initially learned at a coarser resolution and then successively refined at finer resolutions.
+	
+	The following pseudo code demonstrates how landmarks are propagated from stage 1 to stage 's' by utilizing the deformation model at each stage.
 	
 	\begin{lstlisting}[language=Python]
 	# N: The number of landmark lists.
@@ -1277,17 +1276,15 @@ linkcolor=red
 				update_landmark_point(new_landmark_point)
 	\end{lstlisting}
 	
-	The pseudo code loops through each landmark list, landmark point, and stage, and calculates the deformation field for the current stage. The new landmark point is then calculated by subtracting the deformation field from the old landmark point, and the $update\_landmark\_point$ function is used to update the landmark point with the new value. This process is repeated for all landmark points in all landmark lists for all stages.
+	\paragraph{Stage 5: The last stage}
+	The initial approach for aligning images in the final stage of the process involved using software to propagate the previously identified landmarks. However, it was ultimately decided to manually annotate the landmarks again in order to improve accuracy. This is because the images used in this stage are the original, unmodified ones, and using landmarks that were generated with the help of the previous, pre-aligned images may not be accurate enough. By manually annotating the landmarks, the final registration can be more precise.
 	
-	\subsubsection{Stage 4: The last stage}
-	The above software approach could, in principle, be used to propagate the landmarks from stage 3 to stage 4 as well. However, it was decided to perform one more manual annotation of the landmark points for the final stage in order to obtain more accurate results. This was because the input images for stage 4 are the original, unmodified images, which were not blurred, and using "pseudo-annotated" landmark points for this stage may not be accurate. The input images for stage 4 were already nicely pre-aligned due to the coarse-to-fine registration approach, and using accurate landmark points would allow the network to achieve better final registration.
-	
-	\section{Results}
+	\subsubsection{Results}
 	The Figure~\ref{fig:method4_combine} consists of 3 moving image samples in 3 rows. Each column represents the output of the corresponding movie image through different stages through the cascaded network. This figure is representative of the output from Method 4.
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\columnwidth]{resources/chapter4/method4/ldm/registered_images.png}
+		\includegraphics[width=0.6\columnwidth]{resources/chapter4/method4/ldm/registered_images.png}
 		\caption{Coarse-to-fine registration using landmark information.}
 		\label{fig:method4_combine}
 	\end{figure}
@@ -1296,7 +1293,7 @@ linkcolor=red
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\columnwidth]{resources/chapter4/method4/vanilla/registered_images.png}
+		\includegraphics[width=0.6\columnwidth]{resources/chapter4/method4/vanilla/registered_images.png}
 		\caption{Coarse-to-fine registration without using landmark information.}
 		\label{fig:method3_combine}
 	\end{figure}

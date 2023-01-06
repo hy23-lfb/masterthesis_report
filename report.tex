@@ -715,6 +715,70 @@ linkcolor=red
 	
 	The input to the model is an image and the output is a segmentation mask, with each pixel in the mask corresponding to a particular class in the image. The U-Net model is commonly used in medical imaging, where it can be trained to segment organs or other structures in images.
 	
+	\section{Loss Metric}\label{sec:loss_metric}
+	A loss metric, also known as a loss function or objective function, is a measure of how well a machine learning model is able to predict the correct output for a given input. It is used to evaluate the performance of the model during training and to guide the optimization process.
+	
+	There are many different loss functions that can be used, depending on the specific task being addressed and the characteristics of the data. Some common loss functions that are used in image registration include:
+	
+	\begin{enumerate}
+		\item \textbf{Mean squared error (MSE)}
+		\item \textbf{Normalized cross-correlation (NCC)}
+		\item \textbf{Landmark registration error}
+	\end{enumerate}
+	
+	\subsection{Mean squared error (MSE)}
+	This is a common loss function that measures the average squared difference between the predicted output and the true output. It is often used for regression tasks and is particularly useful for image registration because it is sensitive to small errors and can effectively penalize large errors.
+	
+	The mean squared error (MSE) between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as:
+	
+	$$ MSE = \frac{1}{n} \sum_{i=1}^n (I_f(i) - I_m(i))^2 $$
+	
+	where $n$ is the number of pixels in the images and $I_f(i)$ and $I_m(i)$ represent the intensity values of the fixed and moved images at pixel $i$, respectively.
+	
+	\subsection{Normalized cross-correlation (NCC)}
+	This loss function measures the similarity between two images by calculating the cross-correlation between them and normalizing by the product of their standard deviations. It is commonly used in image registration because it is robust to intensity variations and can handle images with different scales or contrast.
+	
+	
+	The normalized cross-correlation (NCC) between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as:
+	
+	$$ NCC = \frac{\sum_{i=1}^n (I_f(i) - \mu_f)(I_m(i) - \mu_m)}{\sqrt{\sum_{i=1}^n (I_f(i) - \mu_f)^2}\sqrt{\sum_{i=1}^n (I_m(i) - \mu_m)^2}} $$
+	
+	where $n$ is the number of pixels in the images, $I_f(i)$ and $I_m(i)$ represent the intensity values of the fixed and moved images at pixel $i$, respectively, and $\mu_f$ and $\mu_m$ are the mean intensities of the fixed and moved images, respectively.
+	
+	\subsection{Landmark registration error}
+	This loss function measures the error between the predicted and true locations of landmarks in the images being registered. It is often used in conjunction with other loss functions to guide the optimization process and ensure that the images are correctly aligned.
+	
+	The landmark registration error between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as the mean Euclidean distance between corresponding landmarks in the two images:
+	
+	$$ LRE = \frac{1}{K} \sum_{k=1}^K \sqrt{(x_f^k - x_m^k)^2 + (y_f^k - y_m^k)^2 + (z_f^k - z_m^k)^2} $$
+	
+	where $K$ is the number of landmarks, $(x_f^k, y_f^k, z_f^k)$ and $(x_m^k, y_m^k, z_m^k)$ represent the coordinates of the $k$-th landmark in the fixed and moved images, respectively.
+	
+	\section{Quality Assessment}\label{sec:quality}
+	It is important to evaluate the performance of an image registration method using multiple metrics because the loss function, such as normalized cross-correlation error (NCC) or mean squared error (MSE), only measures the overall error in the registration. These metrics do not necessarily capture errors that occur at specific, biologically significant local regions. Therefore, evaluating the performance qualitatively and quantitatively becomes necessary help to identify and quantify errors at such local regions. This can provide a more comprehensive assessment of the accuracy and effectiveness of the image registration method.
+	
+	\subsection{Quantitative Assessment}
+	Quantitative assessment metrics are numerical measures that are used to evaluate the performance. The specific metric used will depend on the characteristics of the data and the goals of the analysis. In our image registration task, in addition to optimizing the loss function, such as normalized cross-correlation error (NCC), we  evaluate below metrics to assess the performance of our approach.
+	\begin{enumerate}
+		\item \textbf{Ventricular Error Indicator (VI)}
+		\item \textbf{Thoracic Nerve Entry Error Indicator (TI)}
+		\item \textbf{Landmark registration error (LRE)}
+	\end{enumerate}
+	
+	
+	\subsubsection{Ventricular Error Indicator (VI)}
+	To evaluate the accuracy of the image registration in the Ventricular Nerve Cord (VNC) region, we consider 2 small 3D spherical volumes in the VNC entry points in both the fixed and moved images and compute the mutual information between these regions. A high score indicates that the image registration is good, while a low score indicates that there are errors in the registration. With this score, we can determine the quality of the image registration at this locality.
+	
+	\subsubsection{Thoracic Nerve Entry Error Indicator (TI)}
+	To evaluate the accuracy of the image registration at thoracic nerve entry, we consider 6 small 3D spherical volumes around the 6 thoracic nerve entry points in both the fixed and moved images and compute the mutual information between these regions. A high score indicates that the image registration is good, while a low score indicates that there are errors in the registration. With this score, we can determine the quality of the image registration at this locality.
+	
+	\subsubsection{Landmark registration error (LRE)}
+	In the larvalign paper, biologists identified 30 distinct and biologically significant points in the brain scan of a drosophila larva that can be used as landmarks. We use the same landmarks in this study also. Landmark registration error (LRE) is a measure of the accuracy of the alignment of the landmarks in two images, and is commonly used in medical imaging and other fields where the alignment of specific features or structures is important. A low LRE score indicates that the image registration is accurate, while a high score indicates that there are errors in the alignment of the landmarks. By comparing the LRE scores, we can determine the quality of the image registration at these landmark sites.
+	
+	\subsection{Qualitative Assessment}
+	While quantitative assessments involve the use of numerical measurements and statistical analysis to objectively assess the performance or quality of something. The qualitative assessments involve the use of subjective observations and interpretations to evaluate the performance or quality of something. These methods are often preferred because they can provide insights and understanding that may not be captured by quantitative methods, and they can be used to identify trends and patterns that may not be immediately apparent from numerical data alone.
+	For this purpose, we use the \texttt{imshowpair} function in MATLAB to overlay the fixed image and the registered image. The resulting image will show the original intensity values where the two images perfectly overlap, and it will show green or magenta values in areas where there is no overlap. This allows us to visually inspect the registration and identify any discrepancies.
+	
 	\chapter{Methods and Implementations}
 	In Chapter \ref{chap:litreture}, we reviewed various traditional and deep learning approaches for medical image registration. In this chapter, we will delve into the specific methods we selected for our study and explain why they were chosen and how they are effective in addressing the challenges of medical image registration.
 	
@@ -1301,15 +1365,125 @@ linkcolor=red
 	
 	Comparing the figures Figure~\ref{fig:method4_combine} and Figure~\ref{fig:method3_combine}, it is evident that adding landmark points at the lower tip of the Ventral Nerve Cord has resulted in better registration accuracy for Method 4 than for Method 3.	
 
-	
 	\chapter{Results}
-	\section{Metrics}
-	\section{Quality Assessment}
-	\subsection{Qualitative Assessment}
-	\subsection{Quantitative Assessment}
+	In the following sections, we will evaluate the performance of our proposed approaches and compare them to the "\emph{larvalign}" approach using the "\texttt{Larvalign dataset}". We will use the metrics introduced in the sections \ref{sec:loss_metric} and \ref{sec:quality} to assess the effectiveness of these approaches.
+	
+	\section{Assessment on \emph{larvalign} method}
+	Before presenting the results of the approaches we have developed in this thesis, we will first present the results of the "\emph{larvalign}" method. This will provide a baseline or benchmark against which we can compare the performance of our approaches.
+	
+	\subsection{Quantitative Assessment Metric}
+	The table \ref{table:quant_larvalign} presents the results of three different metrics used to quantitatively assess the performance of the image registration on the medium quality images in "\texttt{Larvalign Dataset}":
+	\begin{enumerate}
+		\item The "VI" or "ventricular nerve entry error indicator" measures the error in the alignment of the ventricular nerve cord region in the images.
+		\item The "TI" or "thoracic nerve entry error indicator" measures the error in the alignment of the thoracic nerve entry regions in the images.
+		\item The "MMI" or "Mattes Mutual Information" measures the overall similarity between the fixed image and the registered image.
+	\end{enumerate}
+	
+	The average score obtained for all the images in the \texttt{Larvalign dataset} is captured in the below table \ref{table:quant_larvalign_avg}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|l|l|}
+			\hline
+			 & \textbf{MMI} & \textbf{VI} & \textbf{TI} \\ \hline
+			Average Score & 76.88 & 84 & 71 \\ \hline
+		\end{tabular}
+		\caption{The average Mattes Mutual Information, VI Error Indicator, and TI Error Indicator for the all the images in \texttt{Larvalign Dataset} for \emph{larvalign} method.}
+		\label{table:quant_larvalign_avg}
+	\end{table}
+
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{|l|l|l|l|}
+			\hline
+			\textbf{Scan} & \textbf{MMI} & \textbf{VI} & \textbf{TI} \\ \hline
+			\textbf{np\_GL\_09B11\_AE\_01\_012410A\_scaled.tif} & 67 & 84 & 58 \\ 
+			\textbf{np\_GL\_10A07\_AE\_01\_011511B\_scaled.tif} & 73 & 92 & 71 \\ 
+			\textbf{np\_GL\_24B09\_AE\_01\_102709B\_scaled.tif} & 33 & 5 & 65 \\ 
+			\textbf{np\_GL\_24H06\_AE\_01\_062508A\_scaled.tif} & 26 & 0 & 48 \\ 
+			\textbf{np\_GL\_31B04\_AE\_01\_031911B\_scaled.tif} & 61 & 88 & 57 \\ 
+			\textbf{np\_GL\_39A12\_AE\_01\_051609B\_scaled.tif} & 81 & 96 & 66 \\ 
+			\textbf{np\_GL\_39H11\_AE\_01\_080409B\_scaled.tif} & 48 & 41 & 62 \\ 
+			\textbf{np\_GL\_43A11\_AE\_01\_101609B\_scaled.tif} & 61 & 68 & 61 \\ 
+			\textbf{np\_GL\_43A12\_AE\_01\_101210B\_scaled.tif} & 72 & 84 & 68 \\ 
+			\textbf{np\_GL\_47C10\_AE\_01\_061509A\_scaled.tif} & 64 & 69 & 66 \\ 
+			\textbf{np\_GL\_49C01\_AE\_01\_111710A\_scaled.tif} & 66 & 88 & 53 \\ 
+			\textbf{np\_GL\_53A06\_AE\_01\_081209A\_scaled.tif} & 38 & 15 & 55 \\ 
+			\textbf{np\_GL\_53H01\_AE\_01\_021611A\_scaled.tif} & 60 & 64 & 56 \\ 
+			\textbf{np\_GL\_58E05\_AE\_01\_082709B\_scaled.tif} & 75 & 92 & 79 \\ 
+			\textbf{np\_GL\_60A07\_AE\_01\_091509A\_scaled.tif} & 48 & 24 & 60 \\ 
+			\textbf{np\_GL\_60F09\_AE\_01\_012010A\_scaled.tif} & 59 & 72 & 68 \\ 
+			\textbf{np\_GL\_62A03\_AD\_01\_020610A\_scaled.tif} & 56 & 76 & 63 \\ 
+			\textbf{np\_GL\_68B03\_AE\_01\_110408B\_scaled.tif} & 71 & 63 & 65 \\ 
+			\textbf{np\_GL\_73B11\_AE\_01\_121309B\_scaled.tif} & 71 & 75 & 58 \\ 
+			\textbf{np\_GL\_79B07\_AE\_01\_100110B\_scaled.tif} & 61 & 85 & 60 \\ 
+			\textbf{np\_GL\_85B08\_AE\_01\_081210A\_scaled.tif} & 59 & 68 & 55 \\ 
+			\textbf{np\_GL\_89B10\_AE\_01\_090410A\_scaled.tif} & 57 & 62 & 62 \\ 
+			\textbf{np\_GL\_93A08\_AE\_01\_071110B\_scaled.tif} & 67 & 75 & 61 \\ 
+			\textbf{np\_GL\_93F05\_AE\_01\_090310A\_scaled.tif} & 55 & 74 & 70 \\ 
+			\textbf{np\_GL\_96A08\_AD\_01\_031911B\_scaled.tif} & 68 & 96 & 70 \\ \hline
+		\end{tabular}
+		\caption{Mattes Mutual Information, VI Error Indicator, and TI Error Indicator for the medium quality images in \texttt{Larvalign Dataset} for \emph{larvalign} method.}
+		\label{table:quant_larvalign}
+	\end{table}
+	
+	In addition to these, LRE, or landmark registration error, that measures the overall accuracy of the alignment of specific landmarks in the images was also computed for the medium quality images registered by \emph{larvalign} in \texttt{Larvalign Dataset} and is represented in the table \ref{table:lre_larvalign}. The average mean and standard deviation for the LRE measure on the medium quality images is given in this below table \ref{table:avg_lre_larvalign}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{} & \textbf{Mean LRE} & \textbf{Std LRE} \\ \hline
+			\textbf{Average score} & 2.10 & 1.02 \\ \hline
+		\end{tabular}
+		\caption{The average mean and standard deviation for the LRE measured on medium quality images in Larvalign dataset.}
+		\label{table:avg_lre_larvalign}
+	\end{table}
+	
+	\begin{table}[!h]
+		\centering
+		\begin{tabular}{|l|c|c|}
+			\hline
+			\textbf{Landmark Points} & \textbf{Mean LRE} & \textbf{Std LRE} \\ \hline
+			\textbf{left thoracic nerve entry T2} & 0.91 & 0.59 \\ 
+			\textbf{right MB vertical medial lobe connection} & 0.91 & 0.77 \\ 
+			\textbf{right A7 nerve entry} & 3.05 & 1.21 \\ 
+			\textbf{right tip of vertical lobe} & 0.74 & 0.53 \\ 
+			\textbf{right basal brain neuropil border posterior} & 4.12 & 1.66 \\ 
+			\textbf{right thoracic nerve entry T1} & 1.61 & 0.68 \\ 
+			\textbf{Left MB vertical medial lobe connection} & 1.07 & 0.61 \\ 
+			\textbf{right upper peduncle} & 1.26 & 0.66 \\ 
+			\textbf{left thoracic nerve entry T1} & 1.65 & 0.68 \\ 
+			\textbf{right antennal nerve} & 2.01 & 1.02 \\ 
+			\textbf{left A8 nerve entry} & 2.97 & 0.96 \\ 
+			\textbf{right A8 nerve entry} & 2.92 & 0.97 \\ 
+			\textbf{end of ventral nerve cord} & 1.46 & 0.96 \\ 
+			\textbf{left upper most anterior nerve entry} & 3.84 & 1.91 \\ 
+			\textbf{left basal brain neuropil border posterior} & 4.19 & 1.52 \\ 
+			\textbf{left thoracic nerve entry T3} & 1.14 & 0.79 \\ 
+			\textbf{right thoracic nerve entry T2} & 0.94 & 0.53 \\ 
+			\textbf{anterior upper commisure} & 1.6 & 1.12 \\ 
+			\textbf{center SEZ neuropil fusion} & 2.75 & 1.36 \\ 
+			\textbf{left tip of vertical lobe} & 0.91 & 0.63 \\ 
+			\textbf{left antennal nerve} & 1.95 & 1.33 \\ 
+			\textbf{right anterior LON nerve} & 1.68 & 0.71 \\ 
+			\textbf{posterior upper commisure} & 2.59 & 1.2 \\ 
+			\textbf{right upper most anterior nerve entry} & 3.94 & 2.72 \\ 
+			\textbf{left A7 nerve entry} & 2.96 & 1.3 \\ 
+			\textbf{right A6 nerve entry} & 3.0 & 1.01 \\ 
+			\textbf{left upper peduncle} & 1.16 & 0.74 \\ 
+			\textbf{left A6 nerve entry} & 3.1 & 0.93 \\ 
+			\textbf{left anterior LON nerve} & 1.51 & 0.73 \\ 
+			\textbf{right thoracic nerve entry T3} & 1.17 & 0.77 \\ \hline
+		\end{tabular}
+		\caption{The mean and standard deviation in landmark registration error recorded across all the medium quality images in \texttt{Larvalign Dataset} for \emph{larvalign} method.}
+		\label{table:lre_larvalign}
+	\end{table}
+	
 	\newpage
 	
 	\chapter{Discussion}
+	The goal of this chapter is to provide a clear and concise summary of the key findings of the research, and to interpret and discuss their significance in relation to the research question of whether deep learning is a fast and robust method for image registration compared to the traditional way of performing image registration.
 	\newpage
 	
 	\chapter{Conclusion}

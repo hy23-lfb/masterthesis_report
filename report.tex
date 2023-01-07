@@ -58,8 +58,12 @@
 \geometry{
 	a4paper,
 	total={170mm,257mm},
-	left=20mm,
-	top=20mm,
+%	left=20mm,
+%	top=20mm,
+	left=1.5in,
+	right=1in,
+	top=1in,
+	bottom=1in,
 }
 
 % captioned images or figures in LaTeX.
@@ -137,12 +141,22 @@ linkcolor=red
 % To change the color of caption
 % \usepackage[font={color=rwth-blue-1},figurename=Figure]{caption}
 
+% to include chapter name at the top of every page.
+\usepackage{fancyhdr}
+
+\fancyhf{} % clear all header and footer fields
+\fancyhead[L]{\leftmark} % set the chapter name in the center of the header
+\fancyfoot[C]{\thepage} % set the page number in the center of the footer
+\pagestyle{fancy}
+
 \begin{document}
 	\maketitle
 	\newpage
 	
 	\hypersetup{linkcolor=rwth-blue-1}
 	\tableofcontents
+	\listoffigures
+	\listoftables
 	\newpage
 	
 	\chapter{Introduction}
@@ -181,7 +195,7 @@ linkcolor=red
 	In the context of drosophila larva, image registration can be particularly useful for studying the development and function of the nervous system, as these insects have a relatively simple and well-defined nervous. Image registration can help researchers to align and compare brain images from different experiments or conditions, and to accurately measure and analyze changes in brain structure and function.
 	
 	% https://tex.stackexchange.com/a/8633/277097
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\columnwidth]{resources/chapter1/figure1.png}
 		\caption{An image registration example}
@@ -199,7 +213,7 @@ linkcolor=red
 	
 	The focus of this thesis is to build upon the work presented in the \textit{larvalign} paper \cite{larvalign}, which is a 3D volume template and a registration method called \textit{larvalign} for aligning brain scans of drosophila larvae. While \textit{larvalign} showed promising results, it sometimes failed to accurately align images, particularly at the lower tip of the Ventral Nerve Cord (VNC) as shown in Figure \ref{fig:Registraion_Failure}.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\linewidth]{resources/motivation_fig_1.jpg}
 		\caption{An example of a registration failure of \textit{larvalign} \cite{larvalign} at the lower tip of the Ventral Nerve Cord (VNC).}
@@ -222,23 +236,23 @@ linkcolor=red
 	
 	\section{Objectives and Hypothesis}
 	The goal of this thesis is to investigate whether deep learning techniques like Voxelmorph \cite{Balakrishnan_2019} can be used to improve the robustness and efficiency of image registration for biological scans of drosophila larva that may exhibit large deformations. We hypothesize that deep neural network architectures have the ability to learn complex, inherent features and can therefore be as efficient as \textit{larvalign} \cite{larvalign} in terms of accuracy in registration. Furthermore, we believe that by training these networks with more data, we can avoid the errors made by \textit{larvalign} \cite{larvalign} and that the prediction time for image registration using deep learning will be significantly faster, due to the ability of these networks to learn a function for computing the deformation field between pairs of images.
-	
-	
+
 	\section{Organization}
 	Finally, in this section we provide an overview of the structure of the thesis, highlighting the main chapters and subtopics that we will cover. This will help the reader to understand the organization of the study and how each chapter contributes to the research question.
 	
 	\begin{itemize}
 		\item \textbf{Literature review}: This chapter presents an overview of the existing research on the topic of the study, highlighting the main findings and debates in the field.
 		\item \textbf{Drosophila larva biology and an overview of machine learning techniques}: This chapter provides an overview of Drosophila larva biology and a summary of the machine learning techniques that will be used in the study.
-		\item \textbf{Methods and Implementations}: This chapter describes the research design, sample, and data collection and analysis procedures used in the study. It provides enough detail for readers to understand and replicate the study.
-		\item \textbf{Results}: This chapter presents the findings of the study, including tables, figures, and other visualizations. In addition, we will conduct several ablation studies to explore the effect of different parameters on training.
+		\item \textbf{Implementations and Data Preparation}: This chapter describes the research design, sample, and data collection and analysis procedures used in the study. It provides enough detail for readers to understand and replicate the study.
+		\item \textbf{Methods}: This chapter presents the findings of the study, including tables, figures, and other visualizations. In addition, we will conduct several ablation studies to explore the effect of different parameters on training.
+		\item \textbf{Results}:
 		\item \textbf{Discussion}: This chapter interprets and contextualizes the results of the study, discussing their implications and limitations in relation to the literature review and research question. It also identifies areas for future research.
 		\item \textbf{Conclusion}: This chapter summarizes the main findings and implications of the study, and will highlight the contribution of the research to the field.
 	\end{itemize}
 	
 	\chapter{Literature review}
 	\label{chap:litreture}
-	Over the past few decades, given the numerous applications of image registration, a plethora of methods have been proposed. Until the success of AlexNet \cite{AlexNet} in the 2012 ImageNet competition, many of the proposed methods formulated the registration problem as a physical problem to minimize the energy function \cite{THIRION1998243} \cite{536892} \cite{5193151} \cite{5338015} \cite{Avants2011ARE} \cite{1009381}. The success of AlexNet led to increased confidence in deep learning techniques and their widespread use in research. This can be seen in Figure \ref{fig:no_of_papers}, which shows the increase in Deep Learning-based image registration work after 2012.
+	Over the past few decades, given the numerous applications of image registration, a plethora of methods have been proposed. Until the success of AlexNet \cite{AlexNet} in the 2012 ImageNet competition, many of the proposed methods formulated the registration problem as a physical problem to minimize the energy function \cite{THIRION1998243} \cite{536892} \cite{5193151} \cite{5338015} \cite{Avants2011ARE} \cite{1009381}. The success of AlexNet led to increased confidence in deep learning techniques and their widespread use in research.
 	
 	The adaptation to deep learning techniques led to exceptional performance results in many computer vision tasks such as object recognition, image segmentation, image classification, etc., which could not be achieved before, and the popularity of deep learning methods increased rapidly.
 	
@@ -252,7 +266,7 @@ linkcolor=red
 	
 	Starting from an identity deformation {$T_0$}, for each iteration, the elementary force for each demon at the object boundary of the fixed image is calculated. From all elementary forces of the demons, the deformation $T_{i+1}$ of $T_i$ is calculated. The following figure \ref{fig:demons} represents this iterative scheme.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\columnwidth]{resources/chapter2/demons.png}
 		\caption{Iterative scheme in the case of diffusing models. \cite{THIRION1998243}}
@@ -295,7 +309,7 @@ linkcolor=red
 	
 	Wu et al. \cite{7314894} \cite{Wu} were the first ones to use deep learning to obtain application specific feature in contrast to the supervised feature extraction or handcrafted feature selection methods, and then the learnt features were deployed to the classical Demons \cite{VERCAUTEREN2009S61}, \cite{10.1007/10704282_64}, \cite{10.1007/978-3-540-85990-1_117}, \cite{10.1007/978-3-642-24446-9_3}, \cite{Peyrat} and HAMMER methods \cite{Wu2010TPSHAMMERIH}, \cite{Shen} with defined interpolation strategy, transformation model, and optimization alogirthm. These features were learnt from the data and hence is optimal representation for specific dataset. Thus, the then state-of-the-art registration methods were imporved by integrating these feature representations via deep learning. However, the registration process is still slow because the later transformation estimation is still iterative. Thus, methods to directly predict the transformation parameters have been proposed such that the registered image can be obtained directly by warping the moving image with the predicted transformation parameters.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\textwidth]{resources/chapter2/tx_parameters.png}
 	\caption{6 transformation parameters in a 3D transformation. \cite{7393571}}
@@ -324,7 +338,7 @@ linkcolor=red
 	
 	Chee et al. \cite{https://doi.org/10.48550/arxiv.1810.02583} employed a CNN to predict all transformation parameters simultaneously, rather than predicting them in groups and then applying them in a hierarchical fashion. In this framework, their Affine Image Registration Network (AIRNet) took two images and outputs the rigid transformation parameters. The moving image is then warped by the resampler using transformation matrix. The training loss function was mean-squared error of the estimated transformation parameters.
 	
-	%\begin{figure}[H]
+	%\begin{figure}[h]
 	%	\centering
 	%	\includegraphics[width=0.7\columnwidth]{resources/chapter2/AIRNet.png}
 	%	\caption{Workflow of \cite{https://doi.org/10.48550/arxiv.1810.02583} image registration framework.}
@@ -340,7 +354,7 @@ linkcolor=red
 	
 	A key innovation that has been useful for all work following the unsupervised method is the spatial transformer network (STN) \cite{NIPS2015_33ceb07b}. The spatial transformer network is a differentiable module that can be inserted into existing convolutional architectures, giving neural networks the ability to spatially transform feature maps. Since it is a differentiable module, it can also be trained together in an end-to-end fashion through backpropagation. In the paper, "A Survey on Deep Learning in Medical Image Registration", \cite{Haskins_2020} a nice visualization aptly describes the workflow of unsupervised deep learning methods for registration.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\columnwidth]{resources/chapter2/figure2.png}
 		\caption{Visualization of unsupervised method of training deep neural networks for registration. \cite{Haskins_2020}}
@@ -390,7 +404,7 @@ linkcolor=red
 	
 	In decoder, alternate between upsampling, convolutions and skip connections are done. The decoder network is used to recover 3D image patches from the learned low-dimensional feature representations, acting as feedback to refine the inferences in the encoder network.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter2/vxm.png}
 		\caption{Overview of the VoxelMorph method. \cite{Balakrishnan_2019}}
@@ -399,7 +413,7 @@ linkcolor=red
 	
 	An important architectural constraint is that the receptive fields of the convolutional kernels of the smallest layer should be at least as large as the maximum expected displacement between corresponding voxels in $f$ and $m$.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.8\columnwidth]{resources/chapter2/vxm_unet.png}
 		\caption{Implementation of the U-Net convolution architecture. Each rectangle represents a 3D volume created from the previous volume using a 3D convolutional network layer. The spatial resolution of each volume with respect to the input volume is given below. Multiple 32-filter convolutions are used in the decoder, each followed by an upsampling layer to bring the volume back to full resolution. The arrows represent skip connections that chain encoder and decoder functions. \cite{Balakrishnan_2019}}
@@ -408,7 +422,7 @@ linkcolor=red
 	
 	The figure \ref{fig:vxm_result} shows the average dice scores and runtime results for affine alignment, ANTs, NiftyReg and VoxelMorph. Standard deviations across structures and subjects are in parantheses. The average Dice score is computed over all the structures and subjects.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\columnwidth]{resources/chapter2/vxm_result.png}
 		\caption{Average Dice scores and runtime results for affine alignment, ANTs, NiftyReg and VoxelMorph. \cite{Balakrishnan_2019}}
@@ -417,7 +431,7 @@ linkcolor=red
 	
 	In another setup, the trained VoxelMorph was tested on the (unseen) Buckner40 dataset containing 39 scans. VoxelMorph with instance specific optimization was also performed. The dice scores in \ref{fig:vxm_result_2} show that VoxelMorph using cross correlation loss behaves comparably to ANTs and NiftyReg using the same cost function. Further, VoxelMorph with instance-specific optimization improved the results.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.5\columnwidth]{resources/chapter2/vxm_result_2.png}
 		\caption{Results for manual annotation experiment. \cite{Balakrishnan_2019}}
@@ -431,7 +445,7 @@ linkcolor=red
 	
 	Although the authors note in the VoxelMorph paper \cite{Balakrishnan_2019} that the model may be useful for medical image registration applications such as MR scans of the heart or CT scans of the lung, Zhao et al. \cite{8889674} note that VoxelMorph does not work well when large shifts are present between images. Therefore, both papers \cite{8889674} and \cite{Balakrishnan_2019} offer a solution for dealing with such scenarios where large deformation fields are present by cascading the networks. In both the methods, final deformation field is a composition of field from the subnetworks. That is, the final flow prediction is composed of an initial affine transformation and $\phi_1$, $\phi_2$, $\cdots$, $\phi_n$, each of which only performs a rather simple displacement.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\columnwidth]{resources/chapter2/recursive_cascade_flowfield.png}
 		\caption{Composition of deformation fields. Flow fields are drawn by mapping the abosolute value of the three components (x, y, z) of flow displacements into color channels (R, G, B) respectively. White area indicates zero displacement. \cite{Zhao_2019}}
@@ -440,7 +454,7 @@ linkcolor=red
 	
 	Both VTN \cite{8889674} and DLIR \cite{de_Vos_2019} stack their networks. However, both are limited to a small number of cascades. DLIR trains each cascade one by one, i.e., after fixing the weights of previous cascades. VTN, in contrast, jointly trains the cascades measuring the similiarity between all successively warped images and the fixed image. The figure below \ref{fig:vtn} shows the Volume Tweening Network (VTN) \cite{8889674}. Each registration subnet is responsible for determining the deformation field between the fixed image and the current moving image. The moving image is repeatedly distorted according to the deformation and fed into the next layer of cascaded subnetworks.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\columnwidth]{resources/chapter2/vtn.png}
 		\caption{Illustration of the overall structure of the Volume Tweening Network (VTN) and the back-progression of gradients. Solid lines indicate how the loss is computed and the dashed lines indicate how gradients back-propagate\cite{8889674}}
@@ -451,7 +465,7 @@ linkcolor=red
 	
 	The architecture of the proposed recursive cascaded network is shown in the figure below \ref{fig:recursive}. The difference between this architecture and the VTN is that the similarity is now measured only on the final warped image, so that all cascades can learn progressive alignments together.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\columnwidth]{resources/chapter2/recursive.png}
 		\caption{Illustration of the recursive cascade architecture. Circle denotes a composition. The unsupervised end-to-end learning is guided by the image similiarity between $I_m^{(n)}$ and $I_f$.\cite{Zhao_2019}}
@@ -460,7 +474,7 @@ linkcolor=red
 	
 	The following figure \ref{fig:recursive_result} shows the performance of the recursive cascade network architectures for the SILVER, LiTS, and LSPG datasets. For testing purposes, both VoxelMorph and VTN were chosen as the base network here, and an empirical evaluation was performed. In all cases, the cascaded architecture performed better than the simple network alone.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\columnwidth]{resources/chapter2/recursive_result.png}
 		\caption{Comparison among traditional methods (ANTs SyN and Elastix B-spline), baseline networks (VoxelMorph and VTN), and proposed recursive cascaded networks with and without shared-weight cascading. $r$ x $n$ -cascade means that every deformable cascade is repetitively applied for r times during testing, using the proposed shared-weight cascading method. \cite{Zhao_2019}}
@@ -558,7 +572,7 @@ linkcolor=red
 	\sigma(x) = \frac{1}{1 + e^{-x}}
 	\end{equation}
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[scale=0.5]{resources/chapter3/perceptron.jpg}
 		\caption{Illustration of model with a single perceptron. \cite{kamdem2023inputs}}
@@ -584,7 +598,7 @@ linkcolor=red
 	
 	MLPs have been widely used in many applications, including image recognition, natural language processing, and predictive modeling. However, they can be computationally expensive to train and are not well-suited to tasks that require processing large amounts of sequential data, such as language translation or speech recognition.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\columnwidth]{resources/chapter3/mlp.png}
 		\caption{Illustration of model with a multi-layer perceptron. \cite{tikz_neural_networks}}
@@ -623,7 +637,7 @@ linkcolor=red
 	
 	A Loss function is used to check how our model compares to an ideal model. There are many types of loss functions, one of which can be selected based on the problem being solved. The most common ones for regression are mean absolute error (MAE) also referred to as L1 loss, mean squared error (MSE) also referred to as L2 loss. The most common ones for classification problems are binary cross-entropy (BCE) loss and hinge loss \cite{wang2020comprehensive}. And others include normalized cross correlation and mutual information loss to measure the similarity between the two images. A typical loss function plotted against the number of epochs is given in the Figure \ref{fig:LossFun} \cite{image2023mse}. 
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[scale=0.2]{resources/chapter3/lossfun.png}
 		\caption{Loss function}
@@ -652,7 +666,7 @@ linkcolor=red
 	
 	The encoder-decoder architecture has been widely used in natural language processing tasks, such as machine translation, language modeling, and text summarization. It has also been applied to other domains, such as image generation and sequence-to-sequence modeling in time series data.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\columnwidth]{resources/chapter3/encoderdecoder.png}
 		\caption{Illustration of encoder decoder architecture \cite{tikz_neural_networks}.}
@@ -666,7 +680,7 @@ linkcolor=red
 	\subsection{U-Net}\label{subsec:unet}
 	U-Net is a convolutional neural network (CNN) architecture designed for image segmentation tasks. It was developed by Olaf Ronneberger, Philipp Fischer, and Thomas Brox in 2015 \cite{UNet} and has since become a widely used model for image segmentation in medical imaging and other domains. U-Net is typically trained using supervised learning, with the goal of minimizing the error between the predicted output segmentation map and the ground truth segmentation map. It has been widely used in medical imaging tasks, such as tumor segmentation and organ segmentation, and has also been applied to other domains, such as satellite image analysis and surface defect detection.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\begin{tikzpicture}[node distance=1.5cm]
 		
@@ -714,70 +728,6 @@ linkcolor=red
 	Figure~\ref{fig:unet_tikzpicture} shows the structure of the U-Net model. The model has two main parts: an encoder that reduces the spatial resolution of the input image and increases the number of feature maps, and a decoder that does the opposite. The encoder uses convolutional layers with a stride of 2 to downsample the input image, and the decoder uses transposed convolutional layers to upsample the feature maps. The bottleneck layer connects the encoder and decoder and acts as a bridge between them. It allows the decoder to use the high-level features extracted by the encoder to generate a detailed segmentation map. The model also has skip connections, shown as dotted lines in the figure, that allow the decoder to access the features extracted by the encoder at each level of the network. This helps the model to use both high-level and low-level features and preserves spatial information, leading to more accurate segmentation results.
 	
 	The input to the model is an image and the output is a segmentation mask, with each pixel in the mask corresponding to a particular class in the image. The U-Net model is commonly used in medical imaging, where it can be trained to segment organs or other structures in images.
-	
-	\section{Loss Metric}\label{sec:loss_metric}
-	A loss metric, also known as a loss function or objective function, is a measure of how well a machine learning model is able to predict the correct output for a given input. It is used to evaluate the performance of the model during training and to guide the optimization process.
-	
-	There are many different loss functions that can be used, depending on the specific task being addressed and the characteristics of the data. Some common loss functions that are used in image registration include:
-	
-	\begin{enumerate}
-		\item \textbf{Mean squared error (MSE)}
-		\item \textbf{Normalized cross-correlation (NCC)}
-		\item \textbf{Landmark registration error}
-	\end{enumerate}
-	
-	\subsection{Mean squared error (MSE)}
-	This is a common loss function that measures the average squared difference between the predicted output and the true output. It is often used for regression tasks and is particularly useful for image registration because it is sensitive to small errors and can effectively penalize large errors.
-	
-	The mean squared error (MSE) between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as:
-	
-	$$ MSE = \frac{1}{n} \sum_{i=1}^n (I_f(i) - I_m(i))^2 $$
-	
-	where $n$ is the number of pixels in the images and $I_f(i)$ and $I_m(i)$ represent the intensity values of the fixed and moved images at pixel $i$, respectively.
-	
-	\subsection{Normalized cross-correlation (NCC)}
-	This loss function measures the similarity between two images by calculating the cross-correlation between them and normalizing by the product of their standard deviations. It is commonly used in image registration because it is robust to intensity variations and can handle images with different scales or contrast.
-	
-	
-	The normalized cross-correlation (NCC) between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as:
-	
-	$$ NCC = \frac{\sum_{i=1}^n (I_f(i) - \mu_f)(I_m(i) - \mu_m)}{\sqrt{\sum_{i=1}^n (I_f(i) - \mu_f)^2}\sqrt{\sum_{i=1}^n (I_m(i) - \mu_m)^2}} $$
-	
-	where $n$ is the number of pixels in the images, $I_f(i)$ and $I_m(i)$ represent the intensity values of the fixed and moved images at pixel $i$, respectively, and $\mu_f$ and $\mu_m$ are the mean intensities of the fixed and moved images, respectively.
-	
-	\subsection{Landmark registration error}
-	This loss function measures the error between the predicted and true locations of landmarks in the images being registered. It is often used in conjunction with other loss functions to guide the optimization process and ensure that the images are correctly aligned.
-	
-	The landmark registration error between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as the mean Euclidean distance between corresponding landmarks in the two images:
-	
-	$$ LRE = \frac{1}{K} \sum_{k=1}^K \sqrt{(x_f^k - x_m^k)^2 + (y_f^k - y_m^k)^2 + (z_f^k - z_m^k)^2} $$
-	
-	where $K$ is the number of landmarks, $(x_f^k, y_f^k, z_f^k)$ and $(x_m^k, y_m^k, z_m^k)$ represent the coordinates of the $k$-th landmark in the fixed and moved images, respectively.
-	
-	\section{Quality Assessment}\label{sec:quality}
-	It is important to evaluate the performance of an image registration method using multiple metrics because the loss function, such as normalized cross-correlation error (NCC) or mean squared error (MSE), only measures the overall error in the registration. These metrics do not necessarily capture errors that occur at specific, biologically significant local regions. Therefore, evaluating the performance qualitatively and quantitatively becomes necessary help to identify and quantify errors at such local regions. This can provide a more comprehensive assessment of the accuracy and effectiveness of the image registration method.
-	
-	\subsection{Quantitative Assessment}
-	Quantitative assessment metrics are numerical measures that are used to evaluate the performance. The specific metric used will depend on the characteristics of the data and the goals of the analysis. In our image registration task, in addition to optimizing the loss function, such as normalized cross-correlation error (NCC), we  evaluate below metrics to assess the performance of our approach.
-	\begin{enumerate}
-		\item \textbf{Ventricular Error Indicator (VI)}
-		\item \textbf{Thoracic Nerve Entry Error Indicator (TI)}
-		\item \textbf{Landmark registration error (LRE)}
-	\end{enumerate}
-	
-	
-	\subsubsection{Ventricular Error Indicator (VI)}
-	To evaluate the accuracy of the image registration in the Ventricular Nerve Cord (VNC) region, we consider 2 small 3D spherical volumes in the VNC entry points in both the fixed and moved images and compute the mutual information between these regions. A high score indicates that the image registration is good, while a low score indicates that there are errors in the registration. With this score, we can determine the quality of the image registration at this locality.
-	
-	\subsubsection{Thoracic Nerve Entry Error Indicator (TI)}
-	To evaluate the accuracy of the image registration at thoracic nerve entry, we consider 6 small 3D spherical volumes around the 6 thoracic nerve entry points in both the fixed and moved images and compute the mutual information between these regions. A high score indicates that the image registration is good, while a low score indicates that there are errors in the registration. With this score, we can determine the quality of the image registration at this locality.
-	
-	\subsubsection{Landmark registration error (LRE)}
-	In the larvalign paper, biologists identified 30 distinct and biologically significant points in the brain scan of a drosophila larva that can be used as landmarks. We use the same landmarks in this study also. Landmark registration error (LRE) is a measure of the accuracy of the alignment of the landmarks in two images, and is commonly used in medical imaging and other fields where the alignment of specific features or structures is important. A low LRE score indicates that the image registration is accurate, while a high score indicates that there are errors in the alignment of the landmarks. By comparing the LRE scores, we can determine the quality of the image registration at these landmark sites.
-	
-	\subsection{Qualitative Assessment}
-	While quantitative assessments involve the use of numerical measurements and statistical analysis to objectively assess the performance or quality of something. The qualitative assessments involve the use of subjective observations and interpretations to evaluate the performance or quality of something. These methods are often preferred because they can provide insights and understanding that may not be captured by quantitative methods, and they can be used to identify trends and patterns that may not be immediately apparent from numerical data alone.
-	For this purpose, we use the \texttt{imshowpair} function in MATLAB to overlay the fixed image and the registered image. The resulting image will show the original intensity values where the two images perfectly overlap, and it will show green or magenta values in areas where there is no overlap. This allows us to visually inspect the registration and identify any discrepancies.
 	
 	\chapter{Implementations and Data Preperation}
 	In Chapter \ref{chap:litreture}, we reviewed various traditional and deep learning approaches for medical image registration. In this chapter, we will delve into the specific methods we selected for our study and explain why they were chosen and how they are effective in addressing the challenges of medical image registration.
@@ -954,7 +904,7 @@ linkcolor=red
 	
 	The figure below illustrates an example of an image before and after affine alignment.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter3/np_58E02_37E10_MB299C_021713A_scaled.tif.png}
 		\caption{Affine registration example against the \textit{larvalign} template \cite{larvalign}.}
@@ -1017,28 +967,91 @@ linkcolor=red
 	
 	The code for normalization is shown in Listing~\ref{lst:normalize}. This code defines a function called "normalize" that takes a list of pixel values as input and returns a new list of normalized values. The pixel values are normalized by dividing each value by 255, the maximum value for a pixel in an 8-bit image.
 	
-	\chapter{Methods and Results}
+	\section{Loss Metric}\label{sec:loss_metric}
+	A loss metric, also known as a loss function or objective function, is a measure of how well a machine learning model is able to predict the correct output for a given input. It is used to evaluate the performance of the model during training and to guide the optimization process.
+	
+	There are many different loss functions that can be used, depending on the specific task being addressed and the characteristics of the data. Some common loss functions that are used in image registration include:
+	
+	\begin{enumerate}
+		\item \textbf{Mean squared error (MSE)}
+		\item \textbf{Normalized cross-correlation (NCC)}
+		\item \textbf{Landmark registration error (LRE)}
+	\end{enumerate}
+	
+	\subsection{Mean squared error (MSE)}
+	This is a common loss function that measures the average squared difference between the predicted output and the true output. It is often used for regression tasks and is particularly useful for image registration because it is sensitive to small errors and can effectively penalize large errors.
+	
+	The mean squared error (MSE) between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as:
+	
+	$$ MSE = \frac{1}{n} \sum_{i=1}^n (I_f(i) - I_m(i))^2 $$
+	
+	where $n$ is the number of pixels in the images and $I_f(i)$ and $I_m(i)$ represent the intensity values of the fixed and moved images at pixel $i$, respectively.
+	
+	\subsection{Normalized cross-correlation (NCC)}
+	This loss function measures the similarity between two images by calculating the cross-correlation between them and normalizing by the product of their standard deviations. It is commonly used in image registration because it is robust to intensity variations and can handle images with different scales or contrast.
+	
+	
+	The normalized cross-correlation (NCC) between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as:
+	
+	$$ NCC = \frac{\sum_{i=1}^n (I_f(i) - \mu_f)(I_m(i) - \mu_m)}{\sqrt{\sum_{i=1}^n (I_f(i) - \mu_f)^2}\sqrt{\sum_{i=1}^n (I_m(i) - \mu_m)^2}} $$
+	
+	where $n$ is the number of pixels in the images, $I_f(i)$ and $I_m(i)$ represent the intensity values of the fixed and moved images at pixel $i$, respectively, and $\mu_f$ and $\mu_m$ are the mean intensities of the fixed and moved images, respectively.
+	
+	\subsection{Landmark registration error (LRE)}
+	This loss function measures the error between the predicted and true locations of landmarks in the images being registered. It is often used in conjunction with other loss functions to guide the optimization process and ensure that the images are correctly aligned.
+	
+	The landmark registration error between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as the mean Euclidean distance between corresponding landmarks in the two images:
+	
+	$$ LRE = \frac{1}{K} \sum_{k=1}^K \sqrt{(x_f^k - x_m^k)^2 + (y_f^k - y_m^k)^2 + (z_f^k - z_m^k)^2} $$
+	
+	where $K$ is the number of landmarks, $(x_f^k, y_f^k, z_f^k)$ and $(x_m^k, y_m^k, z_m^k)$ represent the coordinates of the $k$-th landmark in the fixed and moved images, respectively.
+	
+	\section{Quality Assessment}\label{sec:quality}
+	It is important to evaluate the performance of an image registration method using multiple metrics because the loss function, such as normalized cross-correlation error (NCC) or mean squared error (MSE), only measures the overall error in the registration. These metrics do not necessarily capture errors that occur at specific, biologically significant local regions. Therefore, evaluating the performance qualitatively and quantitatively becomes necessary help to identify and quantify errors at such local regions. This can provide a more comprehensive assessment of the accuracy and effectiveness of the image registration method.
+	
+	\subsection{Quantitative Assessment}
+	Quantitative assessment metrics are numerical measures that are used to evaluate the performance. The specific metric used will depend on the characteristics of the data and the goals of the analysis. In our image registration task, in addition to optimizing the loss function, such as normalized cross-correlation error (NCC), we  evaluate below metrics to assess the performance of our approach.
+	\begin{enumerate}
+		\item \textbf{Ventricular Error Indicator (VI)}
+		\item \textbf{Thoracic Nerve Entry Error Indicator (TI)}
+		\item \textbf{Landmark registration error (LRE)}
+	\end{enumerate}
+
+	\subsubsection{Ventricular Error Indicator (VI)}
+	To evaluate the accuracy of the image registration in the Ventricular Nerve Cord (VNC) region, we consider 2 small 3D spherical volumes in the VNC entry points in both the fixed and moved images and compute the mutual information between these regions. A high score indicates that the image registration is good, while a low score indicates that there are errors in the registration. With this score, we can determine the quality of the image registration at this locality.
+	
+	\subsubsection{Thoracic Nerve Entry Error Indicator (TI)}
+	To evaluate the accuracy of the image registration at thoracic nerve entry, we consider 6 small 3D spherical volumes around the 6 thoracic nerve entry points in both the fixed and moved images and compute the mutual information between these regions. A high score indicates that the image registration is good, while a low score indicates that there are errors in the registration. With this score, we can determine the quality of the image registration at this locality.
+	
+	\subsubsection{Landmark registration error (LRE)}
+	In the larvalign paper, biologists identified 30 distinct and biologically significant points in the brain scan of a drosophila larva that can be used as landmarks. We use the same landmarks in this study also. Landmark registration error (LRE) is a measure of the accuracy of the alignment of the landmarks in two images, and is commonly used in medical imaging and other fields where the alignment of specific features or structures is important. A low LRE score indicates that the image registration is accurate, while a high score indicates that there are errors in the alignment of the landmarks. By comparing the LRE scores, we can determine the quality of the image registration at these landmark sites.
+	
+	\subsection{Qualitative Assessment}
+	While quantitative assessments involve the use of numerical measurements and statistical analysis to objectively assess the performance or quality of something. The qualitative assessments involve the use of subjective observations and interpretations to evaluate the performance or quality of something. These methods are often preferred because they can provide insights and understanding that may not be captured by quantitative methods, and they can be used to identify trends and patterns that may not be immediately apparent from numerical data alone.
+	For this purpose, we use the \texttt{imshowpair} function in MATLAB to overlay the fixed image and the registered image. The resulting image will show the original intensity values where the two images perfectly overlap, and it will show green or magenta values in areas where there is no overlap. This allows us to visually inspect the registration and identify any discrepancies.
+	
+	\chapter{Methods}
 	
 	In the following sections, we will describe the different methods that we used to evaluate the performance of deep learning neural networks, presented in order of increasing performance. All of the methods were implemented using the TensorFlow framework in Python. For each method, we will explain why we chose it and how it outperformed the previous method. In total, we will present four methods.
 	\begin{itemize}
-		\item \textbf{Method1}: Evaluating the Raw Voxelmorph Architecture.
-		\item \textbf{Method2}: Enhancing Method 1 with Novel Landmark Information.
+		\item \textbf{Method1}: Evaluating the morph Architecture.
+		\item \textbf{Method2}: Enhancing Method1 with Novel Landmark Information.
 		\item \textbf{Method3}: Pyramid Gaussian Filtering and Cascaded Training.
-		\item \textbf{Method4}: Enhancing Method 3 with Novel Landmark Information.
+		\item \textbf{Method4}: Enhancing Method3 with Novel Landmark Information.
 	\end{itemize}
 
-	\section{Method1: Evaluating the Raw Voxelmorph Architecture}\label{subsec:method1}
+	\section{Method1: Evaluating the Vanilla Voxelmorph Architecture}\label{sec:method1}
 	
 	As described in the Section~\ref{sec:vxm_architecture}, the architecture of the VoxelMorph network consists of a series of encoder-decoder blocks, which are inspired by the U-Net architecture.The encoder blocks down-sample the input images by applying convolutions and max pooling, while the decoder blocks up-sample the feature maps using transposed convolutions. The network also includes skip connections between the encoder and decoder blocks, which helps to preserve spatial resolution and fine details in the output image.
 	
-	Unlike the vanilla voxelmorph model, this method employs a U-Net architecture with 6 encoding layers and 6 corresponding decoding layers, connected by skip connections. The number of channels in the encoding layers is [16, 32, 32, 32, 32, 32], and the number of channels in the decoding layers is [32, 32, 32, 32, 32, 32]. In addition, from the output of the U-Net, there are 3 additional convolutional layers with [32, 16, 16] channels that are used to extract additional features at the end stages. Between each pair of consecutive encoding layers, the size of the feature maps is reduced by a factor of 2 using max pooling. Similarly, between each pair of consecutive decoding layers, the size of the feature maps is increased by a factor of 2 using upsampling. Leaky ReLu activation functions are used to introduce non-linearity between each layer.
+	Unlike the vanilla  model, this method employs a U-Net architecture with 6 encoding layers and 6 corresponding decoding layers, connected by skip connections. The number of channels in the encoding layers is [16, 32, 32, 32, 32, 32], and the number of channels in the decoding layers is [32, 32, 32, 32, 32, 32]. In addition, from the output of the U-Net, there are 3 additional convolutional layers with [32, 16, 16] channels that are used to extract additional features at the end stages. Between each pair of consecutive encoding layers, the size of the feature maps is reduced by a factor of 2 using max pooling. Similarly, between each pair of consecutive decoding layers, the size of the feature maps is increased by a factor of 2 using upsampling. Leaky ReLu activation functions are used to introduce non-linearity between each layer.
 	
 	This configuration produces a 3-channel feature map representing the 3D deformation field between the fixed and moving images. This deformation field, interpreted as displacement vectors, is used to register the moving image to the fixed image using a spatial transformer network (STN). This network applies the necessary transformations to the moving image based on the input deformation field, aligning it with the fixed image. After the moving image is registered to the fixed image using the U-Net and spatial transformer network, the resulting "warped" image, also called as "moved" image, is compared to the fixed image using a similarity score Normalized Cross Correlation. The network is trained for 100 epochs until the similarity score reached a maximum or saturated at a certain level, indicating satisfactory alignment of the moving and fixed images. This whole process is described in the below Figure~\ref{fig:block_method1}
 	
 	\begin{figure}[h!]
 		\centering
 		\includegraphics{resources/chapter4/methods/method1.pdf}
-		\caption{A visual guide to training Method 1 - the raw Voxelmorph model with the NCC optimization function.}
+		\caption{A visual guide to training Method1 - the vanilla Voxelmorph model with the NCC optimization function.}
 		\label{fig:block_method1}
 	\end{figure}
 	
@@ -1052,50 +1065,26 @@ linkcolor=red
 	
 	In this Equation~\ref{eq:ncc_loss}, N is the number of moving images, and $NCC(Fixed, Moved_i)$ is the normalized cross correlation between $Fixed$ and $Moved_i$. The loss function is the negative average of the normalized cross correlation between the fixed image and each of the moving images.
 	
-	\subsection{Results}
-	The model with the above mentioned configuration was trained with the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was found that this model performed poorly on images that contained large deformations. However, the model performed well on images that contained smaller deformations. This suggested that the voxelmorph model may have been less effective at registering images with large deformations, but effective for registering images with smaller deformations.
+	\section{Method2: Enhancing Method1 with Novel Landmark Information.}
+	As described in Section~\ref{sec:landmark_points}, in image registration, landmarks are considered to be the "Gold Standard" for determining the accuracy of the registration process. The goal is to align the fixed and moving images in such a way that the landmarks in both images match perfectly, resulting in a landmark registration error (LRE) of zero. The LRE is the Euclidean distance between the landmarks in the registered and fixed images and to improve the accuracy of the registration, the LRE is used as an additional loss function for the network, and thus encouraging the model to learn the registration process to minimize the LRE.
 	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
-		\caption{An example moving sample image with larger deformation where the Method 1 type of deformable registration did not produce a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method1_fail}
-	\end{figure}
-
-	 The moving image in Figure~\ref{fig:method1_fail} has large deformation at the lower tip of the Ventral Nerve Cord (VNC), and the registration process is not successful as evident (magenta region at the lower tip of VNC) in the corresponding overlay image. In contrast, the Voxelmorph method produces good results in the Figure~\ref{fig:method1_pas}. The good results produced by the Voxelmorph method in this case can be attributed to the absence of significant deformation in the moving image and the model's ability to handle smaller deformations effectively.
-
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/np_brain7_scaled.tif.png}
-		\caption{An example moving sample image with smaller deformation where the Method 1 type of deformable registration produced a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method1_pas}
-	\end{figure}
+	Biologists identified 30 points on the drosophila larva that could be used as landmarks for image registration (Figure~\ref{fig:landmark_annotations}). However, manually annotating all 30 landmarks on every training sample is time-consuming. For samples with minimal deformations, the vanilla Voxelmorph model [Section \ref{sec:method1}] already performed well, so additional annotations are not needed. Even in cases where the Voxelmorph model did not perform well, the poor performance is only observed in specific regions, such as the tip of the Ventral Nerve Cord (VNC). Therefore, we only need annotations on samples where the vanilla Voxelmorph model had difficulty achieving accurate registration. To be more specific, we choose to annotate only in such samples and in such regions where we are certain that Voxelmorph would require assistance. This means that each training sample may have a different number of landmarks, including zero. To address this issue, we developed a method that can take into account of the presence of variable number of landmarks between the training samples and calculate the average landmark registration error (LRE). This allowed us to minimize the annotation effort while still obtaining good performance from the model.
 	
-	\subsection{Motivation for Method2}
-	The model clearly struggled with handling large deformations, specifically in the lower ventricular nerve chord region of the brain. In order to improve the model's performance in these cases, we provided it with additional, manually annotated information for both the moving and fixed images. This helped guide the model towards achieving better alignment, particularly when dealing with large deformations. By including this extra information in the training process, we aimed to improve the model's ability to register brain images with significant deformations.
-	
-	The practice of adding additional, manually annotated information for both the moving images and fixed image is referred to as Method 2. This method is explained in further detail in the following section.
-	
-	\section{Method2: Enhancing Method 1 with Novel Landmark Information.}
-	As described in Section~\ref{sec:landmark_points}, in image registration, landmarks are considered to be the "Gold Standard" for determining the accuracy of the registration process. The goal is to align the fixed and moving images in such a way that the landmarks in both images matched perfectly, resulting in a landmark registration error (LRE) of zero. The LRE is the Euclidean distance between the landmarks in the registered and fixed images and to improve the accuracy of the registration, the LRE is used as an additional loss function for the network, and thus encouraging the model to learn the registration process to minimize the LRE.
-	
-	Biologists identified 30 points on the drosophila larva that could be used as landmarks for image registration (Figure~\ref{fig:landmark_annotations}). However, manually annotating all 30 landmarks on every training sample is time-consuming. For samples with minimal deformations, the raw Voxelmorph model [Subsection \ref{subsec:method1}] already performed well, so additional annotations are not needed. Even in cases where the Voxelmorph model did not perform well, the poor performance is only observed in specific regions, such as the tip of the Ventral Nerve Cord (VNC). Therefore, we only need annotations on samples where the raw Voxelmorph model has difficulty achieving accurate registration. To be more specific, we choose to annotate only in such samples and in such regions where we are certain that Voxelmorph would require assistance. This means that each training sample may have a different number of landmarks, including zero. To address this issue, we developed a method that can take into account of the presence of variable number of landmarks between the training samples and calculate the average landmark registration error (LRE). This allowed us to minimize the annotation effort while still obtaining good performance from the model.
-	
-	Incorporating landmark points as auxiliary information is a novel method that has not been used previously. The original Voxelmorph paper utilized segmentation maps to help improve registration results. With the knowledge of how Method 1 worked, the following figure \ref{fig:block_method2} will illustrate the Method 2.
+	Incorporating landmark points as auxiliary information is a novel method that has not been used previously. The original Voxelmorph paper utilized segmentation maps to help improve registration results. With the knowledge of how Method1 worked, the following Figure \ref{fig:block_method2} will illustrate the Method2.
 	
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.6\columnwidth]{resources/chapter4/methods/Method2.pdf}
-		\caption{A visual guide to training Method 2 - the raw Voxelmorph model with landmark points as auxiliary information.}
+		\caption{A visual guide to training Method2 - the vanilla Voxelmorph model with landmark points as auxiliary information.}
 		\label{fig:block_method2}
 	\end{figure}
 	
-	The optimization function we attempted to minimize was:
+	The optimization function we attempted to minimize is:
 	\begin{equation}
 	L_\text{combined} = L_\text{main} + L_\text{aux} \label{eqn:combined_loss}
 	\end{equation}	
 	
-	Let's call the main loss $L_\text{main}$ and the landmark registration error $L_\text{aux}$.
+	Let us call the main loss as $L_\text{main}$ and the landmark registration error as $L_\text{aux}$.
 	
 	\textbf{Main loss}:
 	\begin{equation}
@@ -1112,50 +1101,12 @@ linkcolor=red
 	
 	In this Equation~\ref{eqn:aux_loss}, N is the number of moving images, L is the number of landmarks, p\_l is the coordinates of the l-th landmark in the fixed image, and q\_{n,l} is the coordinates of the l-th landmark in the n-th moving image. The auxiliary loss is the average of the euclidean distance between the landmarks in the fixed image and the landmarks in each of the moving images.
 	
-	
-	\subsection{Results}
-	Using the same configurations as in Method 1, landmark points as auxiliary information was incorporated into the training. The model was retrained on the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was found that there is an improvement in the registration accuracy with landmark points as auxiliary information.
-	
-	The following figures, Figure~\ref{fig:method2_fail} and Figure~\ref{fig:method2_pas}, show the results of registration using Method 2 on the same example samples used in Method 1.
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
-		\caption{An example moving sample image with larger deformation where the Method 2 type of deformable registration could produce a successful result when large deformation is present in contrast to Method 1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method2_fail}
-	\end{figure}
-		
-	Method 2 produced significantly improved registered results compared to Method 1, as can be evidenced in the two figures Figure~\ref{fig:method1_fail} and Figure~\ref{fig:method2_fail}. In Figure~\ref{fig:method1_fail}, Method 1 failed to produce satisfactory registration, particularly at the lower tip of the VNC. However, in Figure~\ref{fig:method2_fail}, it can be witnessed that with the help of landmark information, Method 2 was able to successfully register the image. The results in both figures demonstrate the efficacy of using landmark information in improving registration accuracy.
-
-	For the moving image with little deformation like in Figure~\ref{fig:method1_pas}, the model continued to produce accurate registration results, as expected. This can be verified in the Figure~\ref{fig:method2_pas}.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_brain7_scaled.tif.png}
-		\caption{An example moving sample image with smaller deformation where the Method 2 type of deformable registration could contine to produce a successful result like Method 1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method2_pas}
-	\end{figure}
-	
-	While the incorporation of landmarks did improve registration accuracy, in some cases, on moving images with significant deformation, this model produced artifacts on the registered output. An example of this can be seen in the following Figure~\ref{fig:method2_artifact}.
-	
-	The two images in focus on the lower tip of the Ventral Nerve Cord (VNC) show the moving image before and after registration. As seen, it appears as though the structures in this area have been erased after the registration was performed.
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_52B07_52H01_MB262B_021713B_scaled.png}
-		\caption{An example moving sample image with large deformations at the lower tip of Ventral Nerve Cord (VNC) where the Method 2 produced an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method2_artifact}
-	\end{figure}
-	
-	\subsection{Motivation for Method3}
-	The artifact is commonly observed on moving images with large deformations and may be due to the model's inherent limitations in handling such large deformations. The addition of auxiliary information and loss is trying to enforce the model to achieve near perfect registration, while the model is not yet capable of doing it. This new force in play can cause the network to compromize on the qualitative features while gaining good scores in terms of error scores. To fix this problem, we need to make the model better at handling large deformations. We can also use the auxiliary information as a guide, but it should not be the main way to solve the problem.
-	
 	\section{Method3: Pyramid Gaussian Filtering and Cascaded Training.}
-	Image registration is a challenging task because the optimization surface can be complex and lead to suboptimal results if the model gets stuck in one such local optima. However, literature study has shown that performing registration in a coarse-to-fine fashion can help the model escape such local optima and reach one of the better global optima. This approach has been effective in both the pre-deep learning and deep learning eras.
+	Image registration is a challenging task because the optimization surface can be complex and lead to suboptimal results if the model gets stuck in such a local optimum. However, literature studies have shown that performing registration in a coarse-to-fine manner can help the model escape such local optima and achieve one of the better global optima. This approach has proven successful in both the pre-deep learning and deep learning eras.
 	
-	This technique, called "pyramid registration," involves applying pyramid-style Gaussian filters and aligning images from the lowest resolution to the highest resolution. This method is effective because it ensures that the images are aligned starting with the large structures at the lowest resolutions, and then gradually aligning the finer structures as the resolution increases.
-		
-	Thus, the method involves processing an image at five different resolutions, and aligning the images in a coarse-to-fine manner, starting at the lowest resolution and gradually increasing the resolution at each stage. At each stage, the transformation learned in the previous stage is incorporated into the current stage in a cascaded manner. To decrease the resolution of the image, a Gaussian blur is applied using different values of $\sigma$, while keeping the width and height of the image constant. This process can be represented mathematically using the equation for Gaussian blurring.
+	In this method, called "pyramid registration," pyramidal Gaussian filters are applied and the images are aligned from the lowest to the highest resolution. This method is effective because it ensures that the images are first aligned with the large structures at the lowest resolutions and then progressively aligned with the finer structures as the resolution increases.
+	
+	Thus, the method consists of processing an image at five different resolutions and aligning the images from coarse to fine, starting with the lowest resolution and gradually increasing the resolution at each stage. In each stage, the transformation learned in the previous stage is cascaded to the current stage. To decrease the resolution of the image, a Gaussian blur with different values for $\sigma$ is applied while the width and height of the image remain constant. This process can be represented mathematically with the equation for Gaussian blur \ref{eqn:GaussBlur}.
 	
 	Let's say we have an input image with pixel values $I(x, y)$, and we want to apply Gaussian blurring to it using a kernel with size $n \times n$. The resulting image, $G(x, y)$, can be computed as follows:
 	
@@ -1179,80 +1130,33 @@ linkcolor=red
 		\label{fig:block_method3}
 	\end{figure}
 
-	This method for image registration uses multiple Voxelmorph model without auxiliary information and with the same configurations connected in a cascaded fashion. Both the moving and fixed images were pre-processed with Gaussian blurring using different sigma values for each stage.
+	In this method of image registration, multiple Voxelmorph models are cascaded together without any auxiliary information, using the same model configurations as Method1 and Method2. Both the moving and fixed images are preprocessed with Gaussian blur, using appropriate sigma values for each stage.
 	
 	\subsection{Stages}
-	For each stage, the appropriate inputs (fixed image and moving image) are chosen from the Gaussian Pyramid. To help explain the process, we will refer to the inputs for each stage as input1 through input5, with input1 representing the input images for stage 1 (blurred with sigma = 4), input2 representing the input images for stage 2 (blurred with sigma = 2), and so on. The final input, input5, consists of the original, unmodified images. We will also refer to the models for each stage as model1 through model5. The optimization function (Normalized Cross Correlation) used in all these stage aims to maximize the similarity between the moved and fixed images.
+	For each stage, the appropriate inputs (fixed image and moving image) are chosen from the Gaussian Pyramid. To help explain the process, we will refer to the inputs for each stage as \texttt{input1} through \texttt{input5}, with \texttt{input1} representing the input images for stage 1 (blurred with sigma = 4), \texttt{input2} representing the input images for stage 2 (blurred with sigma = 2), and so on. The final input, \texttt{input5}, consists of the original, unmodified images. We will also refer to the models for each stage as \texttt{model1} through \texttt{model5}. The same optimization function (Normalized Cross Correlation) is used in all these stage and aims to maximize the similarity between the moved and fixed images.
 	
 	\begin{equation}
 		L = -\frac{1}{N} \sum_{i=1}^N \text{NCC}(Fixed, Moved_i)
 	\end{equation}
 	
 	where:
-	\begin{itemize}
-		\item $\text{L}$ is the loss function.
-		\item $N$ is the number of moving images.
-		\item $\mathbf{Moved}_i$ is the $i$th moved image.
-		\item $\mathbf{Fixed}$ is the fixed image.
-		\item $NCC(\mathbf{Fixed}, \mathbf{Moved}_i)$ is the normalized cross correlation between the $i$th moved image and the fixed image.
-	\end{itemize}
+		$\text{L}$ is the loss function, $N$ is the number of moving images, $\mathbf{Moved}_i$ is the $i$th moved image, $\mathbf{Fixed}$ is the fixed image, and $NCC(\mathbf{Fixed}, \mathbf{Moved}_i)$ is the normalized cross correlation between the $i$th moved image and the fixed image.
 	
 	\subsubsection{Stage 1}
-	In stage 1, the model is trained using input images that has been pre-processed with Gaussian blurring using sigma = 4. The predicted deformation field from this model is used to transform the input image, creating a version called the "moved image." This moved image is then compared to the fixed image, which has also been pre-processed with Gaussian blurring using sigma = 4. All other stages are not used and will be grayed out.
+	In stage 1, the model is trained using input images that has been pre-processed with Gaussian blurring using sigma = 4. The predicted deformation field from this model is used to transform the input image, creating a version called the "moved image." This moved image is then compared to the fixed image, which has also been pre-processed with Gaussian blurring using sigma = 4. All other later stages are not used and is grayed out.
 	
 	\subsubsection{Stage 2}
-	In stage 2, the model is trained using input images that have been pre-processed with a Gaussian blur of sigma = 2. After completing the training for stage 1, the trained model parameters are frozen (white) and used for coarse alignment of input2 images. These coarsely aligned input2 images are then used to train stage 2 to predict a deformation field, which is applied to the input image using a spatial transformer network to produce a transformed moving image called the "moved" image. The moved image is compared to the fixed image, which has been pre-processed with a Gaussian blur of sigma = 2, to compute the similarity value. The other stages are unused.
+	In stage 2, the model is trained using input images that have been pre-processed with a Gaussian blur of sigma = 2. After completing the training for stage 1, the trained model parameters are frozen (white) and used for coarse alignment of \texttt{input2} images. These coarsely aligned \texttt{input2} images are then used to train stage 2 to predict a deformation field, which is applied to the input image using a spatial transformer network to produce a transformed moving image called the "moved image". The moved image is compared to the fixed image, which has been pre-processed with a Gaussian blur of sigma = 2, to compute the similarity value. The later stages are grayed out.
 	
 	\subsubsection{Stage 3, 4 and 5}
 	The aforementioned steps are repeated iteratively for all subsequent stages, using the previously trained and frozen models to incorporate the learned transformation and coarsely align the images for the current training stage. This process follows a coarse-to-fine approach, meaning that the transformation is initially learned at a coarser resolution and then successively refined at finer resolutions.
 	
-	\subsection{Results}
-	We used this model to register a moving sample and found that it did not introduce any artifacts, as demonstrated in Figure~\ref{fig:method3_artifact}. This conclusion was confirmed by comparing the results to the reference image in Figure~\ref{fig:method2_artifact}. In addition to visually inspecting the results, we also evaluated the performance quantitatively using the metrics described in sections \ref{sec:quality} and \ref{sec:loss_metric}. Our method was compared to the larvalign as a baseline.
+	\section{Method4: Enhancing Method3 with Novel Landmark Information.}
+	In Method2, the use of landmark information was found to improve performance. However, incorporating this information in Method4 is not as straightforward because the input for each stage consists of different pre-aligned images, which means that landmarks annotated in one stage cannot be used in later stages because they are moved to different positions by the process of pre-alignment. Manually re-annotating the landmarks for each stage is impractical, especially when there are many stages or a large number of images. To solve this problem, we have developed a method that allows us to incorporate landmark information at all stages without the need for manual re-annotation. Our approach is based on the fact that the input images are the same for each phase, except for the different levels of applied Gaussian blur. This means that the initial annotations made on any of these images can be used in later stages if we can transfer the landmarks to their new positions using the predicted deformation field, similar to the pre-alignment process for images.
 	
-	\paragraph{Test Setup}
-	In order to evaluate the performance of the larvalign and method 3 methods, the larvaling dataset is used as the test dataset and metrics such as VI, TI, and Global Mattes Mutual Scores are calculated for all images in the dataset. The results are presented in tables. Additionally, a summary of the average scores achieved by both methods is presented in the form of a table.
+	Again, this is a novel method introduced as part of this work. These shifted landmarks, called "pseudo-annotated" landmarks, may not be as accurate as manually annotated landmarks, but they were accurate enough to work with the blurred images in the earlier stages where the structures were not clear and required precise manual annotation.
 	
-	Method 3 performed better than the previous two methods in terms of registering the moving samples with large and smaller deformations, as shown in Figure~\ref{fig:method3_pas} and Figure~\ref{fig:method3_fail}. However, there is room for improvement at the lower tip of the Ventral Nerve Cord (VNC) where the nerve entry points can be aligned more accurately.
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method3/compare/np_52B07_52H01_MB262B_021713B_scaled.png}
-		\caption{An example moving sample image with large deformations at the lower tip of Ventral Nerve Cord (VNC) where the Method 3 did not produce an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method3_artifact}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method3/compare/np_brain7_scaled.tif.png}
-		\caption{An example moving sample image with smaller deformation where the Method 3 type of deformable registration could continue to produce a successful result like Method 1 and Method 2. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method3_pas}
-	\end{figure}
-
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method3/compare/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
-		\caption{An example moving sample image with larger deformation where the Method 3 type of deformable registration could produce a successful result when large deformation is present in contrast to Method 1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method3_fail}
-	\end{figure}
-	
-	The following Figure~\ref{fig:method3_cascade} demonstrate the output of the registered moving image as it is propogated through each stage of the cascade. The corrections are applied in a coarse to fine manner, with the transformation becoming more precise at progressively higher resolutions as the sample progresses through these stages.
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=\columnwidth]{resources/chapter4/method3/np_60H12_14E09_MB049B_020113B_scaled.png}
-		\caption{Registration output through a series of cascaded stages performed in a coarse-to-fine manner.}
-		\label{fig:method3_cascade}
-	\end{figure}
-	
-	\subsection{Motivation for Method4}
-	This method was able to handle large deformations more effectively than the raw Voxelmorph model used in Method 1 and at the same time not producing any artifacts. The results demonstrated this. While the results were satisfactory, there was a clear potential for further improvement at the lower end of the Ventral Nerve Cord by incorporating landmark point information during training, as seen in the results of Method 2. Further experiments will be conducted to assess the benefits of adding this additional information in the next method.
-	
-	\section{Method4: Enhancing Method 3 with Novel Landmark Information.}
-	In Method 2, the use of landmark information was found to improve performance. However, incorporating this information into Method 4 is not straightforward because the input for each stage consists of different pre-aligned image samples, meaning that the landmarks annotated in one stage cannot be used in later stages due to the pre-alignment process moving them to different positions. Manually re-annotating the landmarks for each stage is impractical, especially if there are many stages or a large number of images. To solve this problem, we developed a method that allows us to incorporate the landmark information at all stages without requiring manual re-annotation. Our approach is based on the fact that the input images for each stage are the same except for the different levels of Gaussian blurring applied. This means that the initial annotations made on any of these images can still be used at later stages if we can propagate the landmarks to their new positions using the predicted deformation field, similar to the pre-alignment process for images.
-	
-	This is again a novel method that has been introduced in this theis work. These moved landmarks, called "pseudo-annotated" landmarks, may not be as accurate as manually annotated landmarks, but they were precise enough to work with the blurred images in the earlier stages where the structures were not clear to require precise manual annotation.
-	
-	The Equation~\ref{eq:ldm_prop} states that the new position of the landmark is obtained by subtracting the deformation field at that position from the old position of the landmark.
+	The equation~\ref{eq:ldm_prop} states that the new landmark position is determined by subtracting the deformation field at that position from the old landmark position.
 	
 	\begin{equation}\label{eq:ldm_prop}
 		l_n^{new} = l_n^{old} - d_n
@@ -1262,24 +1166,17 @@ linkcolor=red
 	
 	$l_n^{new}$ is the new position of the landmark in image $n$. $l_n^{old}$ is the old position of the landmark in image $n$. $d_n$ is the deformation field for image $n$ at the position of the landmark.
 	
-	Method 4 combines aspects of Method 2 and Method 3 in an attempt to take advantage of the strengths of both approaches. Like Method 3, it involves processing an image at five different resolutions and aligning the images in a coarse-to-fine manner, starting at the lowest resolution and gradually increasing it at each stage. The transformation learned in the previous stage is incorporated into the current stage in a cascaded manner. To decrease the resolution of the image, a Gaussian blur is applied using different values of sigma, while the width and height of the image remain constant. This process is represented mathematically using equation \ref{eqn:GaussBlur}. And like Method 2, we use the auxiliary information in the form of landmark points to help neural network train in the right direction.
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=\columnwidth]{resources/chapter4/methods/Method4.pdf}
-		\caption{This process consists of 5 stages, each of which is trained separately. Only one stage (indicated by the color green) is being trained at a given time, while the other stages (colored white or gray) are either inactive or not being used. The input for the current stage (colored green) is selected from a list of Gaussian filtered images and passes through the previous stages (colored white) to be pre-registered before being used for training. The stages that come after the current stage (colored gray) are not used during this training process. In addition to the images, the landmark points are also used to calculate the landmark registration error (LRE) at each stage during training.}
-		\label{fig:block_method4}
-	\end{figure}
+	Method4 combines aspects of Method2 and Method3 in an attempt to leverage the strengths of both the approaches. As with Method3, an image is processed at five different resolutions and aligned coarse to fine, starting with the lowest resolution and increasing it incrementally at each stage. The transformation learned in the previous stage is cascaded to the current stage. To reduce the resolution of the image, a Gaussian blur with different sigma values is applied while keeping the width and height of the image constant. This process is represented mathematically with the equation \ref{eqn:GaussBlur}. And as in method 2, we use the auxiliary information in the form of landmarks to train the neural network in the right direction.
 	
 	\subsection{Stages}
-	For each stage, the appropriate inputs (fixed image and moving image) are chosen from the Gaussian Pyramid. To help explain the process, we will refer to the inputs for each stage as input1 through input5, with input1 representing the input images for stage 1 (blurred with sigma = 4), input2 representing the input images for stage 2 (blurred with sigma = 2), and so on. The final input, input5, consists of the original, unmodified images. We will also refer to the models for each stage as model1 through model5. The optimization function (Normalized Cross Correlation) used in all these stage aims to maximize the similarity between the moved and fixed images. Additionally, the model is also evaluated based on the landmark registration error to guide the learning process.
+	For each stage, the corresponding inputs (fixed image and moving image) are selected from the Gaussian pyramid. To explain the process, the inputs for each stage are labeled \texttt{input1} through \texttt{input5}, where input1 represents the input images for stage 1 (blurred with sigma = 4), \texttt{input2} represents the input images for stage 2 (blurred with sigma = 2), and so on. The final input, \texttt{input5}, consists of the original, unmodified images. We also refer to the models for each stage as \texttt{model1} through \texttt{model5}. The same optimization function (normalized cross-correlation) is used in all these stages and it aims to maximize the similarity between the moving and the fixed images. In addition, the model is also evaluated based on the landmark registration error to guide the learning process.
 	
 	Therefore, the optimization function attempted to minimize was:
 	\begin{equation}\label{eq:aux_loss_combined}
 		L_\text{combined} = L_\text{main} + L_\text{aux}
 	\end{equation}
 	
-	Let us call the main loss $L_\text{main}$ and the landmark registration error $L_\text{aux}$.
+	Let us call the main loss as $L_\text{main}$ and the landmark registration error as $L_\text{aux}$.
 	
 	\textbf{Main loss:}
 	\begin{equation}\label{eq:aux_loss_main}
@@ -1295,13 +1192,35 @@ linkcolor=red
 	
 	In this Equation~\ref{eq:aux_loss_aux}, N is the number of moving images, L is the number of landmarks, p\_l is the coordinates of the l-th landmark in the fixed image, and q\_{n,l} is the coordinates of the l-th landmark in the n-th moving image. The auxiliary loss is the average of the euclidean distance between the landmarks in the fixed image and the landmarks in each of the moving images.
 	
-    The whole process is described in the Figure~\ref{fig:block_method4}
-	
+    The whole process is described in the Figure~\ref{fig:block_method4} and the following pseudo code demonstrates how landmarks are propagated from stage 1 to stage 's' by utilizing the deformation model at each stage.
+    
+    \begin{lstlisting}[language=Python]
+    	# N: The number of landmark lists.
+    	# M: The number of landmark points in each landmark list.
+    	# S: The number of stages.
+    	for n in range(N):
+    	# n: The index of the current landmark list.
+    	for m in range(M):
+    	# m: The index of the current landmark point.
+    	for s in range(S):
+    	# s: The index of the current stage.
+    	# deformation_field: The deformation field for the current stage.
+    	deformation_field = find_deformation_field(s)
+    	# old_landmark_point: The old landmark point for the current landmark point
+    	# and stage.
+    	# new_landmark_point: The new landmark point for the current landmark point
+    	# and stage, which is calculated by subtracting the deformation field from
+    	# the old landmark point.
+    	new_landmark_point = old_landmark_point - deformation_field
+    	# Update the landmark point with the new value.
+    	update_landmark_point(new_landmark_point)
+    \end{lstlisting}
+
 	\subsubsection{Stage 1}
-	In stage 1, the model is trained using input images that has been pre-processed with Gaussian blurring using sigma = 4. The predicted deformation field from this model is used to transform the input image, creating a version called the "moved image." This moved image is then compared to the fixed image, which has also been pre-processed with Gaussian blurring using sigma = 4. All other stages are not used and will be grayed out.
+	In stage 1, the model is trained using input images preprocessed with a Gaussian blur of sigma = 4. The deformation field predicted by this model is used to transform the moving image and create a version called the "moved image". This moved image is then compared to the fixed image, which has also been preprocessed with Gaussian blur and sigma = 4. All the later stages are not used and are grayed out.
 
 	\subsubsection{Stage 2}
-	In stage 2 of this process, the model is trained on input images that have been blurred using a Gaussian blur with a sigma value of 2. The trained model from stage 1 is then frozen and used to coarsely align the input2 images. These aligned images are used to train stage 2 to predict a deformation field, which is applied to the input image using a spatial transformer network to create a transformed image called the "moved" image. The moved image is compared to a fixed image, which has also been blurred using a Gaussian blur with a sigma value of 2, to calculate a similarity value. The later stages are not used in this process. Stage 2 uses "pseudo-annotated" landmarks, which are obtained by propagating manually annotated landmarks from the previous stage using the deformation field predicted by model1.
+	In stage 2 of this process, the model is trained on input images that have been blurred using a Gaussian blur with a sigma value of 2. The trained model from stage 1 is then frozen and used to coarsely align the \texttt{input2} images. These aligned images are used to train stage 2 to predict a deformation field, which is applied to the input image using a spatial transformer network to create a transformed image called the "moved image". The moved image is compared to the fixed image, which has also been blurred using a Gaussian blur with a sigma value of 2, to calculate a similarity value.Stage 2 uses "pseudo-annotated" landmarks obtained by propagating manually annotated landmarks from the previous stage using the deformation field predicted by \texttt{model1}. The later stages are not used in this process.
 	
 	\begin{equation}\label{eq:pseudoldm}
 		landmark_{stage2,m,n} = landmark_{stage1,m,n} - deformation\_field_{stage1,m,n}
@@ -1315,62 +1234,290 @@ linkcolor=red
 	\end{itemize}
 	
 	This Equation~\ref{eq:pseudoldm} is valid for all values of m such that m is a landmark point for an image in stage 1, and for all values of n such that n belongs to N, where N is the number of images in stage 2.
+
+	\begin{figure}[p!]
+		\centering
+		\includegraphics[width=\columnwidth]{resources/chapter4/methods/Method4.pdf}
+		\caption{This process consists of 5 stages, each of which is trained separately. Only one stage (indicated by the color green) is being trained at a given time, while the other stages (colored white or gray) are either inactive or not being used. The input for the current stage (colored green) is selected from a list of Gaussian filtered images and passes through the previous stages (colored white) to be pre-registered before being used for training. The stages that come after the current stage (colored gray) are not used during this training process. In addition to the images, the landmark points are also used to calculate the landmark registration error (LRE) at each stage during training.}
+		\label{fig:block_method4}
+	\end{figure}
 	
 	\subsubsection{Stage 3 and 4}
-	The aforementioned steps are repeated iteratively for all subsequent stages, using the previously trained and frozen models to incorporate the learned transformation and coarsely align the images for the current training stage. This process follows a coarse-to-fine approach, meaning that the transformation is initially learned at a coarser resolution and then successively refined at finer resolutions.
-	
-	The following pseudo code demonstrates how landmarks are propagated from stage 1 to stage 's' by utilizing the deformation model at each stage.
-	
-	\begin{lstlisting}[language=Python]
-	# N: The number of landmark lists.
-	# M: The number of landmark points in each landmark list.
-	# S: The number of stages.
-	for n in range(N):
-	# n: The index of the current landmark list.
-		for m in range(M):
-		# m: The index of the current landmark point.
-			for s in range(S):
-			# s: The index of the current stage.
-				# deformation_field: The deformation field for the current stage.
-				deformation_field = find_deformation_field(s)
-				# old_landmark_point: The old landmark point for the current landmark point
-				# and stage.
-				# new_landmark_point: The new landmark point for the current landmark point
-				# and stage, which is calculated by subtracting the deformation field from
-				# the old landmark point.
-				new_landmark_point = old_landmark_point - deformation_field
-				# Update the landmark point with the new value.
-				update_landmark_point(new_landmark_point)
-	\end{lstlisting}
+	The above steps are iteratively repeated for all subsequent stages, using the previously trained and frozen models to integrate the learned transformation and coarsely align the images for the current training stage. This process follows a coarse-to-fine approach, i.e., the transformation is first learned at a coarser resolution and then successively refined at finer resolutions.
 	
 	\subsubsection{Stage 5: The last stage}
-	The initial approach for aligning images in the final stage of the process involved using software to propagate the previously identified landmarks. However, it was ultimately decided to manually annotate the landmarks again in order to improve accuracy. This is because the images used in this stage are the original, unmodified ones, and using landmarks that were generated with the help of the previous, pre-aligned images may not be accurate enough. By manually annotating the landmarks, the final registration can be more precise.
+	The original approach to aligning the images in the final stage of the process was to transfer the previously identified landmarks via software. However, it was eventually decided to manually label the landmarks again to improve accuracy. The reason for this is that the images used in this phase are the original untouched images and the use of landmarks generated using the previous, already aligned images may not be accurate enough. By manually labeling the landmarks, the final registration can be more accurate.
 	
-	\subsection{Results}
-	The Figure~\ref{fig:method4_combine} consists of 3 moving image samples in 3 rows. Each column represents the output of the corresponding movie image through different stages through the cascaded network. This figure is representative of the output from Method 4.
+	\chapter{Results}
 	
-	\begin{figure}[H]
+	\section{Results for Method1}
+	The model with the above mentioned configuration was trained with the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was found that this model performed poorly on images that contained large deformations as shown in the Figure~\ref{fig:method1_fail}. However, on images with small deformations, the model performed good as shown in the Figure~\ref{fig:method1_pas}. This suggested that the Voxelmorph model may be less effective at registering images with large deformations.
+	
+	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.6\columnwidth]{resources/chapter4/method4/ldm/registered_images.png}
+		\includegraphics[width=0.9\columnwidth]{resources/chapter4/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
+		\caption{An example moving sample image with larger deformation where the Method1 type of deformable registration did not produce a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\label{fig:method1_fail}
+	\end{figure}
+	
+	The moving image in Figure~\ref{fig:method1_fail} has large deformation at the lower tip of the Ventral Nerve Cord (VNC), and the registration process is not successful as evident (magenta region at the lower tip of VNC) in the corresponding overlay image. In contrast, the Voxelmorph method produces good results in the Figure~\ref{fig:method1_pas}. The good results produced by the Voxelmorph method in this case can be attributed to the absence of significant deformation in the moving image and the model's ability to handle smaller deformations.
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\columnwidth]{resources/chapter4/np_brain7_scaled.tif.png}
+		\caption{An example moving sample image with smaller deformation where the Method1 type of deformable registration produced a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\label{fig:method1_pas}
+	\end{figure}
+	
+	\subsection{Motivation for Method2}
+	The model clearly struggled with handling large deformations, specifically in the lower ventricular nerve chord region of the brain. In order to improve the model's performance in these cases, we can provide it with additional, manually annotated information for both the moving and fixed images. This can help guide the model towards achieving better alignment, particularly when dealing with large deformations. The proof of this concept is tested and evaluated in the next method.
+	
+	The practice of adding additional, manually annotated information for both the moving images and fixed image is referred to as Method2. This method is explained in further detail in the following section.
+	
+	\section{Results for Method2}
+	Using the same model configurations as in Method1, landmark points as auxiliary information were incorporated into the training. The model was retrained on the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was observed that the registration accuracy in the regions of landmark points were improved.
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
+		\caption{An example moving sample image with larger deformation where the Method2 type of deformable registration could produce a successful result when large deformation is present in contrast to Method1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\label{fig:method2_fail}
+	\end{figure}
+	
+	Figures \ref{fig:method1_fail} and \ref{fig:method2_fail} can help us understand the improvement that the Method2 introduces over Method1. Both the plots are for the same moving image registered against the same fixed image. As seen in  the Figure~\ref{fig:method1_fail}, Method1 failed to produce satisfactory registration at the lower tip of the VNC. However, in Figure~\ref{fig:method2_fail}, it can be witnessed that adding landmark points at VNC tip helped Method2 to produce a better registered output. The results in both figures demonstrate the efficacy of using landmark information in improving registration accuracy.
+	
+	For the moving image with small deformation like in Figure~\ref{fig:method1_pas}, the model continued to produce accurate registration results, as expected. This can be verified in the Figure~\ref{fig:method2_pas}.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_brain7_scaled.tif.png}
+		\caption{An example moving sample image with smaller deformation where the Method2 type of deformable registration could contine to produce a successful result like Method1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\label{fig:method2_pas}
+	\end{figure}
+	
+	\subsection{Motivation for Method3}
+	The inclusion of landmarks improved registration accuracy, but in some cases, for moving images with significant deformation, this model resulted in artifacts. An example of this can be seen in the following figure~\ref{fig:method2_artifact}.
+	
+	The two images focused on the inferior tip of the ventral nerve cord (VNC) show the moving image before and after registration. As can be seen, it appears that the structures in this area were erased after registration.
+	
+	The artifact is often observed in moving images with large deformations and may be due to the inherent limitations of the model in handling such large deformations. The addition of auxiliary information and the loss of LRE attempt to force the model to near-perfect registration, even though the model is not yet capable of doing so. This new force in play can cause the network to compromise on qualitative features while achieving good error scores. To fix this problem, the model must be better able to handle large deformations, because the auxiliary information must act as a guide, and if the model is inherently unable to handle large deformations, the auxiliary loss begins to play the main role.
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_52B07_52H01_MB262B_021713B_scaled.png}
+		\caption{An example moving sample image with large deformations at the lower tip of Ventral Nerve Cord (VNC) where the Method2 produced an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\label{fig:method2_artifact}
+	\end{figure}
+	
+	\section{Results for Method3}
+	The cascade of models is trained on the Janelia dataset using the same setup and model configurations as Method1 and Method2, and tested on the Larvalign dataset. It was found that the registration of the same moving example image that produced artifacts with Method2 now has no such artifacts. This can be seen in Figure~\ref{fig:method3_artifact} and compared to the plot in Figure~\ref{fig:method2_artifact}.
+	
+	Furthermore, in contrast to method 1, method 3 provides good registration results for moving images with large and small deformations. This can be seen in Figures~\ref{fig:method3_fail} and \ref{fig:method3_pas}.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\columnwidth]{resources/chapter4/method3/compare/np_52B07_52H01_MB262B_021713B_scaled.png}
+		\caption{An example moving sample image with large deformations at the lower tip of Ventral Nerve Cord (VNC) where the Method3 did not produce an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\label{fig:method3_artifact}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\columnwidth]{resources/chapter4/method3/compare/np_brain7_scaled.tif.png}
+		\caption{An example moving sample image with smaller deformation where the Method3 type of deformable registration could continue to produce a successful result like Method1 and Method2. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\label{fig:method3_pas}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\columnwidth]{resources/chapter4/method3/compare/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
+		\caption{An example moving sample image with larger deformation where the Method3 type of deformable registration could produce a successful result when large deformation is present in contrast to Method1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\label{fig:method3_fail}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\columnwidth]{resources/chapter4/method3/np_60H12_14E09_MB049B_020113B_scaled.png}
+		\caption{Registration output through a series of cascaded stages performed in a coarse-to-fine manner.}
+		\label{fig:method3_cascade}
+	\end{figure}
+	
+	The figure~\ref{fig:method3_cascade} shows the output of the registered moving image as it passes through the stages of the cascade. The corrections are applied from coarse to fine, with the transformation becoming more precise at higher and higher resolutions as the sample passes through them.
+	
+	\subsection{Motivation for Method4}
+	This method was able to handle large deformations better than the vanilla Voxelmorph model in Method1 or the vanilla Voxelmorph model with additional information in Method2, with no artifacts. The results show that. Although the results were satisfactory, the inclusion of landmark information during training may improve the registration results, as seen in Method2. In the next method, we will investigate this.
+	
+	\section{Results for Method4}
+	The figure~\ref{fig:method4_combine} consists of 3 moving image samples in 3 rows. Each column represents the output of the corresponding moved image over different stages of the cascaded network. This figure is representative of the output of method 4. Similarly, the figure~\ref{fig:method3_combine} consists of the same 3 moving image samples in 3 rows each. Each column again represents the output of the corresponding moved image in the different stages of the cascaded network. This figure is representative of the output of method 3.
+	
+	Comparing Figure~\ref{fig:method4_combine} and Figure~\ref{fig:method3_combine}, it is clear that the addition of landmarks at the lower tip of the ventral nerve cord resulted in better registration accuracy for method 4 than for method 3.
+	
+	\begin{figure}[p!]
+		\centering
+		\includegraphics[width=\columnwidth]{resources/chapter4/method4/ldm/registered_images.png}
 		\caption{Coarse-to-fine registration using landmark information.}
 		\label{fig:method4_combine}
 	\end{figure}
-
-	Similarly, the Figure~\ref{fig:method3_combine} consists of same 3 moving image samples in 3 respective rows. Each column, again, represents the output of the corresponding movie image through different stages through the cascaded network. This figure is representative of the output from Method 3.
 	
-	\begin{figure}[H]
+	\begin{figure}[p!]
 		\centering
-		\includegraphics[width=0.6\columnwidth]{resources/chapter4/method4/vanilla/registered_images.png}
+		\includegraphics[width=\columnwidth]{resources/chapter4/method4/vanilla/registered_images.png}
 		\caption{Coarse-to-fine registration without using landmark information.}
 		\label{fig:method3_combine}
 	\end{figure}
+
+	\section{Quantitative analysis of Method3 and Method4 versus \emph{larvalign}}
+	So far, we have performed a qualitative analysis, visually analyzing the registered images. However, in this section we would like to perform a quantitative analysis to analyze and interpret the data in a systematic and objective way. As part of the quantitative metrics, we will use the metrics used in larvalign paper \cite{larvalign} and explained in the \ref{sec:quality} section. These values will be compared to the numbers from the Larvalign and used as a baseline.
 	
+	We divide the quantitative assessment into two subsections - one measures the Mattes Mutual Information between the registered and the fixed images, and the second measures the distances between the landmarks in the registered and the fixed images. These landmark distances allow us to assess whether or not the biologically important landmarks have moved to the correct location.
 	
-	Comparing the figures Figure~\ref{fig:method4_combine} and Figure~\ref{fig:method3_combine}, it is evident that adding landmark points at the lower tip of the Ventral Nerve Cord has resulted in better registration accuracy for Method 4 than for Method 3.
+	The models will be trained with the {Janelia dataset} and tested with the {Larvalign dataset}. The {Larvalign dataset} will be divided into {good, medium, and random} images based on the quality of the scans, which we will then use to independently perform the quantitative measurements and evaluate the performance of our models on them.
+	
+	\subsection{Mattes Mutual Information (MMI)}
+	We will record 3 Mattes Mutual Information scores in total between the registered and the fixed image.
+	\begin{enumerate}
+		\item \textbf{Global MMI} score between the registered and fixed image - this would allow us to capture the similarity between the two images.
+		\item \textbf{Local MMI} score between the registered and fixed image in the Ventricular Nerve Cord (VNC) and Thoracic Nerve Entry Points regions - this would allow us to capture information locally in these regions.
+	\end{enumerate}
+	
+	The table~\ref{table:quality_larvalign_good} records the score for the good quality images of the \texttt{larvalign dataset}, the table~\ref{table:quality_larvalign_medium} the score for the medium quality images of the \texttt{Larvalign dataset}, and \ref{table:quality_larvalign_random} the score for the random quality images of the the table~\texttt{Larvalign dataset} registered using larvalign method.
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_larvalign_Good.tex}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign} dataset registered using \emph{larvalign} method \cite{larvalign}.}
+		\label{table:quality_larvalign_good}
+	\end{table}
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_larvalign_Medium.tex}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign} dataset registered using \emph{larvalign} method \cite{larvalign}.}
+		\label{table:quality_larvalign_medium}
+	\end{table}
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_larvalign_Random.tex}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign} dataset registered using \emph{larvalign} method \cite{larvalign}.}
+		\label{table:quality_larvalign_random}
+	\end{table}
+	
+
+	 Similarly, the table~\ref{table:quality_vanilla_good} records the score for the good quality images of the \texttt{larvalign dataset}, the table~\ref{table:quality_vanilla_medium} the score for the medium quality images of the \texttt{Larvalign dataset}, and the table~\ref{table:quality_vanilla_random} the score for the random quality images of the \texttt{Larvalign dataset} registered using our proposed method - Method3.
+	 
+	 \begin{table}[h]
+	 	\centering
+	 	\input{resources/chapter5/csv_files/Quality_vanilla_Good.tex}
+	 	\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign} dataset registered using Method3.}
+	 	\label{table:quality_vanilla_good}
+	 \end{table}
+	 
+	 \begin{table}[h]
+	 	\centering
+	 	\input{resources/chapter5/csv_files/Quality_vanilla_Medium.tex}
+	 	\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign} dataset registered using Method3.}
+	 	\label{table:quality_vanilla_medium}
+	 \end{table}
+	 
+	 \begin{table}[h]
+	 	\centering
+	 	\input{resources/chapter5/csv_files/Quality_vanilla_Random.tex}
+	 	\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign} dataset registered using Method3.}
+	 	\label{table:quality_vanilla_random}
+	 \end{table}
+	
+	Similarly, the table~\ref{table:quality_ldm_good} records the score for the good quality images of the \texttt{larvalign dataset}, the table~\ref{table:quality_ldm_medium} the score for the medium quality images of the \texttt{Larvalign dataset}, and the table~\ref{table:quality_ldm_random} the score for the random quality images of the \texttt{Larvalign dataset} registered using our proposed method - Method4.
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_ldm_Good.tex}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign} dataset registered using Method4.}
+		\label{table:quality_ldm_good}
+	\end{table}
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_ldm_Medium.tex}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign} dataset registered using Method4.}
+		\label{table:quality_ldm_medium}
+	\end{table}
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_ldm_Random.tex}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign} dataset registered using Method4.}
+		\label{table:quality_ldm_random}
+	\end{table}
+	
+	\subsection{Landmark Distances}
+	The local MMI values measured in the above analysis capture the similarity between the two images in these VNC regions and Thoracic Nerve Entry regions. However, we are also interested in whether or not the other local biologically important structures were correctly captured. To this end, we decided to manually annotate all 30 landmarks identified and proposed by the biologists in the Larvalign study and use the medium quality images from the Larvalign dataset for the annotations to compensate for the overall annotation time and also because the medium quality images are more representative of the use case than good or random quality images, which can sometimes represent extreme use cases. The location of the 30 landmarks can be seen in the figure~\ref{fig:landmark_annotations}, which was taken directly from the Larvalign paper \cite{larvalign}.
+	
+	The annotations for this study were done by us, and one of the fully labeled images was provided to the biologists for review and approval of the accuracy of the annotations. With the exception of the entry points of the "A6 nerve entry", the "A8 nerve entry", and the "upper most anterior nerve entry", all other labels were perfect, as this requires a better biological understanding to clearly identify them. With the exception of these 6 landmarks (right and left), all other markings can be considered correct.
+	
+	The table~\ref{table:lre_larvalign} represents the mean and standard deviation of landmark registration error for each landmark measured across all the medium quality images in \texttt{Larvalign dataset} registered using the larvalign method.
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/additional_tables/lrv.tex}
+		\caption{Average landmark registration error (LRE) captured on all the "medium" quality images from the \texttt{Larvalign} dataset registered using \emph{larvalign} method \cite{larvalign}.}
+		\label{table:lre_larvalign}
+	\end{table}
+
+	The table~\ref{table:lre_vanilla} represents the mean and standard deviation of landmark registration error for each landmark measured across all the medium quality images in \texttt{Larvalign dataset} registered using Method3.
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/additional_tables/vanilla.tex}
+		\caption{Average landmark registration error (LRE) captured on all the "medium" quality images from the \texttt{Larvalign} dataset registered using Method3.}
+		\label{table:lre_vanilla}
+	\end{table}
+
+	The table~\ref{table:lre_ldm} represents the mean and standard deviation of landmark registration error for each landmark measured across all the medium quality images in \texttt{Larvalign dataset} registered using Method4.
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/additional_tables/ldm.tex}
+		\caption{Average landmark registration error (LRE) captured on all the "medium" quality images from the \texttt{Larvalign} dataset registered using Method4.}
+		\label{table:lre_ldm}
+	\end{table}
 	
 	\chapter{Discussion}
 	The goal of this chapter is to provide a clear and concise summary of the key findings of the research, and to interpret and discuss their significance in relation to the research question of whether deep learning is a fast and robust method for image registration compared to the traditional way of performing image registration.
-	\newpage
+	
+	\section{Quantitative Assessment on Landmark Registration Error (LRE)}
+	The~\ref{table:lre} table below contains the summary information on the average of the mean registration errors for all 30 landmarks in the~\ref{table:lre_larvalign}, \ref{table:lre_vanilla}, and \ref{table:lre_ldm} tables.
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/csv_files/LRE.tex}
+		\caption{Summary of the average landmark registration error (LRE) across all 30 landmarks for each method.}
+		\label{table:lre}
+	\end{table}
+
+	\section{Quantitative Assessment on Mattes Mutual Information Scores}
+	The~\ref{table:quality_good}, ~\ref{table:quality_medium}, ~\ref{table:quality_random} tables below contains the summary information on the average of MMI, VI, and TI scores for the "good", "medium", and "random" quality images.
+	
+	\begin{table}[h!]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_Good.tex}
+		\caption{Summary of the average MMI, VI, and TI errors across all the "good" quality images for each method.}
+		\label{table:quality_good}
+	\end{table}
+	
+	\begin{table}[h!]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_Medium.tex}
+		\caption{Summary of the average MMI, VI, and TI errors across all the "medium" quality images for each method.}
+		\label{table:quality_medium}
+	\end{table}
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_Random.tex}
+		\caption{Summary of the average MMI, VI, and TI errors across all the "random" quality images for each method.}
+		\label{table:quality_random}
+	\end{table}
 	
 	\chapter{Conclusion}
 	

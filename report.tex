@@ -1410,7 +1410,232 @@ linkcolor=red
 	\subsection{Landmark Distances}
 	The local MMI values measured in the above analysis capture the similarity between the two images in these VNC regions and Thoracic Nerve Entry regions. However, we are also interested in whether or not the other local biologically important structures were correctly captured. To this end, we decided to manually annotate all 30 landmarks identified and proposed by the biologists in the Larvalign study and use the medium quality images from the Larvalign dataset for the annotations to compensate for the overall annotation time and also because the medium quality images are more representative of the use case than good or random quality images, which can sometimes represent extreme use cases. The location of the 30 landmarks can be seen in the figure~\ref{fig:landmark_annotations}, which was taken directly from the Larvalign paper \cite{larvalign}.
 	
-	The annotations for this study were done by us, and one of the fully labeled images was provided to the biologists for review and approval of the accuracy of the annotations. With the exception of the entry points of the "A6 nerve entry", the "A8 nerve entry", and the "upper most anterior nerve entry", all other labels were perfect, as this requires a better biological understanding to clearly identify them. With the exception of these 6 landmarks (right and left), all other markings can be considered correct.
+	The annotations for this study were done by us, and one of the fully labeled images was provided to the biologists for review and approval of the accuracy of the annotations. With the exception of the entry points of the "A6 nerve entry", the "A8 nerve entry", and the "upper most anterior nerve entry", all other labels were perfect, as this requires a better biological understanding to clearly identify them. With the exception of these 6 landmarks (right and left), all other markings can be considered correct. This is clearly evident in the high standard deviations seen in figures Figure~\ref{fig:landmark17} and Figure~\ref{fig:landmark21} for "upper most anterior nerve entry" in all the 3 approaches. Similarly, the high standard deviations are observed for "A8 nerve entry" and "A6 nerve entry" points in figures Figure~\ref{fig:landmark7}, Figure~\ref{fig:landmark26}, Figure~\ref{fig:landmark1}, and Figure~\ref{fig:landmark24}. The far more higher standard deviations observed in Cascaded Vanilla Voxelmorph can be accounted for its inaccuarcy in registering the lower tip of Ventricular Nerve Cord (VNC), and in Cascaded Landmark Guided Voxelmorph can be accounted for few outliers where the registration is not accurate.
+	
+	The Landmark Registration Error (LRE) was performed on the "medium" quality images from the Larvalign Dataset that is, across all the "medium" quality images 30 Landmark Registration Error was captured.
+	
+	The below Table~\ref{table:stats_per_landmark} summarizes how the error for each landmark point varied across the approaches like larvalign, Cascaded Vanilla VXM, and Cascaded Landmark Guided VXM methods. The table reports mean error, median error, maximum error and the standard deviation in registering the particular landmark across all the images in the "medium" quality dataset of Larvalign across all the 3 approaches.
+	
+	\begin{table}[h]
+		\centering
+		\input{resources/chapter5_fresh/stats_per_landmark.tex}
+		\caption{Mean and Standard Deviation Landmark Registration Error (LRE) for each landmark point measured across all the "medium" quality images in the Larvalign Dataset across larvalign method, Cascaded Vanilla Voxelmorph, and Cascaded Landmark Guided Voxelmorph approaches}
+		\label{table:stats_per_landmark}
+	\end{table}
+	
+	The below figures from Figure~\ref{fig:landmark1} to Figure~\ref{fig:landmark30} extend the above information by depicting the complete information for each landmark across all the "medium" quality images and approaches.
+	
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left A6 nerve entry.png}
+	\caption{Statistics for "left A6 nerve entry" landmark across different approaches.}
+	\label{fig:landmark1}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T2.png}
+	\caption{Statistics for "left thoracic nerve entry T2" landmark across different approaches.}
+	\label{fig:landmark2}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/center SEZ neuropil fusion.png}
+	\caption{Statistics for "center SEZ neuropil fusion" landmark across different approaches.}
+	\label{fig:landmark3}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right basal brain neuropil border posterior.png}
+	\caption{Statistics for "right basal brain neuropil border posterior" landmark across different approaches.}
+	\label{fig:landmark4}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T2.png}
+	\caption{Statistics for "right thoracic nerve entry T2" landmark across different approaches.}
+	\label{fig:landmark5}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left tip of vertical lobe.png}
+	\caption{Statistics for "left tip of vertical lobe" landmark across different approaches.}
+	\label{fig:landmark6}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right A8 nerve entry.png}
+	\caption{Statistics for "right A8 nerve entry" landmark across different approaches.}
+	\label{fig:landmark7}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T3.png}
+	\caption{Statistics for "right thoracic nerve entry T3" landmark across different approaches.}
+	\label{fig:landmark8}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right antennal nerve.png}
+	\caption{Statistics for "right antennal nerve" landmark across different approaches.}
+	\label{fig:landmark9}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left anterior LON nerve.png}
+	\caption{Statistics for "left anterior LON nerve" landmark across different approaches.}
+	\label{fig:landmark10}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T1.png}
+	\caption{Statistics for "right thoracic nerve entry T1" landmark across different approaches.}
+	\label{fig:landmark11}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/Left MB vertical medial lobe connection.png}
+	\caption{Statistics for "Left MB vertical medial lobe connection" landmark across different approaches.}
+	\label{fig:landmark12}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right anterior LON nerve.png}
+	\caption{Statistics for "right anterior LON nerve" landmark across different approaches.}
+	\label{fig:landmark13}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left upper peduncle.png}
+	\caption{Statistics for "left upper peduncle" landmark across different approaches.}
+	\label{fig:landmark14}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/end of ventral nerve cord.png}
+	\caption{Statistics for "end of ventral nerve cord" landmark across different approaches.}
+	\label{fig:landmark15}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T3.png}
+	\caption{Statistics for "left thoracic nerve entry T3" landmark across different approaches.}
+	\label{fig:landmark16}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right upper most anterior nerve entry.png}
+	\caption{Statistics for "right upper most anterior nerve entry" landmark across different approaches.}
+	\label{fig:landmark17}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/anterior upper commisure.png}
+	\caption{Statistics for "anterior upper commisure" landmark across different approaches.}
+	\label{fig:landmark18}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right upper peduncle.png}
+	\caption{Statistics for "right upper peduncle" landmark across different approaches.}
+	\label{fig:landmark19}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right MB vertical medial lobe connection.png}
+	\caption{Statistics for "right MB vertical medial lobe connection" landmark across different approaches.}
+	\label{fig:landmark20}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left upper most anterior nerve entry.png}
+	\caption{Statistics for "left upper most anterior nerve entry" landmark across different approaches.}
+	\label{fig:landmark21}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left A7 nerve entry.png}
+	\caption{Statistics for "left A7 nerve entry" landmark across different approaches.}
+	\label{fig:landmark22}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right tip of vertical lobe.png}
+	\caption{Statistics for "right tip of vertical lobe" landmark across different approaches.}
+	\label{fig:landmark23}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right A6 nerve entry.png}
+	\caption{Statistics for "right A6 nerve entry" landmark across different approaches.}
+	\label{fig:landmark24}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left basal brain neuropil border posterior.png}
+	\caption{Statistics for "left basal brain neuropil border posterior" landmark across different approaches.}
+	\label{fig:landmark25}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left A8 nerve entry.png}
+	\caption{Statistics for "left A8 nerve entry" landmark across different approaches.}
+	\label{fig:landmark26}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right A7 nerve entry.png}
+	\caption{Statistics for "right A7 nerve entry" landmark across different approaches.}
+	\label{fig:landmark27}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/posterior upper commisure.png}
+	\caption{Statistics for "posterior upper commisure" landmark across different approaches.}
+	\label{fig:landmark28}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left antennal nerve.png}
+	\caption{Statistics for "left antennal nerve" landmark across different approaches.}
+	\label{fig:landmark29}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T1.png}
+	\caption{Statistics for "left thoracic nerve entry T1" landmark across different approaches.}
+	\label{fig:landmark30}
+\end{figure}
+
 	
 	
 	
@@ -1420,11 +1645,6 @@ linkcolor=red
 	
 	
 	
-	
-	
-	
-	
-	\clearpage
 	\clearpage
 	
 	

@@ -1,33 +1,33 @@
 Landmark Points,Mean LRE (mm),Std Dev LRE (mm)
-Left MB vertical medial lobe connection,"1,07","0,61"
-anterior upper commisure,"1,6","1,12"
-center SEZ neuropil fusion,"2,75","1,36"
-end of ventral nerve cord,"1,46","0,96"
-left A6 nerve entry,"3,1","0,93"
-left A7 nerve entry,"2,96","1,3"
-left A8 nerve entry,"2,97","0,96"
-left antennal nerve,"1,95","1,33"
-left anterior LON nerve,"1,51","0,73"
-left basal brain neuropil border posterior,"4,19","1,52"
-left thoracic nerve entry T1,"1,65","0,68"
-left thoracic nerve entry T2,"0,91","0,59"
-left thoracic nerve entry T3,"1,14","0,79"
-left tip of vertical lobe,"0,91","0,63"
-left upper most anterior nerve entry,"3,84","1,91"
-left upper peduncle,"1,16","0,74"
-posterior upper commisure,"2,59","1,2"
-right A6 nerve entry,3,"1,01"
-right A7 nerve entry,"3,05","1,21"
-right A8 nerve entry,"2,92","0,97"
-right MB vertical medial lobe connection,"0,91","0,77"
-right antennal nerve,"2,01","1,02"
-right anterior LON nerve,"1,68","0,71"
-right basal brain neuropil border posterior,"4,12","1,66"
-right thoracic nerve entry T1,"1,61","0,68"
-right thoracic nerve entry T2,"0,94","0,53"
-right thoracic nerve entry T3,"1,17","0,77"
-right tip of vertical lobe,"0,74","0,53"
-right upper most anterior nerve entry,"3,94","2,72"
-right upper peduncle,"1,26","0,66"
+Left MB vertical medial lobe connection,1.07,0.61
+anterior upper commisure,1.6,1.12
+center SEZ neuropil fusion,2.75,1.36
+end of ventral nerve cord,1.46,0.96
+left A6 nerve entry,3.1,0.93
+left A7 nerve entry,2.96,1.3
+left A8 nerve entry,2.97,0.96
+left antennal nerve,1.95,1.33
+left anterior LON nerve,1.51,0.73
+left basal brain neuropil border posterior,4.19,1.52
+left thoracic nerve entry T1,1.65,0.68
+left thoracic nerve entry T2,0.91,0.59
+left thoracic nerve entry T3,1.14,0.79
+left tip of vertical lobe,0.91,0.63
+left upper most anterior nerve entry,3.84,1.91
+left upper peduncle,1.16,0.74
+posterior upper commisure,2.59,1.2
+right A6 nerve entry,3,1.01
+right A7 nerve entry,3.05,1.21
+right A8 nerve entry,2.92,0.97
+right MB vertical medial lobe connection,0.91,0.77
+right antennal nerve,2.01,1.02
+right anterior LON nerve,1.68,0.71
+right basal brain neuropil border posterior,4.12,1.66
+right thoracic nerve entry T1,1.61,0.68
+right thoracic nerve entry T2,0.94,0.53
+right thoracic nerve entry T3,1.17,0.77
+right tip of vertical lobe,0.74,0.53
+right upper most anterior nerve entry,3.94,2.72
+right upper peduncle,1.26,0.66
 ,,
-Average,"2,1","1,02"
+Average,2.1,1.02

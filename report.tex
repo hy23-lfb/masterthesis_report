@@ -1,4 +1,4 @@
-\documentclass{report}
+\documentclass{book}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This seciont would include all the required
@@ -55,7 +55,6 @@
 }
 \lstset{style=mystyle}
 
-
 % page dimensions
 \usepackage{geometry}
 \geometry{
@@ -85,6 +84,9 @@ linkcolor=red
 
 % increase spacing between paragraphs
 \setlength{\parskip}{1mm}
+
+% to number all the way down to subsections.
+\setcounter{secnumdepth}{3}
 
 % colorbox
 % https://texdoc.org/serve/tcolorbox.pdf/0
@@ -195,7 +197,7 @@ linkcolor=red
 	In the context of Droshophila larva, image registration can be particularly useful for studying the development and function of the nervous system, as these insects have a relatively simple and well-defined nervous. Image registration can help researchers to align and compare brain images from different experiments or conditions, and to accurately measure and analyze changes in brain structure and function.
 	
 	% https://tex.stackexchange.com/a/8633/277097
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.7\columnwidth]{resources/chapter1/figure1.png}
 		\caption{An image registration example}
@@ -211,12 +213,12 @@ linkcolor=red
 	
 	In this study, we aim to investigate the effectiveness of deep learning-based image registration in aligning brain scans of Droshophila larvae and compare it to the traditional method. We will also explore the possibility of using auxiliary information, such as landmark points, to guide the learning process and improve the accuracy and efficiency of image registration.
 	
-	The focus of this thesis is to build upon the work presented in the \textit{larvalign} paper \cite{larvalign}, which is a 3D volume template and a registration method for aligning brain scans of Droshophila larvae. While \textit{larvalign} showed promising results, it sometimes failed to accurately align images, particularly at the lower tip of the Ventricular Nerve Cord (VNC) as shown in Figure \ref{fig:Registraion_Failure}.
+	The focus of this thesis is to build upon the work presented in the \textit{larvalign} paper \cite{larvalign}, which is a 3D volume template and a registration method for aligning brain scans of Droshophila larvae. While \textit{larvalign} showed promising results, it sometimes failed to accurately align images, particularly at the lower tip of the Ventral Nerve Cord (VNC) as shown in Figure \ref{fig:Registraion_Failure}.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=\linewidth]{resources/motivation_fig_1.jpg}
-		\caption{An example of a registration failure of \textit{larvalign} \cite{larvalign} at the lower tip of the Ventricular Nerve Cord (VNC).}
+		\caption{An example of a registration failure of \textit{larvalign} \cite{larvalign} at the lower tip of the Ventral Nerve Cord (VNC).}
 		\label{fig:Registraion_Failure}
 	\end{figure}
 	
@@ -230,9 +232,11 @@ linkcolor=red
 	
 	In the overlay image, green structures represent the fixed image and magenta structures represent the moved image. When the two images overlap perfectly, the intensity values are displayed.
 	
-	In this example case, the \textit{larvalign} software was unable to accurately align the moving image with the fixed image, as indicated by the protruding magenta structure at the lower tip of the Ventricular Nerve Cord (VNC) in the overlay. This is an example of a case where \textit{larvalign} struggles to handle large deformations at the lower tip of the Ventricular Nerve Cord (VNC) and consistently produces registration errors in these situations. This issue occurs repeatedly whenever we attempt to register these image pairs again.
+	In this example case, the \textit{larvalign} software was unable to accurately align the moving image with the fixed image, as indicated by the protruding magenta structure at the lower tip of the Ventral Nerve Cord (VNC) in the overlay. This is an example of a case where \textit{larvalign} struggles to handle large deformations at the lower tip of the Ventral Nerve Cord (VNC) and consistently produces registration errors in these situations. This issue occurs repeatedly whenever we attempt to register these image pairs again.
 	
 	\textit{larvalign} is a non-learning method for image registration, which means it cannot improve with experience. We explore the use of a learning-based method of registration that can adapt and potentially outperform larvalign. Deep learning techniques have been effective at learning to compute the deformation field between image pairs \cite{Balakrishnan_2019, de_Vos_2019, Wu, Fu_2020, 10.1007/978-3-319-66182-7_27}, and we expect this approach to be more efficient in terms of registration time compared to \textit{larvalign}.
+	
+	In our image registration use case, registration is always performed using the same fixed reference image. This is an advantage because it allows consistency to be achieved across all training images. By using the same fixed image as a reference, the network can learn to align all images to a common coordinate system, which can improve the accuracy of the registration. With many training examples for the image registration problem, we can train the network in a supervised manner to learn from past registration and not repeat the same mistake.
 	
 	\section{Objectives and Hypothesis}
 	The goal of this thesis is to investigate whether deep learning techniques like Voxelmorph \cite{Balakrishnan_2019} can be used to improve the robustness and efficiency of image registration for biological scans of Droshophila larva that may exhibit large deformations. We hypothesize that deep neural network architectures have the ability to learn complex, inherent features and can therefore be as efficient as \textit{larvalign} \cite{larvalign} in terms of accuracy in registration. Furthermore, we believe that by training these networks with more data, we can avoid the errors made by \textit{larvalign} \cite{larvalign} and that the prediction time for image registration using deep learning will be significantly faster, due to the ability of these networks to learn a function for computing the deformation field between pairs of images.
@@ -243,9 +247,9 @@ linkcolor=red
 	\begin{itemize}
 		\item \textbf{Literature review}: This chapter presents an overview of the existing research on the topic of the study, highlighting the main findings and debates in the field.
 		\item \textbf{Drosophila larva biology and an overview of machine learning techniques}: This chapter provides an overview of Drosophila larva biology and a summary of the machine learning techniques that will be used in the study.
-		\item \textbf{Implementations and Data Preparation}: This chapter describes the research design, sample, and data collection and analysis procedures used in the study. It provides enough detail for readers to understand and replicate the study.
-		\item \textbf{Methods}: This chapter presents the findings of the study, including tables, figures, and other visualizations. In addition, we will conduct several ablation studies to explore the effect of different parameters on training.
-		\item \textbf{Results}:
+		\item \textbf{Implementations and Data Preparation}: This chapter describes the research design, sample, and data collection and analysis procedures used in the study. 
+		\item \textbf{Methods}: This chapter provides the complete details of the methods used in this thesis to address the problem statement. It provides enough detail for readers to understand and replicate the study.
+		\item \textbf{Results}: This chapter presents the findings of the study, including tables, figures, and other visualizations. In addition, we will conduct several ablation studies and report its results.
 		\item \textbf{Discussion}: This chapter interprets and contextualizes the results of the study, discussing their implications and limitations in relation to the literature review and research question. It also identifies areas for future research.
 		\item \textbf{Conclusion}: This chapter summarizes the main findings and implications of the study, and will highlight the contribution of the research to the field.
 	\end{itemize}
@@ -266,7 +270,7 @@ linkcolor=red
 	
 	Starting from an identity deformation {$T_0$}, for each iteration, the elementary force for each demon at the object boundary of the fixed image is calculated. From all elementary forces of the demons, the deformation $T_{i+1}$ of $T_i$ is calculated. The following Figure~\ref{fig:demons} represents this iterative scheme.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.7\columnwidth]{resources/chapter2/Demons.pdf}
 		\caption{Iterative scheme in the case of diffusing models. \cite{THIRION1998243}}
@@ -290,7 +294,7 @@ linkcolor=red
 	
 	\subsubsection{Assessment}
 	\label{subsubsection:assessment}
-	In addition to the visual inspection of the registered image, a quantitative value was defined to measure the quality of the registration. Although the correlation between the registered image and the fixed image captures the misalignment, such global measurements usually do not account for the local errors. To quantify local registration errors, statistical descriptors were developed for the regions at the entry points of the Ventricular Nerve Cord (VNC) and thoracic nerve, similar to those used by Muenzing et al \cite{Muenzing},. These descriptors were defined as VNC Terminal Error Indicator (\textbf{VI}) and Thoracic Nerve Error Indicator (\textbf{TI}), respectively. If these indicators had a value of less than 50\%, this was an indication of a possible registration error. Apart from these two, another error called Landmark Registration Error (\textbf{LRE}) was defined, which was nothing but the average of the Euclidean distance between all landmarks in the fixed image and the registered image.
+	In addition to the visual inspection of the registered image, a quantitative value was defined to measure the quality of the registration. Although the correlation between the registered image and the fixed image captures the misalignment, such global measurements usually do not account for the local errors. To quantify local registration errors, statistical descriptors were developed for the regions at the entry points of the Ventral Nerve Cord (VNC) and thoracic nerve, similar to those used by Muenzing et al \cite{Muenzing},. These descriptors were defined as VNC Terminal Error Indicator (\textbf{VI}) and Thoracic Nerve Error Indicator (\textbf{TI}), respectively. If these indicators had a value of less than 50\%, this was an indication of a possible registration error. Apart from these two, another error called Landmark Registration Error (\textbf{LRE}) was defined, which was nothing but the average of the Euclidean distance between all landmarks in the fixed image and the registered image.
 	
 	Up to this point, registration is completely automatic and does not require human intervention. However, for those cases where \textbf{VI} and \textbf{TI} scored less than 50\%, a framework for registration based on landmarks was developed as a fallback strategy. In the event that VNC registration fails (\textbf{VI} score less than 50 \%), two landmarks were provided to guide this semi-automatic registration. In the event that thoracic registration failed (\textbf{TI} score less than 50 \%), six landmarks were placed at all six entry points of the thoracic nerve.	In contrast to automatic deformable registration, where only the correlation (NCC or MMI) between images controls the registration process, in semi-automatic deformable registration two similarity metrics control the registration process - the correlation metric and the Euclidean distance between the corresponding points \cite{inproceedings}.
 	
@@ -309,7 +313,7 @@ linkcolor=red
 	
 	Wu et al. \cite{7314894} \cite{Wu} were the first ones to use deep learning to obtain application specific feature in contrast to the supervised feature extraction or handcrafted feature selection methods, and then the learnt features were deployed to the classical Demons \cite{VERCAUTEREN2009S61}, \cite{10.1007/10704282_64}, \cite{10.1007/978-3-540-85990-1_117}, \cite{10.1007/978-3-642-24446-9_3}, \cite{Peyrat} and HAMMER methods \cite{Wu2010TPSHAMMERIH}, \cite{Shen} with defined interpolation strategy, transformation model, and optimization alogirthm. These features were learnt from the data and hence is optimal representation for specific dataset. Thus, the then state-of-the-art registration methods were imporved by integrating these feature representations via deep learning. However, the registration process is still slow because the later transformation estimation is still iterative. Thus, methods to directly predict the transformation parameters have been proposed such that the registered image can be obtained directly by warping the moving image with the predicted transformation parameters.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\textwidth]{resources/chapter2/tx_parameters.png}
 	\caption{6 transformation parameters in a 3D transformation. \cite{7393571}}
@@ -338,7 +342,7 @@ linkcolor=red
 	
 	Chee et al. \cite{https://doi.org/10.48550/arxiv.1810.02583} employed a CNN to predict all transformation parameters simultaneously, rather than predicting them in groups and then applying them in a hierarchical fashion. In this framework, their Affine Image Registration Network (AIRNet) took two images and outputs the rigid transformation parameters. The moving image is then warped by the resampler using transformation matrix. The training loss function was mean-squared error of the estimated transformation parameters.
 	
-	%\begin{figure}[h]
+	%\begin{figure}[h!]
 	%	\centering
 	%	\includegraphics[width=0.7\columnwidth]{resources/chapter2/AIRNet.png}
 	%	\caption{Workflow of \cite{https://doi.org/10.48550/arxiv.1810.02583} image registration framework.}
@@ -354,7 +358,7 @@ linkcolor=red
 	
 	A key innovation that has been useful for all work following the unsupervised method is the spatial transformer network (STN) \cite{NIPS2015_33ceb07b}. The spatial transformer network is a differentiable module that can be inserted into existing convolutional architectures, giving neural networks the ability to spatially transform feature maps. Since it is a differentiable module, it can also be trained together in an end-to-end fashion through backpropagation. In the paper, "A Survey on Deep Learning in Medical Image Registration", \cite{Haskins_2020} a nice visualization aptly describes the workflow of unsupervised deep learning methods for registration.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter2/unsupervised_visualization.pdf}
 		\caption{Visualization of unsupervised method of training deep neural networks for registration. \cite{Haskins_2020}}
@@ -397,7 +401,7 @@ linkcolor=red
 	
 	In decoder, alternate between upsampling, convolutions and skip connections are done. The decoder network is used to recover 3D image patches from the learned low-dimensional feature representations, acting as feedback to refine the inferences in the encoder network.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter2/vxm.png}
 		\caption{Overview of the VoxelMorph method. \cite{Balakrishnan_2019}}
@@ -406,7 +410,7 @@ linkcolor=red
 	
 	An important architectural constraint is that the receptive fields of the convolutional kernels of the smallest layer should be at least as large as the maximum expected displacement between corresponding voxels in $f$ and $m$.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.8\columnwidth]{resources/chapter2/vxm_unet.png}
 		\caption{Implementation of the U-Net convolution architecture. Each rectangle represents a 3D volume created from the previous volume using a 3D convolutional network layer. The spatial resolution of each volume with respect to the input volume is given below. Multiple 32-filter convolutions are used in the decoder, each followed by an upsampling layer to bring the volume back to full resolution. The arrows represent skip connections that chain encoder and decoder functions. \cite{Balakrishnan_2019}}
@@ -424,7 +428,7 @@ linkcolor=red
 	
 	Both VTN \cite{8889674} and DLIR \cite{de_Vos_2019} stack their networks. However, both are limited to a small number of cascades. DLIR trains each cascade one by one, i.e., after fixing the weights of previous cascades. VTN, in contrast, jointly trains the cascades measuring the similiarity between all successively warped images and the fixed image. The Figure~\ref{fig:vtn} shows the Volume Tweening Network (VTN) \cite{8889674}. This network is the same one used in VTN paper \cite{8889674}, and is used in this explanation for clarity. Each registration subnet is responsible for determining the deformation field between the fixed image and the current moving image. The moving image is repeatedly distorted according to the deformation and fed into the next layer of cascaded subnetworks.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=\columnwidth]{resources/chapter2/vtn.png}
 		\caption{Illustration of the overall structure of the Volume Tweening Network (VTN) and the back-progression of gradients. Solid lines indicate how the loss is computed and the dashed lines indicate how gradients back-propagate\cite{8889674}}
@@ -441,7 +445,7 @@ linkcolor=red
 	After studying the literature, we decided to use VoxelMorph as the base model and incorporate concepts of VTN, DLIR, and recursive cascading networks for better performance. The cascading of the networks will be implemented in a coarse-to-fine fashion, similar to the image pyramid used in traditional image registration methods and proven for many years.
 
 	\chapter{Drosophila larva biology and an overview of machine learning techniques}
-	The Drosophila larva is a widely studied model organism in the field of biology, due to its short lifespan and ease of genetic manipulation. In this chapter, we will provide an overview of the biological stages of Drosophila larva development and discuss their significance in the medical field. In addition, we will introduce the concepts of machine learning and deep learning, which are powerful techniques for analyzing and interpreting data. We will describe the key features and principles of these techniques, and how they are used in this thesis to address the research question.
+	The Drosophila larva is a widely studied model organism in the field of biology, due to its short lifespan and ease of genetic manipulation. will provide an overview of the biological stages of Drosophila larva development and discuss their significance in the medical field. In addition, we will introduce the concepts of machine learning and deep learning, which are powerful techniques for analyzing and interpreting data. We will describe the key features and principles of these techniques, and how they are used in this thesis to address the research question.
 	
 	\section{Drosophila larva biology}
 	Drosophila melanogaster, also known as the fruit fly, is a species of fly in the family Drosophilidae. Drosophila larvae, also known as maggots, are the immature stage of the fruit fly that precede the pupal stage and adult stage. They are commonly used as a model organism in genetics and developmental biology research due to their relatively simple nervous system, short generation time, and the availability of genetic tools for manipulating them.
@@ -527,7 +531,7 @@ linkcolor=red
 	\sigma(x) = \frac{1}{1 + e^{-x}}
 	\end{equation}
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[scale=0.5]{resources/chapter3/perceptron.jpg}
 		\caption{Illustration of model with a single perceptron. \cite{kamdem2023inputs}}
@@ -553,7 +557,7 @@ linkcolor=red
 	
 	MLPs have been widely used in many applications, including image recognition, natural language processing, and predictive modeling. However, they can be computationally expensive to train and are not well-suited to tasks that require processing large amounts of sequential data, such as language translation or speech recognition.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.7\columnwidth]{resources/chapter3/mlp.png}
 		\caption{Illustration of model with a multi-layer perceptron. \cite{tikz_neural_networks}}
@@ -592,7 +596,7 @@ linkcolor=red
 	
 	A Loss function is used to check how our model compares to an ideal model. There are many types of loss functions, one of which can be selected based on the problem being solved. The most common ones for regression are mean absolute error (MAE) also referred to as L1 loss, mean squared error (MSE) also referred to as L2 loss. The most common ones for classification problems are binary cross-entropy (BCE) loss and hinge loss \cite{wang2020comprehensive}. And others include normalized cross correlation and mutual information loss to measure the similarity between the two images. A typical loss function plotted against the number of epochs is given in the Figure \ref{fig:LossFun} \cite{image2023mse}. 
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[scale=0.2]{resources/chapter3/lossfun.png}
 		\caption{Loss function}
@@ -621,7 +625,7 @@ linkcolor=red
 	
 	The encoder-decoder architecture has been widely used in natural language processing tasks, such as machine translation, language modeling, and text summarization. It has also been applied to other domains, such as image generation and sequence-to-sequence modeling in time series data.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.7\columnwidth]{resources/chapter3/encoderdecoder.png}
 		\caption{Illustration of encoder decoder architecture \cite{tikz_neural_networks}.}
@@ -635,7 +639,7 @@ linkcolor=red
 	\subsection{U-Net}\label{subsec:unet}
 	U-Net is a convolutional neural network (CNN) architecture designed for image segmentation tasks. It was developed by Olaf Ronneberger, Philipp Fischer, and Thomas Brox in 2015 \cite{UNet} and has since become a widely used model for image segmentation in medical imaging and other domains. U-Net is typically trained using supervised learning, with the goal of minimizing the error between the predicted output segmentation map and the ground truth segmentation map. It has been widely used in medical imaging tasks, such as tumor segmentation and organ segmentation, and has also been applied to other domains, such as satellite image analysis and surface defect detection.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\begin{tikzpicture}[node distance=1.5cm]
 		
@@ -684,8 +688,8 @@ linkcolor=red
 	
 	The input to the model is an image and the output is a segmentation mask, with each pixel in the mask corresponding to a particular class in the image. The U-Net model is commonly used in medical imaging, where it can be trained to segment organs or other structures in images.
 	
-	\chapter{Implementations and Data Preparation}
-	In Chapter \ref{chap:litreture}, we reviewed various traditional and deep learning approaches for medical image registration. In this chapter, we will delve into the specific methods we selected for our study and explain why they were chosen and how they are effective in addressing the challenges of medical image registration.
+	\chapter{Implementations and Data Preparation}\label{chap:imp_and_data}
+	In chapter \ref{chap:litreture}, we discussed various traditional and deep learning approaches for medical image registration. In this chapter, we will address the research design and introduce concepts that are highly relevant to the methods used in this thesis.
 	
 	In the following three sections, we will address the specifics of the Voxelmorph architecture \cite{Balakrishnan_2019} that served as the foundation for our study, explore the concept of landmark points and their importance in the field of image registration, and provide an overview of the dataset we used and the preprocessing steps we applied to it in order to prepare it for analysis.
 	
@@ -791,7 +795,7 @@ linkcolor=red
 	
 	The term "gold standard" refers to the fact that these points are considered to be the most accurate and reliable points of reference for aligning images. This term is used metaphorically, as gold is often considered a symbol of excellence and high quality. In the context of image registration, the use of landmark points as the gold standard for alignment helps to ensure the accuracy and reliability of the registration process.
 	
-	In a research paper on \textit{larvalign} \cite{larvalign}, biologists have identified 30 potential landmark locations in brain scans of Droshophila larva. These landmarks are also used in this thesis.
+	In \textit{larvalign} \cite{larvalign}, biologists identified 30 potential landmarks in brain scans of Droshophila larvae. The same landmarks are used in this work. The xy positions of all 30 landmarks used can be seen in the Figure~\ref{fig:landmark_annotations}, which is a direct adaptation from the paper \emph{larvalign} \cite{larvalign}. The names of each landmark can be found in Table 1 of the work \emph{larvalign} \cite{larvalign}.
 	
 	\begin{figure}[h!]
 		\centering
@@ -818,9 +822,9 @@ linkcolor=red
 	This section covers the selection and preparation of datasets for use with the Voxelmorph model. It will cover how to categorize the datasets for training and testing, as well as the necessary preprocessing steps to ensure that the data is properly formatted for the model.
 	
 	\subsection{Dataset}
-	For this research, we have obtained three datasets from different sources: the \texttt{Leipzig dataset} from the University of Leipzig in Germany, the \texttt{Janelia dataset} from the Janelia Research Campus in Virginia, and the \texttt{Larvalign dataset} from the \textit{Larvalign} research paper \cite{larvalign}. These datasets will be referred to by these names throughout the study.
+	For this research, we have obtained three datasets from different sources: the \texttt{Leipzig dataset} from the University of Leipzig in Germany, the \texttt{Janelia dataset} from the Janelia Research Campus in Virginia, and the \texttt{Larvalign dataset} from the \textit{larvalign} research paper \cite{larvalign}. These datasets will be referred to by these names throughout the study.
 	
-	As shown in Table~\ref{tab:mytable}, the datasets for this study were divided into three categories by the biologists: good quality, medium quality, and random quality. This separation was necessary to ensure that the training data was balanced and to allow us to evaluate the model's performance on different quality levels of the images.
+	As shown in table~\ref{tab:mytable}, each dataset for this study was divided by the biologists into three categories: good quality, medium quality, and random quality. This subdivision was necessary to ensure that the training data were balanced and to evaluate the performance of the model at different levels of image quality.
 	
 	% Please add the following required packages to your document preamble:
 	\begin{table}[h!]
@@ -844,12 +848,12 @@ linkcolor=red
 		\label{tab:mytable}
 	\end{table}
 	
-	One issue that was encountered during the data preparation process was that the images were of different sizes and resolutions. To input the images into the network, they had to be resized to a consistent size. However, the Voxelmorph model was computationally intensive and required a significant amount of memory due to the various levels of encoding and the need to retain encoded feature maps for later use in the decoding stage through skip connections. Experiments showed that using the model with images that were \texttt{256x512x64} in size required at least a \texttt{16GB GPU}. If the image volumes were larger than this resolution, a GPU with a memory capacity proportional to the expansion of the input images was required. Empirically, it was found that the GPU memory requirement was directly proportional to the increase in image volume by more than 1. As a result, it was decided to use scaled-down resolution images of \texttt{256x512x64} for all experiments. Unless stated otherwise, all experiments from that point forward were based on images with this resolution. The scaling down operation was performed by resampling the image using the bicubic interpolation algorithm present in the ImageJ Fiji tool.
+	One problem that arose during data preparation was that the images had different sizes and resolutions. In order to input the images into the network, they had to be resized to a uniform size. In addition, the Voxelmorph model is computationally intensive and requires a significant amount of memory due to the different encoding layers and the need to keep encoded feature maps for later use in the decoding phase by skipping connections. Experiments showed that using the model with images of size \texttt{256x512x64} required at least one \texttt{16GB GPU}. If the image volumes were larger than this resolution, a GPU with a memory capacity proportional to the increase in the size of the input images was required. Empirically, it was found that the memory requirements of the GPU were directly proportional to the increase in image volume by more than 1. Therefore, it was decided to use images with a reduced resolution of \texttt{256x512x64} for all experiments. Unless otherwise stated, all experiments from this point forward are based on images at this resolution, and all results reported are also at this resolution. The downscaling was done by resampling the image using the bicubic interpolation algorithm included in the ImageJ Fiji tool.
 	
 	\subsection{Affine registration}
-	According to the Voxelmorph research paper \cite{Balakrishnan_2019}, it was recommended to perform affine alignment on the input images before using them with the Voxelmorph model for deformable registration. This preprocessing step could improve the performance of the model compared to using the images without affine alignment.
+	According to the Voxelmorph research paper \cite{Balakrishnan_2019}, it is recommended to affine align the input images before using them with the Voxelmorph model for deformable registration. This preprocessing step could improve the performance of the model compared to using the images without affine alignment.
 	
-	Similar to Voxelmorph, the \textit{larvalign} software \cite{larvalign} also performed affine alignment and then applied non-rigid registration to the affine-aligned image. Therefore, to compare the efficiency of non-rigid registration using \textit{larvalign} versus a deep learning method, it was decided to use \textit{larvalign} to perform affine registration on the input images so that both approaches would be working with the same pre-processed data. This allowed for a fair comparison of the two approaches.
+	Similar to Voxelmorph, the \textit{larvalign} software also performed affine alignment and then applied non-rigid registration to the affine-aligned image. Therefore, to compare the efficiency of non-rigid registration using \textit{larvalign} versus a deep learning method, it was decided to use \textit{larvalign} to perform affine registration on the input images so that both approaches would work on the same preprocessed data. This allowed for a fair comparison between the two approaches.
 	
 	\begin{tcolorbox}[colback=rwth-blue-5,colframe=rwth-blue-1,title=\textbf{Larvalign Software}]
 		Larvalign is based on the Elastix Registration Toolbox, which is a widely used, open-source medical image registration toolbox that allows for both rigid and non-rigid registration of medical images such as CT, MRI, and PET scans.
@@ -859,7 +863,7 @@ linkcolor=red
 	
 	The figure below illustrates an example of an image before and after affine alignment.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter3/np_58E02_37E10_MB299C_021713A_scaled.tif.png}
 		\caption{Affine registration example against the \textit{larvalign} template \cite{larvalign}.}
@@ -904,7 +908,7 @@ linkcolor=red
 	\end{enumerate}
 	
 	\subsubsection{Normalizing the inputs}
-	Normalizing the pixel values in the input images for use in a neural network could prevent issues such as vanishing or exploding gradients, which could further hinder the network's ability to learn effectively. One way to normalize the values was to scale them to be between 0 and 1, which could be done by dividing the pixel values by 255 (the maximum value for an 8-bit image). This approach was suggested by the authors of the Voxelmorph paper, as it was compatible with the Leaky ReLU activation function used in the network, and this was what was followed in this work. Other normalization techniques, such as subtracting the mean and dividing by the standard deviation of the pixel values, could also be used, but they may not have been as well-suited for use with the Leaky ReLU function because such normalization could result in negative values.
+	Normalizing the pixel values in the input images for use in a neural network could prevent problems such as vanishing or exploding gradients that could further impair the network's ability to learn effectively. One way to normalize the values was to scale them to be between 0 and 1, which can be achieved by dividing the pixel values by 255 (the maximum value for an 8-bit image). This approach was proposed by the authors of the Voxelmorph research paper because it was compatible with the leaky ReLU activation function used in the network, and so it was also used in this work. Other normalization techniques, such as subtracting the mean and dividing by the standard deviation of the pixel values, could also be used, but may not be as well suited for use with the Leaky ReLU function, as such normalization could result in negative values.
 	
 	\begin{lstlisting}[language=python, label=lst:normalize, caption=Pseudo function to show the normalization of pixel intensity values.]
 		def normalize(pixels):
@@ -962,9 +966,9 @@ linkcolor=red
 	where $K$ is the number of landmarks, $(x_f^k, y_f^k, z_f^k)$ and $(x_m^k, y_m^k, z_m^k)$ represent the coordinates of the $k$-th landmark in the fixed and moved images, respectively.
 	
 	\section{Quality Assessment}\label{sec:quality}
-	It is important to evaluate the performance of an image registration method using multiple metrics because the loss function, such as normalized cross-correlation error (NCC) or mean squared error (MSE), only measures the overall error in the registration. These metrics do not necessarily capture errors that occur at specific, biologically significant local regions. Therefore, evaluating the performance qualitatively and quantitatively becomes necessary help to identify and quantify errors at such local regions. This can provide a more comprehensive assessment of the accuracy and effectiveness of the image registration method.
+	It is important to evaluate the performance of an image registration method using multiple metrics because the loss function, such as normalized cross-correlation error (NCC) or mean squared error (MSE), only measures the overall error in the registration. These metrics do not necessarily capture errors that occur at specific, biologically significant local regions. Therefore, evaluating the performance qualitatively and quantitatively becomes necessary to help to identify and quantify errors at such local regions. This can provide a more comprehensive assessment of the accuracy and effectiveness of the image registration method.
 	
-	\subsection{Quantitative Assessment}
+	\subsection{Quantitative Assessment} \label{subsec:quantitative}
 	Quantitative assessment metrics are numerical measures that are used to evaluate the performance. The specific metric used will depend on the characteristics of the data and the goals of the analysis. In our image registration task, in addition to optimizing the loss function, such as normalized cross-correlation error (NCC), we  evaluate below metrics to assess the performance of our approach.
 	\begin{enumerate}
 		\item \textbf{VNC Terminal Error Indicator (VI)}
@@ -972,48 +976,55 @@ linkcolor=red
 		\item \textbf{Landmark Registration Error (LRE)}
 	\end{enumerate}
 
-	\subsubsection{VNC Terminal Error Indicator (VI)}
-	To evaluate the accuracy of image registration in the Ventricular Nerve Cord (VNC) region, we consider two small 3D spherical volumes with a radius of 5 micrometers at two terminal VNC positions defined in the template image and calculate the mutual information between the fixed and moving images. A high score indicates that the image registration is good, while a low score indicates registration errors. Using this score, we can determine the quality of image registration at that location.
-	The original radius considered in \textit{larvalign}'s work \cite{larvalign} is 10 microns. However, since we are now working with the downscaled images, 5 microns was chosen so that the two spherical volumes do not overlap and just touch.
+	\subsubsection{VNC Terminal Error Indicator (VI)} \label{subsubsec:vi}
+	To evaluate the accuracy of image registration in the Ventral Nerve Cord (VNC) region, we consider two small 3D spherical volumes with a radius of 5 \textmu m at two terminal VNC positions defined in the fixed image and calculate the mutual information between the fixed and moving images. These two terminal positions chosen are the two landmark points - "right A7 nerve entry point" and "left A7 nerve entry point" in the fixed image. The original radius considered in \textit{larvalign}'s work \cite{larvalign} is 10 \textmu m. However, since we are now working with the downscaled images, 5 \textmu m was chosen so that the two spherical volumes do not overlap and just touch. Unlike in landmark registration error (LRE), the landmarks in this scenario only dictate the location of the region considered and does not contribute to the score in any other manner.	
+	A high score indicates that the image registration is good, while a low score indicates registration errors. Using this score, we can determine the quality of image registration at the tip of Ventral Nerve Cord.
 	
-	\subsubsection{Thoracic Nerve Error Indicator (TI)}
-	To evaluate the accuracy of image registration at the entrance of the thoracic nerve, we consider 6 small 3D spherical volumes with a radius of 12 micrometers at all six thoracic nerves defined in the template image and calculate the mutual information between the fixed and moving images. A high score indicates that the image registration is good, while a low score indicates that there are errors in the registration. Using this score, we can determine the quality of image registration at that location.
+	\subsubsection{Thoracic Nerve Error Indicator (TI)} \label{subsubsec:ti}
+	To evaluate the accuracy of image registration at the entrance of the thoracic nerve, we consider 6 small 3D spherical volumes with a radius of 12 \textmu m at all six thoracic nerve entry points defined in the fixed image and calculate the mutual information between the fixed and moving images. The six thoracic nerve entry points are the six landmark points - "right/left thoracic nerve entry T1",  "right/left thoracic nerve entry T2", and "right/left thoracic nerve entry T3" in the fixed image. The original radius considered in \textit{larvalign}'s work \cite{larvalign} is 35 \textmu m. However, since we are working with the downscaled images, a radius of 12 \textmu m was chosen so that the spherical volumes do not overlap and just touch. Unlike in landmark registration error (LRE), the landmarks in this scenario only dictate the location of the region considered and does not contribute to the score in any other manner.
 	
-	The original radius considered in \textit{larvalign}'s work \cite{larvalign} is 35 microns. However, since we are working with the downscaled images, a radius of 12 micrometers was chosen so that the spherical volumes do not overlap and just touch.
+	A high score indicates that the image registration is good, while a low score indicates that there are errors in the registration. Using this score, we can determine the quality of image registration at the Thoracic Nerve Entry points.
 	
 	\subsubsection{Landmark Registration Error (LRE)}
 	In the \textit{larvalign} paper, biologists identified 30 distinct and biologically significant points in the brain scan of a Droshophila larva that can be used as landmarks. We use the same landmarks in this study also. Landmark Registration Error (LRE) is a measure of the accuracy of the alignment of the landmarks in two images, and is commonly used in medical imaging and other fields where the alignment of specific features or structures is important. A low LRE score indicates that the image registration is accurate, while a high score indicates that there are errors in the alignment of the landmarks. By comparing the LRE scores, we can determine the quality of the image registration at these landmark sites.
+	
+	The landmark registration error between two images, fixed image $I_f$ and moved image $I_m$, can be calculated as the mean Euclidean distance between corresponding landmarks in the two images:
+	\begin{equation}\label{eqn:lre}
+		LRE = \frac{1}{K} \sum_{k=1}^K \sqrt{(x_f^k - x_m^k)^2 + (y_f^k - y_m^k)^2 + (z_f^k - z_m^k)^2}
+	\end{equation}
+	
+	where $K$ is the number of landmarks, $(x_f^k, y_f^k, z_f^k)$ and $(x_m^k, y_m^k, z_m^k)$ represent the coordinates of the $k$-th landmark in the fixed and moved images, respectively.
 	
 	\subsection{Qualitative Assessment}
 	While quantitative assessments involve the use of numerical measurements and statistical analysis to objectively assess the performance or quality of something. The qualitative assessments involve the use of subjective observations and interpretations to evaluate the performance or quality of something. These methods are often preferred because they can provide insights and understanding that may not be captured by quantitative methods, and they can be used to identify trends and patterns that may not be immediately apparent from numerical data alone.
 	For this purpose, we use the \texttt{imshowpair} function in MATLAB to overlay the fixed image and the registered image. The resulting image will show the original intensity values where the two images perfectly overlap, and it will show green or magenta values in areas where there is no overlap. This allows us to visually inspect the registration and identify any discrepancies.
 	
-	\chapter{Methods}
+	\chapter{Methods}\label{chap:methods}
 	
-	In the following sections, we will describe the different methods that we used to evaluate the performance of deep learning neural networks, presented in order of increasing performance. All of the methods were implemented using the TensorFlow framework in Python. For each method, we will explain why we chose it and how it outperformed the previous method. In total, we will present four methods.
-	\begin{itemize}
-		\item \textbf{Method1}: Evaluating the morph Architecture.
-		\item \textbf{Method2}: Enhancing Method1 with Novel Landmark Information.
-		\item \textbf{Method3}: Pyramid Gaussian Filtering and Cascaded Training.
-		\item \textbf{Method4}: Enhancing Method3 with Novel Landmark Information.
-	\end{itemize}
+	The following sections describe the various deep learning methods developed in this thesis to solve the problem of image registration of Drosophila larval brain scans using the \textit{larvalign} template. All methods were implemented using the TensorFlow framework in Python. In total, we developed four methods,
+	\begin{enumerate}
+		\item \textbf{Vanilla Voxelmorph}
+		\item \textbf{\texttt{Landmark Guided Voxelmorph}}: Enhancing the capability of vanilla Voxelmorph with novel landmark information.
+		\item \textbf{\texttt{Cascaded Vanilla Voxelmorph}}: Gaussian pyramid filtering and cascaded training.
+		\item \textbf{\texttt{Cascaded Landmark Guided Voxelmorph}}: Gaussian pyramid filtering with novel landmark information and cascaded training.
+	\end{enumerate}
 
-	\section{Method1: Evaluating the Vanilla Voxelmorph Architecture}\label{sec:method1}
+	\section{Vanilla Voxelmorph}\label{sec:method1}
 	
-	As described in the Section~\ref{sec:vxm_architecture}, the architecture of the VoxelMorph network consists of a series of encoder-decoder blocks, which are inspired by the U-Net architecture.The encoder blocks down-sample the input images by applying convolutions and max pooling, while the decoder blocks up-sample the feature maps using transposed convolutions. The network also includes skip connections between the encoder and decoder blocks, which helps to preserve spatial resolution and fine details in the output image.
+	As described in the section~\ref{sec:vxm_architecture}, the architecture of the VoxelMorph network consists of a series of encoder-decoder blocks, which are inspired by the U-Net architecture.The encoder blocks down-sample the input images by applying convolutions and max pooling, while the decoder blocks up-sample the feature maps using transposed convolutions. The network also includes skip connections between the encoder and decoder blocks, which helps to preserve spatial resolution and fine details in the output image.
 	
-	Unlike the vanilla  model, this method employs a U-Net architecture with 6 encoding layers and 6 corresponding decoding layers, connected by skip connections. The number of channels in the encoding layers is [16, 32, 32, 32, 32, 32], and the number of channels in the decoding layers is [32, 32, 32, 32, 32, 32]. In addition, from the output of the U-Net, there are 3 additional convolutional layers with [32, 16, 16] channels that are used to extract additional features at the end stages. Between each pair of consecutive encoding layers, the size of the feature maps is reduced by a factor of 2 using max pooling. Similarly, between each pair of consecutive decoding layers, the size of the feature maps is increased by a factor of 2 using upsampling. Leaky ReLu activation functions are used to introduce non-linearity between each layer.
+	Unlike the vanilla model, this method uses a U-Net architecture with 6 encoding layers and 6 corresponding decoding layers instead of 4 connected by skip connections. The number of channels in the encoding layers is [16, 32, 32, 32, 32, 32], and the number of channels in the decoding layers is [32, 32, 32, 32, 32, 32]. Moreover, at the output of the U-Net, there are 3 additional convolutional layers with [32, 16, 16] channels, which are used to extract additional features in the final stages. Between each pair of consecutive coding layers, the size of the feature maps is reduced by a factor of 2 using max-pooling. Similarly, between each pair of consecutive decoding layers, the size of the feature maps is increased by a factor of 2 using upsampling. Leaky-ReLU activation functions are used to introduce non-linearity between layers.
 	
-	This configuration produces a 3-channel feature map representing the 3D deformation field between the fixed and moving images. This deformation field, interpreted as displacement vectors, is used to register the moving image to the fixed image using a spatial transformer network (STN). This network applies the necessary transformations to the moving image based on the input deformation field, aligning it with the fixed image. After the moving image is registered to the fixed image using the U-Net and spatial transformer network, the resulting "warped" image, also called as "moved" image, is compared to the fixed image using a similarity score Normalized Cross Correlation. The network is trained for 100 epochs until the similarity score reached a maximum or saturated at a certain level, indicating satisfactory alignment of the moving and fixed images. This whole process is described in the below Figure~\ref{fig:block_method1}
+	This configuration produces a 3-channel feature map representing the 3D deformation field between the fixed and moving images. This deformation field, interpreted as displacement vectors, is used to register the moving image to the fixed image using a spatial transformer network (STN). This network applies the necessary transformations to the moving image based on the input deformation field, aligning it with the fixed image. After the moving image is registered to the fixed image using the U-Net and spatial transformer network (STN), the resulting "warped" image, also called as "moved" image, is compared to the fixed image using a similarity score Normalized Cross Correlation (NCC). The network is trained for 100 epochs until the similarity score reached a maximum or saturated at a certain level, indicating satisfactory alignment of the moving and fixed images. This whole process is described in the below Figure~\ref{fig:block_method1}
 	
 	\begin{figure}[h!]
 		\centering
 		\includegraphics{resources/chapter4/methods/method1.pdf}
-		\caption{A visual guide to training Method1 - the vanilla Voxelmorph model with the NCC optimization function.}
+		\caption{A visual guide to training vanilla Voxelmorph - the vanilla Voxelmorph model with the NCC optimization function.}
 		\label{fig:block_method1}
 	\end{figure}
 	
-	The NCC is the metric that measures the similarity between two images by comparing the intensity values of corresponding pixels. It is normalized to have a specific range, independent of the images' overall intensity values. A higher NCC score means higher similarity between the images, while a lower score meant lower similarity.
+	The Normalized Cross Correlation (NCC) is the metric that measures the similarity between two images by comparing the intensity values of corresponding pixels. It is normalized to have a specific range, independent of the images' overall intensity values. A higher NCC score means higher similarity between the images, while a lower score meant lower similarity.
 	
 	\begin{equation}\label{eq:ncc_loss}
 	L = -\frac{1}{N} \sum_{i=1}^N \text{NCC}(Fixed, Moved_i)
@@ -1023,19 +1034,12 @@ linkcolor=red
 	
 	In this Equation~\ref{eq:ncc_loss}, N is the number of moving images, and $NCC(Fixed, Moved_i)$ is the normalized cross correlation between $Fixed$ and $Moved_i$. The loss function is the negative average of the normalized cross correlation between the fixed image and each of the moving images.
 	
-	\section{Method2: Enhancing Method1 with Novel Landmark Information.}
-	As described in Section~\ref{sec:landmark_points}, in image registration, landmarks are considered to be the "Gold Standard" for determining the accuracy of the registration process. The goal is to align the fixed and moving images in such a way that the landmarks in both images match perfectly, resulting in a Landmark Registration Error (LRE) of zero. The LRE is the Euclidean distance between the landmarks in the registered and fixed images and to improve the accuracy of the registration, the LRE is used as an additional loss function for the network, and thus encouraging the model to learn the registration process to minimize the LRE.
+	\section{\texttt{Landmark Guided Voxelmorph}: Enhancing the capability of vanilla Voxelmorph with novel landmark information.}
+	As described in the section~\ref{sec:landmark_points}, landmarks in image registration are considered the "gold standard" for determining the accuracy of the registration process. The goal is to align the fixed image and the moving image so that the landmarks in both images match perfectly, resulting in a landmark registration error (LRE) of zero. The landmark registration error (LRE) is the Euclidean distance between the landmarks in the registered and fixed images. To improve the accuracy of the registration, the LRE is used as an additional loss function for the network, encouraging the model to learn the registration process to minimize the LRE.
 	
-	Biologists identified 30 points on the Droshophila larva that could be used as landmarks for image registration (Figure~\ref{fig:landmark_annotations}). However, manually annotating all 30 landmarks on every training sample is time-consuming. For samples with minimal deformations, the vanilla Voxelmorph model [Section \ref{sec:method1}] already performed well, so additional annotations are not needed. Even in cases where the Voxelmorph model did not perform well, the poor performance is only observed in specific regions, such as the tip of the Ventricular Nerve Cord (VNC). Therefore, we only need annotations on samples where the vanilla Voxelmorph model had difficulty achieving accurate registration. To be more specific, we choose to annotate only in such samples and in such regions where we are certain that Voxelmorph would require assistance. This means that each training sample may have a different number of landmarks, including zero. To address this issue, we developed a method that can take into account of the presence of variable number of landmarks between the training samples and calculate the average Landmark Registration Error (LRE). This allowed us to minimize the annotation effort while still obtaining good performance from the model.
+	Biologists have identified 30 points on the Droshophila larva that can be used as landmarks for image registration (Figure~\ref{fig:landmark_annotations}). However, it is time consuming to manually annotate all 30 landmarks for each training sample. For samples with minimal deformations, the vanilla Voxelmorph model already produces good results, so additional annotations are not necessary. Even in the cases where the vanilla Voxelmorph model does not perform well, the poor performance is only observed in certain regions, such as at the tip of the Ventral Nerve Cord (VNC). Therefore, we only require annotations on samples where the vanilla Voxelmorph model had difficulty achieving accurate registration. More specifically, we decided to annotate only in such samples and in such regions where we are sure that vanilla Voxelmorph model would need support. This means that each training sample may have a different number of landmarks, including zero. To address this issue, we developed a method that takes into account the presence of a different number of landmarks in the training samples and calculates the average landmark registration error (LRE). In this way, we were able to minimize the annotation overhead and still achieve good performance of the model.
 	
-	Incorporating landmark points as auxiliary information is a novel method that has not been used previously. The original Voxelmorph paper utilized segmentation maps to help improve registration results. With the knowledge of how Method1 worked, the following Figure \ref{fig:block_method2} will illustrate the Method2.
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.6\columnwidth]{resources/chapter4/methods/Method2.pdf}
-		\caption{A visual guide to training Method2 - the vanilla Voxelmorph model with landmark points as auxiliary information.}
-		\label{fig:block_method2}
-	\end{figure}
+	The inclusion of landmarks as auxiliary information is a new method that has not been used before. In the original Voxelmorph research paper, segmentation maps were used to improve registration results. With the knowledge of how vanilla Voxelmorph works, the Figure~\ref{fig:block_method2} illustrates the \texttt{Landmark Guided Voxelmorph}.
 	
 	The optimization function we attempted to minimize is:
 	\begin{equation}
@@ -1057,9 +1061,16 @@ linkcolor=red
 	
 	In this Equation~\ref{eqn:main_loss}, N is the number of moving images, and $NCC(Fixed, Moved_i)$ is the normalized cross correlation between $Fixed$ and $Moved_i$. The loss function is the negative average of the normalized cross correlation between the fixed image and each of the moving images.
 	
-	In this Equation~\ref{eqn:aux_loss}, N is the number of moving images, L is the number of landmarks, p\_l is the coordinates of the l-th landmark in the fixed image, and q\_{n,l} is the coordinates of the l-th landmark in the n-th moving image. The auxiliary loss is the average of the euclidean distance between the landmarks in the fixed image and the landmarks in each of the moving images.
+	In this Equation~\ref{eqn:aux_loss}, N is the number of moving images, L is the number of landmarks, p\_l is the coordinates of the l-th landmark in the fixed image, and q\_{n,l} is the coordinates of the l-th landmark in the n-th moving image. The auxiliary loss is the average of the Euclidean distance between the landmarks in the fixed image and the landmarks in each of the moving images.
 	
-	\section{Method3: Pyramid Gaussian Filtering and Cascaded Training.}
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.6\columnwidth]{resources/chapter4/methods/Method2.pdf}
+		\caption{A visual guide to training \texttt{Landmark Guided Voxelmorph} - the vanilla Voxelmorph model with landmark points as auxiliary information.}
+		\label{fig:block_method2}
+	\end{figure}
+
+	\section{\texttt{Cascaded Vanilla Voxelmorph}: Gaussian pyramid filtering and cascaded training.}
 	Image registration is a challenging task because the optimization surface can be complex and lead to suboptimal results if the model gets stuck in such a local optimum. However, literature studies have shown that performing registration in a coarse-to-fine manner can help the model escape such local optima and achieve one of the better global optima. This approach has proven successful in both the pre-deep learning and deep learning eras.
 	
 	In this method, called "pyramid registration," pyramidal Gaussian filters are applied and the images are aligned from the lowest to the highest resolution. This method is effective because it ensures that the images are first aligned with the large structures at the lowest resolutions and then progressively aligned with the finer structures as the resolution increases.
@@ -1079,16 +1090,16 @@ linkcolor=red
 	\end{equation}
 	
 	Here, $\sigma$ is a parameter that determines the amount of blur applied to the image. A larger value of $\sigma$ results in more blur. The size of the kernel, $n$, is usually chosen to be an odd number such as 3, 5, or 7. We start by processing the image at the lowest resolution, where the value of $\sigma$ is set to 4. In subsequent stages, we progressively increase the resolution of the image by decreasing the value of $\sigma$ to 2, 1, 0.5, and finally to 0, which is the original resolution of the image.
-	The process is illustrated in the Figure \ref{fig:block_method3}.
+	The process is illustrated in the Figure \ref{fig:block_Cascaded Vanilla Voxelmorph}.
 	
     \begin{figure}[h!]
 		\centering
 		\includegraphics[width=\columnwidth]{resources/chapter4/methods/Method3.pdf}
 		\caption{This process involves 5 stages, each of which is trained independently. At any given time, only one stage (colored green) is being trained, while the other stages (colored white or gray) are either frozen or not in use. The input for the current stage (colored green) is selected from a list of Gaussian filtered images and passes through the previous stages (colored white) to be pre-registered before being used for training. The stages located after the current stage (colored gray) are not utilized during this training process.}
-		\label{fig:block_method3}
+		\label{fig:block_Cascaded Vanilla Voxelmorph}
 	\end{figure}
 
-	In this method of image registration, multiple Voxelmorph models are cascaded together without any auxiliary information, using the same model configurations as Method1 and Method2. Both the moving and fixed images are preprocessed with Gaussian blur, using appropriate sigma values for each stage.
+	In this method of image registration, multiple Voxelmorph models are cascaded together without any auxiliary information, using the same model configurations as vanilla Voxelmorph and \texttt{Landmark Guided Voxelmorph}. Both the moving and fixed images are preprocessed with Gaussian blur, using appropriate sigma values for each stage.
 	
 	\subsection{Stages}
 	For each stage, the appropriate inputs (fixed image and moving image) are chosen from the Gaussian Pyramid. To help explain the process, we will refer to the inputs for each stage as \texttt{input1} through \texttt{input5}, with \texttt{input1} representing the input images for stage 1 (blurred with sigma = 4), \texttt{input2} representing the input images for stage 2 (blurred with sigma = 2), and so on. The final input, \texttt{input5}, consists of the original, unmodified images. We will also refer to the models for each stage as \texttt{model1} through \texttt{model5}. The same optimization function (Normalized Cross Correlation) is used in all these stage and aims to maximize the similarity between the moved and fixed images.
@@ -1109,10 +1120,10 @@ linkcolor=red
 	\subsubsection{Stage 3, 4 and 5}
 	The aforementioned steps are repeated iteratively for all subsequent stages, using the previously trained and frozen models to incorporate the learned transformation and coarsely align the images for the current training stage. This process follows a coarse-to-fine approach, meaning that the transformation is initially learned at a coarser resolution and then successively refined at finer resolutions.
 	
-	\section{Method4: Enhancing Method3 with Novel Landmark Information.}
-	In Method2, the use of landmark information was found to improve performance. However, incorporating this information in Method4 is not as straightforward because the input for each stage consists of different pre-aligned images, which means that landmarks annotated in one stage cannot be used in later stages because they are moved to different positions by the process of pre-alignment. Manually re-annotating the landmarks for each stage is impractical, especially when there are many stages or a large number of images. To solve this problem, we have developed a method that allows us to incorporate landmark information at all stages without the need for manual re-annotation. Our approach is based on the fact that the input images are the same for each phase, except for the different levels of applied Gaussian blur. This means that the initial annotations made on any of these images can be used in later stages if we can transfer the landmarks to their new positions using the predicted deformation field, similar to the pre-alignment process for images.
+	\section{\texttt{Cascaded Landmark Guided Voxelmorph}: Gaussian pyramid filtering with novel landmark information and cascaded training.}
+	In \texttt{Landmark Guided Voxelmorph}, the use of landmark information was found to improve performance. However, incorporating this information in \texttt{Cascaded Landmark Guided Voxelmorph} is not as straightforward because the input for each stage consists of different pre-aligned images, which means that landmarks annotated in one stage cannot be used in later stages as they are moved to different positions by the process of pre-alignment. Manually re-annotating the landmarks for each stage is impractical, especially when there are many stages or a large number of images. To solve this problem, we have developed a method that allows us to incorporate landmark information at all stages without the need for manual re-annotation. Our approach is based on the fact that the input images are the same for each phase, except for the different levels of applied Gaussian blur. This means that the initial annotations made on any of these images can be used in later stages if we can transfer the landmarks to their new positions using the predicted deformation field, similar to the pre-alignment process for images.
 	
-	Again, this is a novel method introduced as part of this work. These shifted landmarks, called "pseudo-annotated" landmarks, may not be as accurate as manually annotated landmarks, but they were accurate enough to work with the blurred images in the earlier stages where the structures were not clear and required precise manual annotation.
+	Again, this is a novel method introduced as part of this work. These shifted landmarks, called "pseudo-annotated" landmarks, may not be as accurate as manually annotated landmarks, but they were accurate enough to work with the blurred images in the earlier stages where the structures were not clear and did not require precise manual annotation.
 	
 	The equation~\ref{eq:ldm_prop} states that the new landmark position is determined by subtracting the deformation field at that position from the old landmark position.
 	
@@ -1124,7 +1135,7 @@ linkcolor=red
 	
 	$l_n^{new}$ is the new position of the landmark in image $n$. $l_n^{old}$ is the old position of the landmark in image $n$. $d_n$ is the deformation field for image $n$ at the position of the landmark.
 	
-	Method4 combines aspects of Method2 and Method3 in an attempt to leverage the strengths of both the approaches. As with Method3, an image is processed at five different resolutions and aligned coarse to fine, starting with the lowest resolution and increasing it incrementally at each stage. The transformation learned in the previous stage is cascaded to the current stage. To reduce the resolution of the image, a Gaussian blur with different sigma values is applied while keeping the width and height of the image constant. This process is represented mathematically with the equation \ref{eqn:GaussBlur}. And as in method 2, we use the auxiliary information in the form of landmarks to train the neural network in the right direction.
+	\texttt{Cascaded Landmark Guided Voxelmorph} combines aspects of \texttt{Landmark Guided Voxelmorph} and \texttt{Cascaded Vanilla Voxelmorph} in an attempt to leverage the strengths of both the approaches. As with \texttt{Cascaded Vanilla Voxelmorph}, an image is processed at five different resolutions and aligned coarse to fine, starting with the lowest resolution and increasing it incrementally at each stage. The transformation learned in the previous stage is cascaded to the current stage. To reduce the resolution of the image, a Gaussian blur with different sigma values is applied while keeping the width and height of the image constant. This process is represented mathematically with the equation \ref{eqn:GaussBlur}. And as in \texttt{Landmark Guided Voxelmorph}, we use the auxiliary information in the form of landmarks to train the neural network in the right direction.
 	
 	\subsection{Stages}
 	For each stage, the corresponding inputs (fixed image and moving image) are selected from the Gaussian pyramid. To explain the process, the inputs for each stage are labeled \texttt{input1} through \texttt{input5}, where input1 represents the input images for stage 1 (blurred with sigma = 4), \texttt{input2} represents the input images for stage 2 (blurred with sigma = 2), and so on. The final input, \texttt{input5}, consists of the original, unmodified images. We also refer to the models for each stage as \texttt{model1} through \texttt{model5}. The same optimization function (normalized cross-correlation) is used in all these stages and it aims to maximize the similarity between the moving and the fixed images. In addition, the model is also evaluated based on the landmark registration error to guide the learning process.
@@ -1206,528 +1217,644 @@ linkcolor=red
 	\subsubsection{Stage 5: The last stage}
 	The original approach to aligning the images in the final stage of the process was to transfer the previously identified landmarks via software. However, it was eventually decided to manually label the landmarks again to improve accuracy. The reason for this is that the images used in this phase are the original untouched images and the use of landmarks generated using the previous, already aligned images may not be accurate enough. By manually labeling the landmarks, the final registration can be more accurate.
 	
-	\chapter{Results}
+	\chapter{Results}\label{chapter:results}
+	This chapter presents the results of the research study conducted to investigate whether the use of Deep Learning Neural Networks would result in rapid and robust image registration of the larval brain of Dropshophila. The results are presented clearly and objectively, and all statistical analyses that were performed are included to support the data. We will divide this chapter into two sections ~\nameref{sec:Qualitative} and ~\nameref{sec:Quantitative}. The \nameref{sec:Quantitative} section provides a detailed analysis of the data collected by performing registration using the \texttt{Cascaded Vanilla Voxelmorph} and \texttt{Cascaded Landmark Guided Voxelmorph} methods, and presents the results in a logical and coherent manner.
 	
-	\section{Results for Method1}
-	The model with the above mentioned configuration was trained with the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was found that this model performed poorly on images that contained large deformations as shown in the Figure~\ref{fig:method1_fail}. However, on images with small deformations, the model performed good as shown in the Figure~\ref{fig:method1_pas}. This suggested that the Voxelmorph model may be less effective at registering images with large deformations.
+	\section{Qualitative Analysis} \label{sec:Qualitative}
+	In the following subsections, we will provide a qualitative analysis of the results obtained using the methods explained in the chapter~\nameref{chap:methods}. Qualitative evaluation is the use of subjective observations and interpretations to assess the performance of our methods. To do this, we overlay the registered image with the fixed image and look for regions where there is no overlap. The registered images and the fixed image used for the overlay are the projection of the maximum intensity of the respective 3D volumes. This is sufficient to visualize the alignment in xy direction.
 	
-	\begin{figure}[h!]
+	\subsection{Results for vanilla Voxelmorph}
+	The model with the configurations mentioned in the previous chapter was trained with the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was found that this model performed poorly on images that contained large deformations as shown in the Figure~\ref{fig:method1_fail}. However, on images with small deformations, as shown in the Figure~\ref{fig:method1_pas}, the model performed good. This suggested that the vanilla Voxelmorph model may be less effective at registering images with large deformations.
+	
+	\begin{figure}[h]
 		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
-		\caption{An example moving sample image with larger deformation where the Method1 type of deformable registration did not produce a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\includegraphics[width=0.8\columnwidth]{resources/chapter4/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
+		\caption{An example moving sample image with larger deformation where the vanilla Voxelmorph did not produce a successful result.}
 		\label{fig:method1_fail}
 	\end{figure}
-	
-	The moving image in Figure~\ref{fig:method1_fail} has large deformation at the lower tip of the Ventricular Nerve Cord (VNC), and the registration process is not successful as evident (magenta region at the lower tip of VNC) in the corresponding overlay image. In contrast, the Voxelmorph method produces good results in the Figure~\ref{fig:method1_pas}. The good results produced by the Voxelmorph method in this case can be attributed to the absence of significant deformation in the moving image and the model's ability to handle smaller deformations.
-	
-	\begin{figure}[h!]
+
+	\begin{figure}[h]
 		\centering
-		\includegraphics[width=0.9\columnwidth]{resources/chapter4/np_brain7_scaled.tif.png}
-		\caption{An example moving sample image with smaller deformation where the Method1 type of deformable registration produced a successful result. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\includegraphics[width=0.8\columnwidth]{resources/chapter4/np_brain7_scaled.tif.png}
+		\caption{An example moving sample image with smaller deformation where the vanilla Voxelmorph produced a successful result.}
 		\label{fig:method1_pas}
 	\end{figure}
+
+	Four images are plotted in a row using MATLAB. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.
 	
-	\subsection{Motivation for Method2}
-	The model clearly struggled with handling large deformations, specifically in the lower ventricular nerve chord region of the brain. In order to improve the model's performance in these cases, we can provide it with additional, manually annotated information for both the moving and fixed images. This can help guide the model towards achieving better alignment, particularly when dealing with large deformations. The proof of this concept is tested and evaluated in the next method.
+	The moving image in Figure~\ref{fig:method1_fail} has large deformation at the lower tip of the Ventral Nerve Cord (VNC), and the registration process is not successful as evident (magenta region at the lower tip of VNC) in the corresponding overlay image. In contrast, the Voxelmorph method produces good results in the Figure~\ref{fig:method1_pas}. The good results produced by the Voxelmorph method in this case can be attributed to the absence of significant deformation in the moving image and the model's ability to handle smaller deformations.
+
 	
-	The practice of adding additional, manually annotated information for both the moving images and fixed image is referred to as Method2. This method is explained in further detail in the following section.
+	\subsubsection{Motivation for \texttt{Landmark Guided Voxelmorph}} \label{subsec:motivation_for_method2}
+	The model clearly had difficulty dealing with large deformations, especially in the lower part of the Ventral Nerve Cord of the brain. To improve the performance of the model in these cases, we can provide it with additional manually labeled information for both the moving and fixed images. This can help the model to achieve better alignment, especially for large deformations. The proof of this concept will be tested and evaluated in the next method.
 	
-	\section{Results for Method2}
-	Using the same model configurations as in Method1, landmark points as auxiliary information were incorporated into the training. The model was retrained on the \texttt{Janelia dataset} and tested on the \texttt{Larvalign dataset}. It was observed that the registration accuracy in the regions of landmark points were improved.
+	The addition of additional manually labeled information in the form of landmarks for both the moving images and the fixed image is referred to as \texttt{Landmark Guided Voxelmorph}.
+	
+	\subsection{Results for \texttt{Landmark Guided Voxelmorph}}
+	Using the same model configurations as in vanilla Voxelmorph, landmark points were included as auxiliary information in the training. The model was trained using the \texttt{Janelia dataset} and tested using the \texttt{Larvalign dataset}. It was found that the registration accuracy was improved in the regions with landmarks.
 	
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
-		\caption{An example moving sample image with larger deformation where the Method2 type of deformable registration could produce a successful result when large deformation is present in contrast to Method1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example of a moving sample image with larger deformation where the \texttt{Landmark Guided Voxelmorph}, unlike the Vanilla Voxelmorph, can lead to a successful result with large deformations.}
 		\label{fig:method2_fail}
 	\end{figure}
 	
-	Figures \ref{fig:method1_fail} and \ref{fig:method2_fail} can help us understand the improvement that the Method2 introduces over Method1. Both the plots are for the same moving image registered against the same fixed image. As seen in  the Figure~\ref{fig:method1_fail}, Method1 failed to produce satisfactory registration at the lower tip of the VNC. However, in Figure~\ref{fig:method2_fail}, it can be witnessed that adding landmark points at VNC tip helped Method2 to produce a better registered output. The results in both figures demonstrate the efficacy of using landmark information in improving registration accuracy.
+	Figures \ref{fig:method1_fail} and \ref{fig:method2_fail} can help us understand the improvement brought by the \texttt{Landmark Guided Voxelmorph} compared to vanilla Voxelmorph. As can be seen in Figure~\ref{fig:method1_fail}, vanilla Voxelmorph failed to achieve satisfactory registration at the bottom of the VNC. However, in Figure~\ref{fig:method2_fail}, it can be seen that adding landmarks at the VNC tip helped \texttt{Landmark Guided Voxelmorph} to achieve better registration performance. The results in both figures show the effectiveness of using landmark information to improve registration accuracy. For the moving images with small deformations as in Figure~\ref{fig:method1_pas}, the model continued to provide accurate registration results as expected. This can be verified in Figure~\ref{fig:method2_pas}.
 	
-	For the moving image with small deformation like in Figure~\ref{fig:method1_pas}, the model continued to produce accurate registration results, as expected. This can be verified in the Figure~\ref{fig:method2_pas}.
-	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_brain7_scaled.tif.png}
-		\caption{An example moving sample image with smaller deformation where the Method2 type of deformable registration could contine to produce a successful result like Method1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example of a moving sample image with smaller deformation where the \texttt{Landmark Guided Voxelmorph} could achieve a successful result like vanilla Voxelmorph.}
 		\label{fig:method2_pas}
 	\end{figure}
 	
-	\subsection{Motivation for Method3}
-	The inclusion of landmarks improved registration accuracy, but in some cases, for moving images with significant deformation, this model resulted in artifacts. An example of this can be seen in the following figure~\ref{fig:method2_artifact}.
+	\subsubsection{Motivation for \texttt{Cascaded Vanilla Voxelmorph}}
+	The inclusion of landmarks improved registration accuracy, but in some cases, for moving images with significant deformations, this model resulted in artifacts. An example of this can be seen in the following figure~\ref{fig:method2_artifact}. The two images focused on the inferior tip of the Ventral Nerve Cord (VNC) show the moving image before and after registration. As can be seen, the structures in this area appear to have been erased after registration. 
 	
-	The two images focused on the inferior tip of the Ventricular Nerve Cord (VNC) show the moving image before and after registration. As can be seen, it appears that the structures in this area were erased after registration.
-	
-	The artifact is often observed in moving images with large deformations and may be due to the inherent limitations of the model in handling such large deformations. The addition of auxiliary information and the loss of LRE attempt to force the model to near-perfect registration, even though the model is not yet capable of doing so. This new force in play can cause the network to compromise on qualitative features while achieving good error scores. To fix this problem, the model must be better able to handle large deformations, because the auxiliary information must act as a guide, and if the model is inherently unable to handle large deformations, the auxiliary loss begins to play the main role.
+	The artifact is commonly observed in moving images with large deformations and may be due to the inherent limitations of the model in handling such large deformations. By adding additional information, an attempt is made to force the model to achieve near-perfect registration, even though it is not yet capable of doing so. This new force in play can cause the network to compromise on qualitative features while still achieving good error values. To fix this problem, the model must be better able to handle large deformations, since the auxiliary information must act as a guide, and if the model is inherently incapable of handling large deformations, the loss due to the auxiliary information begins to play the main role.
 	
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\columnwidth]{resources/chapter4/method2/np_52B07_52H01_MB262B_021713B_scaled.png}
-		\caption{An example moving sample image with large deformations at the lower tip of Ventricular Nerve Cord (VNC) where the Method2 produced an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
+		\caption{An example of a moving sample image with large deformations at the inferior tip of the ventral nerve cord (VNC) where the \texttt{Landmark Guided Voxelmorph} produced an artifact in the registered output.}
 		\label{fig:method2_artifact}
 	\end{figure}
 	
-	\section{Results for Method3}
-	The cascade of models is trained on the Janelia dataset using the same setup and model configurations as Method1 and Method2, and tested on the Larvalign dataset. It was found that the registration of the same moving example image that produced artifacts with Method2 now has no such artifacts. This can be seen in Figure~\ref{fig:method3_artifact} and compared to the plot in Figure~\ref{fig:method2_artifact}.
+	\subsection{Results for \texttt{Cascaded Vanilla Voxelmorph}}
+	The cascade of models is trained on the \texttt{Janelia dataset} with the same setup and model configurations as vanilla Voxelmorph and \texttt{Landmark Guided Voxelmorph} and tested on the \texttt{Larvalign dataset}. It was found that the registration of the same moving sample image that produced artifacts with \texttt{Landmark Guided Voxelmorph} now has no such artifacts. This can be seen in Figure~\ref{fig:Cascaded Vanilla Voxelmorph_artifact} and compared to the figure in Figure~\ref{fig:method2_artifact}.
 	
-	Furthermore, in contrast to method 1, method 3 provides good registration results for moving images with large and small deformations. This can be seen in Figures~\ref{fig:method3_fail} and \ref{fig:method3_pas}.
-	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\columnwidth]{resources/chapter4/method3/compare/np_52B07_52H01_MB262B_021713B_scaled.png}
-		\caption{An example moving sample image with large deformations at the lower tip of Ventricular Nerve Cord (VNC) where the Method3 did not produce an artifact on the registered output. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method3_artifact}
+		\includegraphics[width=0.9\columnwidth]{resources/chapter4/Method3/compare/np_52B07_52H01_MB262B_021713B_scaled.png}
+		\caption{An example of a moving sample image with large deformations at the inferior tip of the ventral nerve cord (VNC) where the \texttt{Cascaded Vanilla Voxelmorph} did not produce artifacts in the registered output.}
+		\label{fig:Cascaded Vanilla Voxelmorph_artifact}
 	\end{figure}
 	
-	\begin{figure}[h]
+	Furthermore, unlike vanilla Voxelmorph, \texttt{Cascaded Vanilla Voxelmorph} provides good registration results for moving images with large and small deformations. This can be seen in the figures~\ref{fig:Cascaded Vanilla Voxelmorph_fail} and \ref{fig:Cascaded Vanilla Voxelmorph_pas}.
+	
+	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\columnwidth]{resources/chapter4/method3/compare/np_brain7_scaled.tif.png}
-		\caption{An example moving sample image with smaller deformation where the Method3 type of deformable registration could continue to produce a successful result like Method1 and Method2. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method3_pas}
+		\includegraphics[width=0.9\columnwidth]{resources/chapter4/Method3/compare/np_brain7_scaled.tif.png}
+		\caption{An example of a moving sample image with smaller deformation, where the \texttt{Cascaded Vanilla Voxelmorph} could still provide a successful result like vanilla Voxelmorph and \texttt{Landmark Guided Voxelmorph}.}
+		\label{fig:Cascaded Vanilla Voxelmorph_pas}
 	\end{figure}
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\columnwidth]{resources/chapter4/method3/compare/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
-		\caption{An example moving sample image with larger deformation where the Method3 type of deformable registration could produce a successful result when large deformation is present in contrast to Method1. Four images are plotted in a row using Matlab. The first image is the fixed image against which the registration is being performed. The second image is the moving image that is being registered. The third image is the result of the registration process, and the fourth image is an overlay of the registered image and the fixed image.}
-		\label{fig:method3_fail}
+		\includegraphics[width=0.9\columnwidth]{resources/chapter4/Method3/compare/np_60H12_14E09_MB049B_020113B_scaled.tif.png}
+		\caption{An example of a moving example image with larger deformation, where the \texttt{Cascaded Vanilla Voxelmorph} type of deformable registration could lead to a successful result at large deformations, unlike vanilla Voxelmorph.}
+		\label{fig:Cascaded Vanilla Voxelmorph_fail}
 	\end{figure}
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=\columnwidth]{resources/chapter4/method3/np_60H12_14E09_MB049B_020113B_scaled.png}
-		\caption{Registration output through a series of cascaded stages performed in a coarse-to-fine manner.}
-		\label{fig:method3_cascade}
+		\includegraphics[width=0.9\columnwidth]{resources/chapter4/Method3/np_60H12_14E09_MB049B_020113B_scaled.png}
+		\caption{Output registration through a series of cascaded stages performed by the \texttt{Cascaded Vanilla Voxelmorph} method in coarse to fine fashion.}
+		\label{fig:Cascaded Vanilla Voxelmorph_cascade}
 	\end{figure}
 	
-	The figure~\ref{fig:method3_cascade} shows the output of the registered moving image as it passes through the stages of the cascade. The corrections are applied from coarse to fine, with the transformation becoming more precise at higher and higher resolutions as the sample passes through them.
+	Figure~\ref{fig:Cascaded Vanilla Voxelmorph_cascade} shows the output of the registered moving image as it passes through the stages of the cascade. The corrections are applied from coarse to fine, with the transformation becoming more precise at higher and higher resolutions as the sample passes through them.
 	
-	\subsection{Motivation for Method4}
-	This method was able to handle large deformations better than the vanilla Voxelmorph model in Method1 or the vanilla Voxelmorph model with additional information in Method2, with no artifacts. The results show that. Although the results were satisfactory, the inclusion of landmark information during training may improve the registration results, as seen in Method2. In the next method, we will investigate this.
+	\subsubsection{Motivation for \texttt{Cascaded Landmark Guided Voxelmorph}}
+	This method could handle large deformations better than the vanilla Voxelmorph model or the vanilla Voxelmorph model with landmark information in \texttt{Landmark Guided Voxelmorph}, without artifacts. The results show that. Although the results were satisfactory, the inclusion of landmark information during training could improve the registration results, as seen in \texttt{Landmark Guided Voxelmorph}. In the next method, we will investigate this.
 	
-	\section{Results for Method4}
-	The figure~\ref{fig:method4_combine} consists of 3 moving image samples in 3 rows. Each column represents the output of the corresponding moved image over different stages of the cascaded network. This figure is representative of the output of method 4. Similarly, the figure~\ref{fig:method3_combine} consists of the same 3 moving image samples in 3 rows each. Each column again represents the output of the corresponding moved image in the different stages of the cascaded network. This figure is representative of the output of method 3.
+	\subsection{Results for \texttt{Cascaded Landmark Guided Voxelmorph}}
+	The Figure~\ref{fig:method4_combine} consists of 3 moving image samples in 3 rows. Each column represents the output of the corresponding moving image over different stages of the cascaded network. This figure is representative of the output of \texttt{Cascaded Landmark Guided Voxelmorph}. Similarly, the figure~\ref{fig:method3_combine} consists of the same 3 moving image samples in 3 rows each. Each column in turn represents the output of the corresponding moving image in the different stages of the cascaded network. This figure is representative of the output of \texttt{Cascaded Vanilla Voxelmorph}.
 	
-	Comparing Figure~\ref{fig:method4_combine} and Figure~\ref{fig:method3_combine}, it is clear that the addition of landmarks at the lower tip of the Ventricular Nerve Cord resulted in better registration accuracy for method 4 than for method 3.
+	Comparing Figure~\ref{fig:method4_combine} and Figure~\ref{fig:method3_combine}, it is clear that the addition of landmarks at the lower tip of the Ventral Nerve Cord results in better registration accuracy for \texttt{Cascaded Landmark Guided Voxelmorph} than for \texttt{Cascaded Vanilla Voxelmorph}.
 	
-	\begin{figure}[p!]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=\columnwidth]{resources/chapter4/method4/ldm/registered_images.png}
-		\caption{Coarse-to-fine registration using landmark information.}
+		\caption{Coarse-to-fine registration with \texttt{Cascaded Landmark Guided Voxelmorph} method.}
 		\label{fig:method4_combine}
 	\end{figure}
 	
-	\begin{figure}[p!]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=\columnwidth]{resources/chapter4/method4/vanilla/registered_images.png}
-		\caption{Coarse-to-fine registration without using landmark information.}
+		\caption{Coarse-to-fine registration with \texttt{Cascaded Vanilla Voxelmorph} method.}
 		\label{fig:method3_combine}
 	\end{figure}
 
-	\section{Quantitative analysis of Method3 and Method4 versus \emph{larvalign}}
-	So far, we have performed a qualitative analysis, visually analyzing the registered images. However, in this section we would like to perform a quantitative analysis to analyze and interpret the data in a systematic and objective way. As part of the quantitative metrics, we will use the metrics used in larvalign paper \cite{larvalign} and explained in the \ref{sec:quality} section. These values will be compared to the numbers from the Larvalign and used as a baseline.
+	\section{Quantitative analysis} \label{sec:Quantitative}
+	So far, we have done qualitative analysis by visually inspecting the registered images and now we know that among all four methods, \texttt{Cascaded Vanilla Voxelmorph} and \texttt{Cascaded Landmark Guided Voxelmorph} are the two most promising methods. So in this section, we will perform the quantitative analysis of these two methods compared to \emph{larvalign}. We perform the analysis to systematically and objectively analyze and interpret the result and compare it with the numbers for the \textit{larvalign} method, which will serve as the baseline. We will use the metrics presented in the \textit{larvalign} \cite{larvalign}, which are also formally defined in the \nameref{sec:quality} section of the chapter~\nameref{chap:imp_and_data}.
 	
-	We divide the quantitative assessment into two subsections - one measures the Mattes Mutual Information between the registered and the fixed images, and the second measures the distances between the landmarks in the registered and the fixed images. These landmark distances allow us to assess whether or not the biologically important landmarks have moved to the correct location.
+	Four scores are recorded in the evaluation - three of them measure the Mattes Mutual Information between the registered and the fixed images globally and locally, and another score that measures the landmark registration error (LRE) between the registered and the fixed images. 
 	
-	The models will be trained with the {Janelia dataset} and tested with the {Larvalign dataset}. The {Larvalign dataset} will be divided into {good, medium, and random} images based on the quality of the scans, which we will then use to independently perform the quantitative measurements and evaluate the performance of our models on them.
-	
-	\subsection{Mattes Mutual Information (MMI)}
-	We recorded 3 Mattes Mutual Information scores in total between the registered and the fixed image.
-	\begin{enumerate}
-		\item \textbf{Global MMI} score between the registered and fixed image - this would allow us to capture the similarity between the two images.
-		\item \textbf{Local MMI} score between the registered and fixed image in the Ventricular Nerve Cord (VNC) and Thoracic Nerve Entry Points regions - this would allow us to capture information locally in these regions.
-	\end{enumerate}
-	
+	The \texttt{Larvalign dataset} is divided into "good", "average", and "random" sets depending on the quality of the scans and we will use this to report the performance of our methods as a function of the quality of the scans.	
+
+	\begin{comment}
 	The table~\ref{table:quality_larvalign_good} records the score for the good quality images of the \texttt{larvalign dataset}, the table~\ref{table:quality_larvalign_medium} the score for the medium quality images of the \texttt{Larvalign dataset}, and \ref{table:quality_larvalign_random} the score for the random quality images of the the table~\texttt{Larvalign dataset} registered using larvalign method.
 	
-	Similarly, the table~\ref{table:quality_vanilla_good} records the score for the good quality images of the \texttt{larvalign dataset}, the table~\ref{table:quality_vanilla_medium} the score for the medium quality images of the \texttt{Larvalign dataset}, and the table~\ref{table:quality_vanilla_random} the score for the random quality images of the \texttt{Larvalign dataset} registered using our proposed method - Method3.
+	Similarly, the table~\ref{table:quality_vanilla_good} records the score for the good quality images of the \texttt{larvalign dataset}, the table~\ref{table:quality_vanilla_medium} the score for the medium quality images of the \texttt{Larvalign dataset}, and the table~\ref{table:quality_vanilla_random} the score for the random quality images of the \texttt{Larvalign dataset} registered using our proposed method - \texttt{Cascaded Vanilla Voxelmorph}.
 	
-	Finally, the table~\ref{table:quality_ldm_good} records the score for the good quality images of the \texttt{larvalign dataset}, the table~\ref{table:quality_ldm_medium} the score for the medium quality images of the \texttt{Larvalign dataset}, and the table~\ref{table:quality_ldm_random} the score for the random quality images of the \texttt{Larvalign dataset} registered using our proposed method - Method4.
-
-	\begin{table}[H]
+	Finally, the table~\ref{table:quality_ldm_good} records the score for the good quality images of the \texttt{larvalign dataset}, the table~\ref{table:quality_ldm_medium} the score for the medium quality images of the \texttt{Larvalign dataset}, and the table~\ref{table:quality_ldm_random} the score for the random quality images of the \texttt{Larvalign dataset} registered using our proposed method - \texttt{Cascaded Landmark Guided Voxelmorph}.
+	
+	\begin{table}[h]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_larvalign_Good.tex}
-		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign} dataset registered using \emph{larvalign} method \cite{larvalign}.}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign dataset} registered using \emph{larvalign} method \cite{larvalign}.}
 		\label{table:quality_larvalign_good}
 	\end{table}
-
-	\begin{table}[H]
+	
+	\begin{table}[h]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_vanilla_Good.tex}
-		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign} dataset registered using Method3.}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign dataset} registered using \texttt{Cascaded Vanilla Voxelmorph}.}
 		\label{table:quality_vanilla_good}
 	\end{table}	
-
-	\begin{table}[H]
+	
+	\begin{table}[h]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_ldm_Good.tex}
-		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign} dataset registered using Method4.}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign dataset} registered using \texttt{Cascaded Landmark Guided Voxelmorph}.}
 		\label{table:quality_ldm_good}
 	\end{table}
-
-	\begin{table}[H]
+	
+	\begin{table}[h]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_larvalign_Medium.tex}
-		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign} dataset registered using \emph{larvalign} method \cite{larvalign}.}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign dataset} registered using \emph{larvalign} method \cite{larvalign}.}
 		\label{table:quality_larvalign_medium}
 	\end{table}
-
-	\begin{table}[H]
+	
+	\begin{table}[h]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_vanilla_Medium.tex}
-		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign} dataset registered using Method3.}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign dataset} registered using \texttt{Cascaded Vanilla Voxelmorph}.}
 		\label{table:quality_vanilla_medium}
 	\end{table}
-
-	\begin{table}[H]
+	
+	\begin{table}[h]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_ldm_Medium.tex}
-		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign} dataset registered using Method4.}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign dataset} registered using \texttt{Cascaded Landmark Guided Voxelmorph}.}
 		\label{table:quality_ldm_medium}
 	\end{table}
-
-	\begin{table}[H]
+	
+	\begin{table}[h]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_larvalign_Random.tex}
-		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign} dataset registered using \emph{larvalign} method \cite{larvalign}.}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign dataset} registered using \emph{larvalign} method \cite{larvalign}.}
 		\label{table:quality_larvalign_random}
 	\end{table}
-
-	\begin{table}[H]
+	
+	\begin{table}[h]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_vanilla_Random.tex}
-		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign} dataset registered using Method3.}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign dataset} registered using \texttt{Cascaded Vanilla Voxelmorph}.}
 		\label{table:quality_vanilla_random}
 	\end{table}
-
-	\begin{table}[H]
+	
+	\begin{table}[h]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_ldm_Random.tex}
-		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign} dataset registered using Method4.}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign dataset} registered using \texttt{Cascaded Landmark Guided Voxelmorph}.}
 		\label{table:quality_ldm_random}
 	\end{table}
+\end{comment}
 
-	\subsection{Landmark Distances}
-	The local MMI values measured in the above analysis capture the similarity between the two images in these VNC regions and Thoracic Nerve Entry regions. However, we are also interested in whether or not the other local biologically important structures were correctly captured. To this end, we decided to manually annotate all 30 landmarks identified and proposed by the biologists in the Larvalign study and use the medium quality images from the Larvalign dataset for the annotations to compensate for the overall annotation time and also because the medium quality images are more representative of the use case than good or random quality images, which can sometimes represent extreme use cases. The location of the 30 landmarks can be seen in the figure~\ref{fig:landmark_annotations}, which was taken directly from the Larvalign paper \cite{larvalign}.
+	\subsection{Mattes Mutual Information (MMI)}
+	We recorded a total of three Mattes Mutual Information \cite{mattes} scores using the Convert3D command line image processing tool between the registered and fixed images. \newline
+	\verb|c3d fixed_image.tif registered_image.tif mask.tif -popas fmask -mmi|
 	
-	The annotations for this study were done by us, and one of the fully labeled images was provided to the biologists for review and approval of the accuracy of the annotations. With the exception of the entry points of the "A6 nerve entry", the "A8 nerve entry", and the "upper most anterior nerve entry", all other labels were perfect, as this requires a better biological understanding to clearly identify them. With the exception of these 6 landmarks (right and left), all other markings can be considered correct. This is clearly evident in the high standard deviations seen in figures Figure~\ref{fig:landmark17} and Figure~\ref{fig:landmark21} for "upper most anterior nerve entry" in all the 3 approaches. Similarly, the high standard deviations are observed for "A8 nerve entry" and "A6 nerve entry" points in figures Figure~\ref{fig:landmark7}, Figure~\ref{fig:landmark26}, Figure~\ref{fig:landmark1}, and Figure~\ref{fig:landmark24}. The far more higher standard deviations observed in Cascaded Vanilla Voxelmorph can be accounted for its inaccuarcy in registering the lower tip of Ventricular Nerve Cord (VNC), and in Cascaded Landmark Guided Voxelmorph can be accounted for few outliers where the registration is not accurate.
+	One of these three Mattes Mutual Information values captures the global similarity between the fixed and registered images, while the other two capture the local similarity. The two local similarity scores are \nameref{subsubsec:vi} and \nameref{subsubsec:ti}, which are described in chapter~\nameref{chap:imp_and_data} on page~\pageref{subsubsec:vi}-\pageref{subsubsec:ti}.
 	
-	The Landmark Registration Error (LRE) was performed on the "medium" quality images from the Larvalign Dataset that is, across all the "medium" quality images 30 Landmark Registration Error was captured.
+	Table~\ref{table:Quality_Good_Fresh}, Table~\ref{table:Quality_Medium_Fresh}, and Table~\ref{table:Quality_Random_Fresh} list the global Mattes Mutual Information score (MMI), VI score, and TI score values for the scans from the "good," "medium," and "random" quality sets in the \texttt{Larvalign dataset} for all three methods.
+
+	\begin{table}[h!]
+		\centering
+		\input{resources/chapter5_fresh/Quality/Quality_Good.tex}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "good" quality images from the \texttt{Larvalign dataset} registered using \emph{larvalign} method, \texttt{Cascaded Vanilla Voxelmorph} method, and \texttt{Cascaded Landmark Guided Voxelmorph} method.}
+		\label{table:Quality_Good_Fresh}
+	\end{table}
+
+	\begin{table}[h!]
+		\centering
+		\input{resources/chapter5_fresh/Quality/Quality_Medium.tex}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "medium" quality images from the \texttt{Larvalign dataset} registered using \emph{larvalign} method, \texttt{Cascaded Vanilla Voxelmorph} method, and \texttt{Cascaded Landmark Guided Voxelmorph} method.}
+		\label{table:Quality_Medium_Fresh}
+	\end{table}
+
+	\begin{table}[h!]
+		\centering
+		\input{resources/chapter5_fresh/Quality/Quality_Random.tex}
+		\caption{Mattes Mutual Information, VI Error Indicator, TI Error Indicator scores measured on "random" quality images from the \texttt{Larvalign dataset} registered using \emph{larvalign} method, \texttt{Cascaded Vanilla Voxelmorph} method, and \texttt{Cascaded Landmark Guided Voxelmorph} method.}
+		\label{table:Quality_Random_Fresh}
+	\end{table}
+
+	\subsection{Landmark registration error (LRE)} \label{subsec:landmark_distance}
+	The values for \nameref{subsubsec:vi} and \nameref{subsubsec:ti} measured in the above analysis capture the similarity between the two images in the VNC regions and the thoracic nerve input regions. However, we are also interested in whether or not the other local biologically important structures were correctly captured. We decided to use all 30 landmarks used in the \emph{larvalign} work for our performance evaluation. Figure~\ref{fig:landmark_annotations} in the~\nameref{subsec:quantitative} subsection of the~\nameref{chap:imp_and_data} chapter shows the annotation for all of these 30 landmarks in a sample scan. 
 	
-	The below Table~\ref{table:stats_per_landmark} summarizes how the error for each landmark point varied across the approaches like larvalign, Cascaded Vanilla VXM, and Cascaded Landmark Guided VXM methods. The table reports mean error, median error, maximum error and the standard deviation in registering the particular landmark across all the images in the "medium" quality dataset of Larvalign across all the 3 approaches.
+	The labeling for this study was done by us, and one of the fully labeled images was submitted to the biologists for review and approval of the accuracy of the labels. With the exception of the entry points of the "A6 nerve entry," the "A8 nerve entry," and the "uppermost anterior nerve entry," all other labels were good, as this requires a better biological understanding to clearly identify them. With the exception of these 6 landmarks (right and left), all other labels can be considered correct.
+	
+	The below landmark registration error (LRE) equation~\eqref{eqn:lre} explained in subsection~\nameref{subsec:quantitative} from chapter~\ref{chap:imp_and_data} showed how the landmark registration error (LRE) was computed.
+	
+	$$ LRE = \frac{1}{K} \sum_{k=1}^K \sqrt{(x_f^k - x_m^k)^2 + (y_f^k - y_m^k)^2 + (z_f^k - z_m^k)^2} $$
+	
+	where $K=30$ is the number of landmarks, $(x_f^k, y_f^k, z_f^k)$ and $(x_m^k, y_m^k, z_m^k)$ represent the coordinates of the $k$-th landmark in the fixed and moved images, respectively. And every landmark is equally weighted in computing this registration error.
+	
+	The landmark registration error (LRE) calculation was performed for the "medium" quality level scans in the \texttt{Larvalign Dataset}. Table~\ref{table:stats_per_landmark} shows the mean landmark registration error (LRE) per landmark point, while Table~\ref{tab:mean_stats_per_scan} shows the mean landmark registration error per registration for all three registration approaches.
+	
+	In addition to the information in Table~\ref{table:stats_per_landmark}, the figures from Figure~\ref{fig:landmark1} to Figure~\ref{fig:landmark30} in the Appendix extend the information summarized by presenting the full information in an error distribution diagram. From Figure~\ref{fig:landmark17} and Figure~\ref{fig:landmark21}, the high standard deviations in all three registration approaches for the landmark "uppermost anterior nerve input" indicate that this particular landmark annotation was inaccurate.
 	
 	\begin{table}[h]
 		\centering
 		\input{resources/chapter5_fresh/stats_per_landmark.tex}
-		\caption{Mean and Standard Deviation Landmark Registration Error (LRE) for each landmark point measured across all the "medium" quality images in the Larvalign Dataset across larvalign method, Cascaded Vanilla Voxelmorph, and Cascaded Landmark Guided Voxelmorph approaches}
+		\caption{Mean and standard deviation of landmark registration error (LRE) per landmark point measured over the entire population in the "medium" quality \texttt{Larvalign dataset} for the \textit{larvalign} method, the \texttt{Cascaded Vanilla Voxelmorph}, and the \texttt{Cascaded Landmark Guided Voxelmorph} approach.}
 		\label{table:stats_per_landmark}
-	\end{table}
-	
-	The below figures from Figure~\ref{fig:landmark1} to Figure~\ref{fig:landmark30} extend the above information by depicting the complete information for each landmark across all the "medium" quality images and approaches.
-	
+	\end{table}	
 
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left A6 nerve entry.png}
-	\caption{Statistics for "left A6 nerve entry" landmark across different approaches.}
-	\label{fig:landmark1}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T2.png}
-	\caption{Statistics for "left thoracic nerve entry T2" landmark across different approaches.}
-	\label{fig:landmark2}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/center SEZ neuropil fusion.png}
-	\caption{Statistics for "center SEZ neuropil fusion" landmark across different approaches.}
-	\label{fig:landmark3}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right basal brain neuropil border posterior.png}
-	\caption{Statistics for "right basal brain neuropil border posterior" landmark across different approaches.}
-	\label{fig:landmark4}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T2.png}
-	\caption{Statistics for "right thoracic nerve entry T2" landmark across different approaches.}
-	\label{fig:landmark5}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left tip of vertical lobe.png}
-	\caption{Statistics for "left tip of vertical lobe" landmark across different approaches.}
-	\label{fig:landmark6}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right A8 nerve entry.png}
-	\caption{Statistics for "right A8 nerve entry" landmark across different approaches.}
-	\label{fig:landmark7}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T3.png}
-	\caption{Statistics for "right thoracic nerve entry T3" landmark across different approaches.}
-	\label{fig:landmark8}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right antennal nerve.png}
-	\caption{Statistics for "right antennal nerve" landmark across different approaches.}
-	\label{fig:landmark9}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left anterior LON nerve.png}
-	\caption{Statistics for "left anterior LON nerve" landmark across different approaches.}
-	\label{fig:landmark10}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T1.png}
-	\caption{Statistics for "right thoracic nerve entry T1" landmark across different approaches.}
-	\label{fig:landmark11}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/Left MB vertical medial lobe connection.png}
-	\caption{Statistics for "Left MB vertical medial lobe connection" landmark across different approaches.}
-	\label{fig:landmark12}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right anterior LON nerve.png}
-	\caption{Statistics for "right anterior LON nerve" landmark across different approaches.}
-	\label{fig:landmark13}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left upper peduncle.png}
-	\caption{Statistics for "left upper peduncle" landmark across different approaches.}
-	\label{fig:landmark14}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/end of ventral nerve cord.png}
-	\caption{Statistics for "end of ventral nerve cord" landmark across different approaches.}
-	\label{fig:landmark15}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T3.png}
-	\caption{Statistics for "left thoracic nerve entry T3" landmark across different approaches.}
-	\label{fig:landmark16}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right upper most anterior nerve entry.png}
-	\caption{Statistics for "right upper most anterior nerve entry" landmark across different approaches.}
-	\label{fig:landmark17}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/anterior upper commisure.png}
-	\caption{Statistics for "anterior upper commisure" landmark across different approaches.}
-	\label{fig:landmark18}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right upper peduncle.png}
-	\caption{Statistics for "right upper peduncle" landmark across different approaches.}
-	\label{fig:landmark19}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right MB vertical medial lobe connection.png}
-	\caption{Statistics for "right MB vertical medial lobe connection" landmark across different approaches.}
-	\label{fig:landmark20}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left upper most anterior nerve entry.png}
-	\caption{Statistics for "left upper most anterior nerve entry" landmark across different approaches.}
-	\label{fig:landmark21}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left A7 nerve entry.png}
-	\caption{Statistics for "left A7 nerve entry" landmark across different approaches.}
-	\label{fig:landmark22}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right tip of vertical lobe.png}
-	\caption{Statistics for "right tip of vertical lobe" landmark across different approaches.}
-	\label{fig:landmark23}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right A6 nerve entry.png}
-	\caption{Statistics for "right A6 nerve entry" landmark across different approaches.}
-	\label{fig:landmark24}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left basal brain neuropil border posterior.png}
-	\caption{Statistics for "left basal brain neuropil border posterior" landmark across different approaches.}
-	\label{fig:landmark25}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left A8 nerve entry.png}
-	\caption{Statistics for "left A8 nerve entry" landmark across different approaches.}
-	\label{fig:landmark26}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/right A7 nerve entry.png}
-	\caption{Statistics for "right A7 nerve entry" landmark across different approaches.}
-	\label{fig:landmark27}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/posterior upper commisure.png}
-	\caption{Statistics for "posterior upper commisure" landmark across different approaches.}
-	\label{fig:landmark28}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left antennal nerve.png}
-	\caption{Statistics for "left antennal nerve" landmark across different approaches.}
-	\label{fig:landmark29}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.7\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T1.png}
-	\caption{Statistics for "left thoracic nerve entry T1" landmark across different approaches.}
-	\label{fig:landmark30}
-\end{figure}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	\clearpage
-	
-	
-	
-	The table~\ref{table:lre_larvalign} represents the mean and standard deviation of landmark registration error for each landmark measured across all the medium quality images in \texttt{Larvalign dataset} registered using the larvalign method.
-	
-	\begin{table}[h]
+	\begin{table}[h!]
 		\centering
-		\input{resources/chapter5/additional_tables/lrv.tex}
-		\caption{Average Landmark Registration Error (LRE) captured on all the "medium" quality images from the \texttt{Larvalign} dataset registered using \emph{larvalign} method \cite{larvalign}.}
-		\label{table:lre_larvalign}
+		\input{resources/chapter5_fresh/stats_per_scan_output/mean_stats_per_scan.tex}
+		\caption{Landmark registration error (LRE) were averaged per registration and the mean error on the "medium" quality scans of \texttt{Larvalign dataset} across all 3 approaches.}
+		\label{tab:mean_stats_per_scan}
 	\end{table}
 
-	The table~\ref{table:lre_vanilla} represents the mean and standard deviation of landmark registration error for each landmark measured across all the medium quality images in \texttt{Larvalign dataset} registered using Method3.
-	
-	\begin{table}[h]
-		\centering
-		\input{resources/chapter5/additional_tables/vanilla.tex}
-		\caption{Average Landmark Registration Error (LRE) captured on all the "medium" quality images from the \texttt{Larvalign} dataset registered using Method3.}
-		\label{table:lre_vanilla}
-	\end{table}
-
-	The table~\ref{table:lre_ldm} represents the mean and standard deviation of landmark registration error for each landmark measured across all the medium quality images in \texttt{Larvalign dataset} registered using Method4.
-	
-	\begin{table}[h]
-		\centering
-		\input{resources/chapter5/additional_tables/ldm.tex}
-		\caption{Average Landmark Registration Error (LRE) captured on all the "medium" quality images from the \texttt{Larvalign} dataset registered using Method4.}
-		\label{table:lre_ldm}
-	\end{table}
+	\section{Registration Time} \label{sec:RegTime}
 	
 	\chapter{Discussion}
 	The goal of this chapter is to provide a clear and concise summary of the key findings of the research, and to interpret and discuss their significance in relation to the research question of whether deep learning is a fast and robust method for image registration compared to the traditional way of performing image registration.
 	
 	\section{Quantitative Assessment on Landmark Registration Error (LRE)}
-	The Landmark Registration Error (LRE) were computed on larvalign registration method, Method3, and Method4 on the "medium" quality images from the larvalign dataset. The average Landmark Registration Error (LRE) across all these images and across all the 30 landmark points was calculated for all the three methods and tabulated below in the table~\ref{table:lre}.
+	Landmark registration errors (LRE) were computed on \texttt{Cascaded Vanilla Voxelmorph}, \texttt{Cascaded Landmark Guided Voxelmorph}, and \textit{larvalign} registered output scans from the "medium" quality set in \texttt{Larvalign dataset}. The Table~\ref{table:lre} summarizes the distribution of these errors across these three registration methods and we can notice that \textit{larvalign} method clearly has a better score than \texttt{Cascaded Vanilla Voxelmorph} or \texttt{Cascaded Landmark Guided Voxelmorph} in all respects. 
 	
-	From the table we can see that larvalign method has a better score than Method3 or Method4. However, larvalign method outperforms Method3 by 0.54 micrometers and Method4 by 0.19 micrometers only. From the larvalign paper, we know that the diameter of the anatomical structures at the selected landmarks – often nerve entry points – is in the range of 2-8 micrometers, with more than 50\% of the structures having diameters \textless 5 micrometers. Given this fact, the difference in less than half a micrometer can be acceptable.
-	
-	Also, the variance in Larvalign method and Method4 is comparable.
-	
-	\begin{table}[h]
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\columnwidth]{resources/chapter5_fresh/stats_per_scan_output/Stats_Per_Landmark.png}
+		\caption{Landmark registration error (LRE) were averaged per registration on the "medium" quality \texttt{Larvalign dataset} for all three approaches and the average error distribution is plotted.}
+		\label{fig:mean_stats_per_scan}
+	\end{figure}
+
+	\begin{table}[h!]
 		\centering
 		\input{resources/chapter5/csv_files/LRE.tex}
-		\caption{Summary of the average Landmark Registration Error (LRE) across all 30 landmarks for each method.}
+		\caption{Summary of landmark registration error (LRE) averaged per registration and the mean error, the median error, the max error, and the corresponding standard deviation were calculated on the "medium" quality scans of Larvalign Dataset across all 3 approaches.}
 		\label{table:lre}
 	\end{table}
-
+	
+	Although the summary values in table~\ref{table:lre} make it appear that all three registration methods perform almost equally well in terms of landmark registration error (LRE), the plot of the error distribution in Figure~\ref{fig:mean_stats_per_scan} shows that the landmark registration error (LRE) is quite wide for the \texttt{Cascaded Vanilla Voxelmorph} method. And both the \textit{larvalign} and the \texttt{Cascaded Landmark Guided Voxelmorph} methods have comparable statistical values and error distributions.
+	
+	Though the maximum error for the \texttt{Cascaded Landmark Guided Voxelmorph} method is larger than for the \textit{larvalign} method, the difference is only 0.41 \textmu m. This is acceptable because we know from the \textit{larvalign} paper that the diameter of anatomical structures at the selected landmarks-often nerve entry points-ranges from 2-8 \textmu, with more than 50\% of the structures having a diameter of 5 m. In addition, assessment of intra-rater variability in landmark annotation by the same neurobiologist as shown that there is a mean intra-rater variance of 2.0 $\pm$ 1.2 \textmu m and a maximum intra-rater variance of 3.5 $\pm$ 1.8 \textmu m. Considering this information, the difference of less than half a micrometer is quite negligible.
+	
 	\section{Quantitative Assessment on Mattes Mutual Information Scores}
-	Mattes Mutual Information scores in the region of VNC, Thoracic Nerve Entry points, and on the whole image were measured for all the images ("good", "medium", and "random") from the Larvalign dataset. The below ~\ref{table:quality_good}, ~\ref{table:quality_medium}, ~\ref{table:quality_random} tables contains the summary information averaged over the "good", "medium", and "random" quality images.
-	
-	From the table we can see that both our methods, Method3 and Method4, comfortably over performs the larvalign method. And more specifically, we can observe that VI score is always better in all the image qualities for Method4, where we specifically introduced landmark points to guide the registration process. This is another proof that adding landmark information leads to better performance
-	
-	Though in some scenarios, Method3 has better scores than Method4, this is only by fractions. However, the score difference in VI scores is quite significant and Method4 is clearly the winnner.
+	Mattes Mutual Information scores in the region of the VNC, thoracic nerve entry points, and throughout the image were measured for all images ("good," "medium," and "random") from the \texttt{Larvalign dataset}. The following table~\ref{table:quality_good}, table~\ref{table:quality_medium}, table~\ref{table:quality_random} contains the summary scores averaged over the "good," "medium," and "random" quality images.
 	
 	\begin{table}[h!]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_Good.tex}
-		\caption{Summary of the average MMI, VI, and TI errors across all the "good" quality images for each method.}
+		\caption{Average MMI, VI, and TI errors across all the "good" quality images in \texttt{Larvalign dataset} for each method.}
 		\label{table:quality_good}
 	\end{table}
 	
 	\begin{table}[h!]
 		\centering
 		\input{resources/chapter5/csv_files/Quality_Medium.tex}
-		\caption{Summary of the average MMI, VI, and TI errors across all the "medium" quality images for each method.}
+		\caption{Average MMI, VI, and TI errors across all the "medium" quality images in \texttt{Larvalign dataset} for each method.}
 		\label{table:quality_medium}
+	\end{table}
+	
+	\begin{table}[h!]
+		\centering
+		\input{resources/chapter5/csv_files/Quality_Random.tex}
+		\caption{Average MMI, VI, and TI errors across all the "random" quality images in \texttt{Larvalign dataset} for each method.}
+		\label{table:quality_random}
+	\end{table}
+
+	From the tables, we can see that both methods, \texttt{Cascaded Vanilla Voxelmorph} and \texttt{Cascaded Landmark Guided Voxelmorph}, significantly outperform the \textit{larvalign} method. More specifically, we can see that the VI score for \texttt{Cascaded Landmark Guided Voxelmorph} is better for all image qualities because we specifically introduced landmark points to control the registration process. This is another proof that adding landmark information leads to better performance.
+	
+	\section{Landmark Registration Error at Ventral Nerve Cord (VNC)}
+	In this section, we will discuss the improvements seen in the accuracy of registration at the lower tip of Ventral Nerve Cord (VNC) upon the adding landmarks into the training as auxiliary information. Figure~\ref{fig:vnc} shows 7 landmarks that were identified by the biologists in \textit{larvalign} paper.
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\columnwidth]{resources/chapter7/VNC.png}
+		\caption{Lower Ventral Nerve Cord (VNC) region in the template brain of Droshophila larva and the associated landmark points in the region. (1,2) are the right/left A8 nerve entry points, (3,4) are the right/left A6 nerve entry points, (5,6) are the right/left A7 nerve entry points, and (7) is the end of ventral nerve cord.}
+		\label{fig:vnc}
+	\end{figure}
+	
+	From Figure~\ref{fig:landmark1}, Figure~\ref{fig:landmark7}, Figure~\ref{fig:landmark15}, Figure~\ref{fig:landmark22}, Figure~\ref{fig:landmark24}, Figure~\ref{fig:landmark26} and Figure~\ref{fig:landmark27}, it can be clearly seen that the landmark registration error (LRE) in the VNC region is high for the \texttt{Cascaded Vanilla Voxelmorph} method compared to the \textit{larvalign} method or the \texttt{Cascaded Landmark Guided Voxelmorph} method. Also, it is clearly evident that adding landmark points in the VNC region helped the network perform better registration than \texttt{Cascaded Vanilla Voxelmorph}.
+	
+	Because the labeling of the entry points of "right/left A6 nerve entry" and "right/left A8 nerve entry" were not accurate for the reasons mentioned in section~\nameref{subsec:landmark_distance} in chapter~\nameref{chapter:results}, we will consider only the entry points of "right/left A7 nerve entry" and "end point of the ventral nerve cord" for analysis. For convenience, they are represented here again as Figure~\ref{fig:re_landmark22}, Figure~\ref{fig:re_landmark27}, and Figure~\ref{fig:re_landmark15}.
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left A7 nerve entry.png}
+		\caption{LRE plot distribution for "left A7 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:re_landmark22}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right A7 nerve entry.png}
+		\caption{LRE plot distribution for "right A7 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:re_landmark27}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/end of ventral nerve cord.png}
+		\caption{LRE plot distribution for "end of ventral nerve cord" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:re_landmark15}
+	\end{figure}
+	
+	The \texttt{Cascaded Vanilla Voxelmorph} method is the least accurate of the three methods when it comes to accurately registering the landmark points at the lower tip of the VNC.
+	
+	Table~\ref{table:vnc_lre} indicate that the average deviation in landmark registration error (LRE) at the VNC landmark points is better for \textit{larvalign} method. However, \emph{larvalign} is better only by less than 1 \textmu m, where as the intra-rater variance itself is about 2 \textmu m.
+	
+	We can analyze the Figure~\ref{fig:re_landmark22}, Figure~\ref{fig:re_landmark27}, and Figure~\ref{fig:re_landmark15} more closely and notice that brain scans (4) and (5) have large outliers in landmark registration errors at all the 3 landmark points for \texttt{Cascaded Landmark Guided Voxelmorph} method and the for our reference, Table~\ref{table:brain45_lre} captures this absolute error between the two registration approaches at the specific landmarks.
+	
+	\begin{table}[h!]
+		\centering
+		\input{resources/Chapter7/VNC_LRE.tex}
+		\caption{Average deviation in landmark registration error (LRE) for the entry points of the A7 right/left nerve and the end of the ventral nerve cord on all scans from "medium" quality set in the \texttt{Larvalign dataset} for the \textit{larvalign} and \texttt{Cascaded Landmark Guided Voxelmorph} methods.}
+		\label{table:vnc_lre}
 	\end{table}
 	
 	\begin{table}[h]
 		\centering
-		\input{resources/chapter5/csv_files/Quality_Random.tex}
-		\caption{Summary of the average MMI, VI, and TI errors across all the "random" quality images for each method.}
-		\label{table:quality_random}
+		\input{resources/Chapter7/LRE_Visual/Brain45_LRE.tex}
+		\caption{One-to-one comparison of landmark registration error (LRE) for Brain Scan 4 and 5 for \textit{larvalign}-registered output and \texttt{Cascaded Landmark Guided Voxelmorph}-registered output at landmark locations "Right/Left A7 Nerve Entry Points" and "End of Ventral Nerve Cord".}
+		\label{table:brain45_lre}
 	\end{table}
+	
+	Figures~\ref{fig:14c08b_overlay} and \ref{fig:14c08c_overlay} show registered brain scans (4) and (5) overlaid with the template to show how poor or alright the registration is.
+
+	The registered image of \texttt{Cascaded Landmark Guided Voxelmorph} has not perfectly registered, yes. But, it needs to noted that the model was trained on \texttt{Janelia dataset} and tested on \texttt{Larvalign dataset}. Training explicitly on \texttt{Larvalign dataset} and testing on the same dataset would give better results.
+	
+	It is important to mention that the landmark registration error (LRE) can also be due to the presence of structures in different slice order. For example, the overlay with the \textit{larvalign}-registered output in Figure~\ref{fig:14c08b_overlay} appears to be very perfect at the "end of ventral nerve cord" landmark. However, the error is still 2.10 \textmu m because the structure appears at slice number 36 in the fixed image, whereas the same structure appears at slice number 34 in the registered image. So sometimes the registration error can be due to the structures being at a different depth.
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/Chapter7/LRE_Visual/14c08b_overlay_zoomed.png}
+		\caption{Focused overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for Brain Scan (4).}
+		\label{fig:14c08b_overlay}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/Chapter7/LRE_Visual/14c08c_overlay_zoomed.png}
+		\caption{Focused overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for Brain Scan (5).}
+		\label{fig:14c08c_overlay}
+	\end{figure}
+	
+	\section{Cascaded Landmark Guided Voxelmorph's ability to learn from mistakes.}
+	One of the key features we wanted to find out was whether the Deep Learning Neural Network could learn from its mistakes and not make the same registration error as \textit{larvalign}. In \emph{larvalign}'s work, three erroneous registrations were shown in Fig. 3 of \textit{larvalign}'s work. These brain scans are part of the "random" quality set of the \texttt{Larvalign dataset}, where \textit{larvalign} clearly had problems registering at the lower end of the Ventral Nerve Cord. The Figure~\ref{fig:larvalign failure 1}, Figure~\ref{fig:larvalign failure 2}, and Figure~\ref{fig:larvalign failure 3} shows an overlay between the \textit{larvalign} registered output and \texttt{Cascaded Landmark Guided Voxelmorph} registered output.
+	
+	One can notice the presence of magenta structures at the lower end of the Ventral Nerve Cord in the \textit{larvalign} registered outputs. These magenta structures are the structures where the registration has failed. In contrast, the corresponding output for the \texttt{Cascaded Landmark Guided Voxelmorph} registered output shows no such magenta structures, and there is nice overlap between the fixed image and the registered image. Though, in the previous sections we saw that landmark registration error (LRE) for \textit{larvalign} is better, \texttt{Cascaded Landmark Guided Voxelmorph} is able to generalize better and handle the scenarios where \textit{larvalign} fails.
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.8\columnwidth]{resources/Chapter7/LRE_Visual/24b09.png}
+		\caption{Overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for \texttt{larvalign failure 1}.}
+		\label{fig:larvalign failure 1}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.8\columnwidth]{resources/Chapter7/LRE_Visual/53a06.png}
+		\caption{Overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for \texttt{larvalign failure 2}.}
+		\label{fig:larvalign failure 2}
+	\end{figure}
+
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.8\columnwidth]{resources/Chapter7/LRE_Visual/60a07.png}
+		\caption{Overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for \texttt{larvalign failure 3}.}
+		\label{fig:larvalign failure 3}
+	\end{figure}
+	
+	\section{Cascaded Landmark Guided Voxelmorph's ability to generalize.}
+	We learned from the biologists that the \textit{larvalign} method that works for brain scans from one lab does not work for similar brain scans from another lab. Before we could test the generalizability of our model, we wanted to identify the brain scans for which \textit{larvalign} failed. Therefore, we registered all brain scans from the \texttt{Leipzig and Janelia datasets} and visually inspected the projection of the maximal intensity of the results registered with \textit{larvalign}.
+	
+	
+	\section{Cascaded Landmark Guided Voxelmorph produces blurry registered output.}
+	Though the registration was good, the output 
 	
 	\chapter{Conclusion}
 	
 	% bibiliography
 	\newpage
-	\listoffigures
+	\listoffigures % list of figures should be efore appendix.
 	\listoftables
 	\lstlistoflistings % Generate list of listings
+	
+	\appendix
+	\chapter{Results}
+	\section{Quantitative Analysis}
+	\subsection{Landmark Registration Error (LRE)}	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left A6 nerve entry.png}
+		\caption{LRE plot distribution for "left A6 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark1}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T2.png}
+		\caption{LRE plot distribution for "left thoracic nerve entry T2" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark2}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/center SEZ neuropil fusion.png}
+		\caption{LRE plot distribution for "center SEZ neuropil fusion" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark3}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right basal brain neuropil border posterior.png}
+		\caption{LRE plot distribution for "right basal brain neuropil border posterior" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark4}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T2.png}
+		\caption{LRE plot distribution for "right thoracic nerve entry T2" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark5}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left tip of vertical lobe.png}
+		\caption{LRE plot distribution for "left tip of vertical lobe" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark6}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right A8 nerve entry.png}
+		\caption{LRE plot distribution for "right A8 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark7}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T3.png}
+		\caption{LRE plot distribution for "right thoracic nerve entry T3" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark8}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right antennal nerve.png}
+		\caption{LRE plot distribution for "right antennal nerve" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark9}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left anterior LON nerve.png}
+		\caption{LRE plot distribution for "left anterior LON nerve" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark10}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T1.png}
+		\caption{LRE plot distribution for "right thoracic nerve entry T1" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark11}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/Left MB vertical medial lobe connection.png}
+		\caption{LRE plot distribution for "Left MB vertical medial lobe connection" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark12}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right anterior LON nerve.png}
+		\caption{LRE plot distribution for "right anterior LON nerve" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark13}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left upper peduncle.png}
+		\caption{LRE plot distribution for "left upper peduncle" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark14}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/end of ventral nerve cord.png}
+		\caption{LRE plot distribution for "end of ventral nerve cord" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark15}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T3.png}
+		\caption{LRE plot distribution for "left thoracic nerve entry T3" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark16}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right upper most anterior nerve entry.png}
+		\caption{LRE plot distribution for "right upper most anterior nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark17}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/anterior upper commisure.png}
+		\caption{LRE plot distribution for "anterior upper commisure" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark18}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right upper peduncle.png}
+		\caption{LRE plot distribution for "right upper peduncle" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark19}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right MB vertical medial lobe connection.png}
+		\caption{LRE plot distribution for "right MB vertical medial lobe connection" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark20}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left upper most anterior nerve entry.png}
+		\caption{LRE plot distribution for "left upper most anterior nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark21}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left A7 nerve entry.png}
+		\caption{LRE plot distribution for "left A7 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark22}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right tip of vertical lobe.png}
+		\caption{LRE plot distribution for "right tip of vertical lobe" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark23}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right A6 nerve entry.png}
+		\caption{LRE plot distribution for "right A6 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark24}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left basal brain neuropil border posterior.png}
+		\caption{LRE plot distribution for "left basal brain neuropil border posterior" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark25}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left A8 nerve entry.png}
+		\caption{LRE plot distribution for "left A8 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark26}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right A7 nerve entry.png}
+		\caption{LRE plot distribution for "right A7 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark27}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/posterior upper commisure.png}
+		\caption{LRE plot distribution for "posterior upper commisure" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark28}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left antennal nerve.png}
+		\caption{LRE plot distribution for "left antennal nerve" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark29}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T1.png}
+		\caption{LRE plot distribution for "left thoracic nerve entry T1" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
+		\label{fig:landmark30}
+	\end{figure}
 	
 	\bibliographystyle{ieeetr}
 	\bibliography{./references}

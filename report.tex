@@ -154,8 +154,23 @@ linkcolor=red
 \fancyfoot[C]{\thepage} % set the page number in the center of the footer
 \pagestyle{fancy}
 
+\usepackage{setspace}
 \begin{document}
 	\maketitle
+	
+	\vspace*{\fill}
+	\begin{center}
+		{\Large \textcolor{rwth-blue-1}{\textbf{Abstract}}}
+	\end{center}
+	In this thesis, we aimed to address the problem of image registration of Drosophila larval brain that is currently existing in the method known as \textit{larvalign}. \textit{larvalign} method is a non-learning style of performing image registration and repeatedly makes the same registration mistakes, particularly in the lower ventral nerve cord sections of the brain. Furthermore, the method is not generalizable, as it does not work well on all the scans from other laboratories.
+	
+	To address this problem, we proposed a novel approach that incorporated a deep neural architecture known as Voxelmorph, which is well-known for its medical image registration capabilities. However, we found that Voxelmorph alone could not handle large deformations in the image. To overcome this limitation, we employed a Gaussian pyramid-based approach and cascaded multiple Voxelmorph networks in a serial fashion and trained them with multi-resolution scans. In addition, we incorporated landmark information as an auxiliary input to help train the network better.
+	
+	Our results showed that cascading Voxelmorph networks in a multi-stage and multi-resolution approach led to better registration accuracy than a single Voxelmorph network. Furthermore, our models trained with landmark information performed as good as the \textit{larvalign} method in terms of accuracy and were also able to handle scenarios where \textit{larvalign} failed. Our approach also significantly reduces the time required for registration, taking 35 seconds for registration compared to 77 seconds for the \textit{larvalign} method on scans downscaled by 25\% from the original resolution. Furthermore, since deep learning neural networks learn a feature mapping to predict the deformation field, we expect our method to take even less time than the \textit{larvalign} method, which takes 7 minutes for images at the highest resolution. Our experiments showed that our proposed method can also work on the scans from other laboratories where \textit{larvalign} failed.
+	
+	This research has significant implications for the field of image registration and the study of the larval brain of Drosophila, as it provides a general and robust approach that can be extended beyond the scans of a single laboratory in much less time.
+	\vspace*{\fill}
+	
 	\newpage
 	
 	\hypersetup{linkcolor=rwth-blue-1}
@@ -163,7 +178,7 @@ linkcolor=red
 
 	\newpage
 	
-	\chapter{Introduction}
+	\chapter{Introduction} \label{chap:intro}
 	The purpose of this chapter is to introduce the main focus of this thesis and provide an overview of its key components. Specifically, we will present the background and motivation for this work, the specific objectives and hypotheses we are aiming to test, and the overall structure of the thesis. Our goal is to provide a clear and concise introduction to the content of the following chapters, giving the reader a clear roadmap for the rest of the document.
 	
 	% https://tex.stackexchange.com/a/8633/277097
@@ -206,7 +221,7 @@ linkcolor=red
 	
 	The Figure~\ref{fig:Registration} shows an example of image registration of the Droshophila larva brain obtained using the \textit{larvalign} software \cite{larvalign}. In this example, image registration was used to align two images of a Drosophila larva, which were acquired as 3D volumes but are shown here as maximum intensity projections for illustrative purposes. The input images are referred to as a fixed image and a moving image, and the output is a registered image with the moving image aligned to the fixed image. This alignment can facilitate the analysis of the images.
 	
-	\section{Motivation}
+	\section{Motivation} \label{sec:motivation}
 	Image registration can be broadly classified into two methods - deep learning method and traditional method. Both methods aim to align multiple images of the same or different objects, taken at different times or from different viewpoints. However, they differ in the approaches they take to achieve this goal.
 	
 	Traditional image registration methods typically rely on hand-crafted features or manually designed algorithms to align the images. On the other hand, image registration using deep learning methods relies on the use of neural networks to learn a mapping from the input images to the registered output. These methods can be more accurate and efficient than traditional methods, especially for complex images, as they are able to learn and adapt to the characteristics of the data. However, deep learning methods require a large amount of data for training. Traditional image registration can be prone to repeating errors and requires starting from scratch for each new image pair, whereas deep learning-based methods can learn from data and adapt to new image pairs more effectively.
@@ -1542,21 +1557,21 @@ linkcolor=red
 	
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left A7 nerve entry.png}
+		\includegraphics[width=0.9\columnwidth]{resources/chapter5_fresh/output/left A7 nerve entry.png}
 		\caption{LRE plot distribution for "left A7 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
 		\label{fig:re_landmark22}
 	\end{figure}
 	
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right A7 nerve entry.png}
+		\includegraphics[width=0.9\columnwidth]{resources/chapter5_fresh/output/right A7 nerve entry.png}
 		\caption{LRE plot distribution for "right A7 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
 		\label{fig:re_landmark27}
 	\end{figure}
 	
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/end of ventral nerve cord.png}
+		\includegraphics[width=0.9\columnwidth]{resources/chapter5_fresh/output/end of ventral nerve cord.png}
 		\caption{LRE plot distribution for "end of ventral nerve cord" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
 		\label{fig:re_landmark15}
 	\end{figure}
@@ -1567,14 +1582,14 @@ linkcolor=red
 	
 	We can analyze the Figure~\ref{fig:re_landmark22}, Figure~\ref{fig:re_landmark27}, and Figure~\ref{fig:re_landmark15} more closely and notice that brain scans (4) and (5) have large outliers in landmark registration errors at all the 3 landmark points for \texttt{Cascaded Landmark Guided Voxelmorph} method and the for our reference, Table~\ref{table:brain45_lre} captures this absolute error between the two registration approaches at the specific landmarks.
 	
-	\begin{table}[h!]
+	\begin{table}[H]
 		\centering
 		\input{resources/Chapter7/VNC_LRE.tex}
 		\caption{Average deviation in landmark registration error (LRE) for the entry points of the A7 right/left nerve and the end of the ventral nerve cord on all scans from "medium" quality set in the \texttt{Larvalign dataset} for the \textit{larvalign} and \texttt{Cascaded Landmark Guided Voxelmorph} methods.}
 		\label{table:vnc_lre}
 	\end{table}
 	
-	\begin{table}[h]
+	\begin{table}[H]
 		\centering
 		\input{resources/Chapter7/LRE_Visual/Brain45_LRE.tex}
 		\caption{One-to-one comparison of landmark registration error (LRE) for Brain Scan 4 and 5 for \textit{larvalign}-registered output and \texttt{Cascaded Landmark Guided Voxelmorph}-registered output at landmark locations "Right/Left A7 Nerve Entry Points" and "End of Ventral Nerve Cord".}
@@ -1589,52 +1604,68 @@ linkcolor=red
 	
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/Chapter7/LRE_Visual/14c08b_overlay_zoomed.png}
+		\includegraphics[width=0.7\columnwidth]{resources/Chapter7/LRE_Visual/14c08b_overlay_zoomed.png}
 		\caption{Focused overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for Brain Scan (4).}
 		\label{fig:14c08b_overlay}
 	\end{figure}
 	
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/Chapter7/LRE_Visual/14c08c_overlay_zoomed.png}
+		\includegraphics[width=0.7\columnwidth]{resources/Chapter7/LRE_Visual/14c08c_overlay_zoomed.png}
 		\caption{Focused overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for Brain Scan (5).}
 		\label{fig:14c08c_overlay}
 	\end{figure}
 	
+	\newpage
 	\section{Cascaded Landmark Guided Voxelmorph's ability to learn from mistakes.}
-	One of the key features we wanted to find out was whether the Deep Learning Neural Network could learn from its mistakes and not make the same registration error as \textit{larvalign}. In \emph{larvalign}'s work, three erroneous registrations were shown in Fig. 3 of \textit{larvalign}'s work. These brain scans are part of the "random" quality set of the \texttt{Larvalign dataset}, where \textit{larvalign} clearly had problems registering at the lower end of the Ventral Nerve Cord. The Figure~\ref{fig:larvalign failure 1}, Figure~\ref{fig:larvalign failure 2}, and Figure~\ref{fig:larvalign failure 3} shows an overlay between the \textit{larvalign} registered output and \texttt{Cascaded Landmark Guided Voxelmorph} registered output.
+	One of the key features we wanted to find out was whether the Deep Learning Neural Network could learn from its mistakes and not make the same registration error as \textit{larvalign}. In \emph{larvalign}'s work, three erroneous registrations were shown in Fig. 3 of \textit{larvalign}'s work, and one such registrations was also mentioned in the section~\nameref{sec:motivation} in chapter~\nameref{chap:intro}. These brain scans are part of the "random" quality set of the \texttt{Larvalign dataset}. The Figure~\ref{fig:larvalign failure 1}, Figure~\ref{fig:larvalign failure 2}, and Figure~\ref{fig:larvalign failure 3} shows an overlay between the \textit{larvalign} registered output and \texttt{Cascaded Landmark Guided Voxelmorph} registered output.
 	
 	One can notice the presence of magenta structures at the lower end of the Ventral Nerve Cord in the \textit{larvalign} registered outputs. These magenta structures are the structures where the registration has failed. In contrast, the corresponding output for the \texttt{Cascaded Landmark Guided Voxelmorph} registered output shows no such magenta structures, and there is nice overlap between the fixed image and the registered image. Though, in the previous sections we saw that landmark registration error (LRE) for \textit{larvalign} is better, \texttt{Cascaded Landmark Guided Voxelmorph} is able to generalize better and handle the scenarios where \textit{larvalign} fails.
 	
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\columnwidth]{resources/Chapter7/LRE_Visual/24b09.png}
+		\includegraphics[width=0.7\columnwidth]{resources/Chapter7/LRE_Visual/24b09.png}
 		\caption{Overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for \texttt{larvalign failure 1}.}
 		\label{fig:larvalign failure 1}
 	\end{figure}
 	
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\columnwidth]{resources/Chapter7/LRE_Visual/53a06.png}
+		\includegraphics[width=0.7\columnwidth]{resources/Chapter7/LRE_Visual/53a06.png}
 		\caption{Overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for \texttt{larvalign failure 2}.}
 		\label{fig:larvalign failure 2}
 	\end{figure}
 
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\columnwidth]{resources/Chapter7/LRE_Visual/60a07.png}
+		\includegraphics[width=0.7\columnwidth]{resources/Chapter7/LRE_Visual/60a07.png}
 		\caption{Overlay of the maximum intensity projection of the fixed image with the maximum intensity projection of the registered \textit{larvalign} output and the maximum intensity projection of the registered \texttt{Cascaded Landmark Guided Voxelmorph} output for \texttt{larvalign failure 3}.}
 		\label{fig:larvalign failure 3}
 	\end{figure}
 	
-	\section{Cascaded Landmark Guided Voxelmorph's ability to generalize.}
-	We learned from the biologists that the \textit{larvalign} method that works for brain scans from one lab does not work for similar brain scans from another lab. Before we could test the generalizability of our model, we wanted to identify the brain scans for which \textit{larvalign} failed. Therefore, we registered all brain scans from the \texttt{Leipzig and Janelia datasets} and visually inspected the projection of the maximal intensity of the results registered with \textit{larvalign}.
-	
-	
 	\section{Cascaded Landmark Guided Voxelmorph produces blurry registered output.}
-	Though the registration was good, the output 
+	The registration process using \texttt{Cascaded Landmark Guided Voxelmorph} was successful, but the registered output image was found to be blurry. Further analysis revealed that the blurriness was a result of the Voxelmorph model inducing blur in each stage of the output. As multiple stages were used in cascade, the blurriness was compounded and resulted in a highly blurry final output. To investigate the cause of the blurriness in a single stage of the Voxelmorph model, we suspected that anisotropiness in the images, both in terms of voxel resolution and number of voxels in the x, y, and z directions, may be to blame. The scan resolution we used in our training data was 256x512x64 and voxel resolution was 0.45x0.45x2.0 \textmu m, but the image resolution used in the Voxelmorph model was 160x192x224 and had a voxel resolution of 1mm in all directions. Testing confirmed that the anisotropiness in the training data was the cause of the blurriness.
+	
+	To test our hypothesis, we prepare two new training datasets - isotropic training dataset and anisotropic training dataset. Isotropic training dataset contained scans in the resolution 128x128x128 in terms of number of voxels, and the anisotropic training dataset contained scans in the resolution of 128x128x32 in terms of number of voxels. We now trained two models - model\_isotropic and model\_anisotropic, independently with isotropic and anisotropic dataset for 50 epochs respectively and performed a test registration on one of the scans.
+	
+	Since the output registered image from both the models were of the size 128x128 in x, y directions, it was hard to visually say if there was any blurriness induced in the model's output trained on anisotropic scans. To address this, we did the following analysis. We made the assumption that the output of the model\_anisotropic is a blurrier version of the output of the model\_isotropic. To test this, we took the difference between the two images, expecting to see high frequency content, such as sharp edges, in the result. However, it is possible that the difference in registration between the two models is causing this result. To further investigate, we also took the difference between the original image and a Gaussian blurred version of the same image, and compared the two "difference" images visually using a false color scale in MATLAB. Both these images appeared similar, providing further evidence that the output from model\_anisotropic is actual introducing blur.
 	
 	\chapter{Conclusion}
+	In this work, we wanted to test whether deep learning techniques would lead to robust and fast registration of biological scans such as Droshophila larvae. There are already non-learning methods such as \textit{larvalign} that do a good job at image registration. However, the method had difficulty registering images that had large deformations at the lower end of the ventral nerve cord, which was also mentioned in the \textit{larvalign} paper. In addition, we were informed by the neurobiologists who used the \textit{larvalign} method in their daily work that the method did not work on all the scans acquired by other laboratories as it worked on the scans from their laboratory. We wanted to see if deep learning techniques could solve these problems through experience and by training with many scans to learn a generic function that could work with all scans from all laboratories.
+
+	
+	We felt that deep learning techniques could solve all these problems, and chose the Voxelmorph model as a base model to start with. The Voxelmorph model is a very popular model for medical image registration, where it showed excellent results on scans of the human brain. We first checked how the Voxelmorph model as such would perform on our dataset and found that Voxelmorph also had difficulty handling large deformations at the lower end of the ventral nerve cord. Hoping to solve this problem, we developed a novel method to include landmarks as auxiliary information in the training. Biologists in the \textit{larvalign} work had identified 30 unique and biologically significant points in Drosophila larval brain scans, which were also used in the \textit{larvalign} work for semi-automatic registration and evaluation by calculating the landmark registration error (LRE) between the fixed image and the registered image. For our training purposes, we did not want to use all the 30 landmark points, as this requires manual labeling and is time consuming. Therefore, we decided to label only the landmark points where we thought the Voxelmorph model would need help. Accordingly, we labeled only at the lower end of the ventral nerve cord. Our method is able to handle scenarios in which the training data contain both landmarks or no landmarks. The model now uses an additional loss, called landmark registration error (LRE), in addition to similarity loss to further drive training. Registration in regions where landmarks were added improved, but with some artifacts. We logically concluded that if the Voxelmorph is inherently unable to handle large deformations, additional losses such as landmark registration error (LRE) force it to make deformation corrections to reduce the error while compromising registration quality.
+	
+	In order for the model to be able to handle large deformations, we decided to use a registration based on the Gaussian pyramid, where the model has now been trained in several stages and at several resolutions. The Gaussian pyramid decides the resolution of the scans fed to the model. We started training the model with images at the lowest resolution to correct for large deformations, and then increased the resolution in a pyramid fashion until we reached the highest resolution, which is the resolution of the original image. The higher the resolution, the finer the structures registered. Thus, the entire registration followed the pattern of coarse-to-fine registration. Using this approach, we found that our new model, which is basically a cascade of Voxelmorph models, was able to handle large deformations. The final model we developed was to incorporate landmark information into this cascade of networks. However, the inclusion of landmark information was not as straightforward as for a single Voxelmorph model, since here the input for each model is a preregistered image from the previous models in the series connection. Therefore, the annotation made in stage 0 of the cascaded network couldn't be used for stage 1 because the landmarks in the input images for stage 1 were shifted after the pre-registration with model 0. This meant that we had to annotate again for stage 1, but this is not practically feasible since we have many images in the training set. Therefore, we developed a method where we can transfer landmarks from one stage to another based on the predicted deformation fields. These landmarks may not be as accurate as the manually labeled landmarks because we use the predicted deformation field, which may be correct or incorrect, especially in the early stages. Therefore, we referred to these landmarks as "pseudo" annotated landmarks. Each stage was now trained using landmarks as auxiliary information at the respective resolutions, with inputs pre-registered using the trained models before this in the series connection. For the final stage, using the original image, we decided to use manual annotation, as we wanted the landmarks to be accurate for the final training stage, using the original image resolution.
+	
+	We trained the models entirely on the Janelia dataset and evaluated them against the Larvalign dataset, as opposed to \textit{larvalign} where the registration parameters were tuned to the Larvalign dataset. We have found that cascading the Voxelmorph models in multiple stages and at multiple resolutions works as well as the \textit{larvalign} method and is more generic and robust than the \textit{larvalign} method. Our method is able to handle larger deformations in the image, which is difficult with the \textit{larvalign} method. Although we expected our method to be generic and work well for all scans in all labs, we found that our model performed as well as \textit{larvalign} when registering images from different labs, and furthermore was able to perform good registrations on some scans where \textit{larvalign} failed, but could not perform good registration on all scans. Perhaps this can be improved with a good selection of training data from many labs. However, this also means that our method has better potential to be applied to other datasets, making it more versatile and useful to a wider range of researchers. Second, our approach is faster than \textit{larvalign} to perform registration, 35 seconds, compared to 77 seconds required by \textit{larvalign} for scans downsized to 25\% of the original resolution. In addition, \textit{larvalign} takes 7 minutes to register a full resolution scan. We believe that our approach should not scale in this way, since the trained deep learning models have already learned the function to create a deformation field between any new pair of input images and this prediction should be significantly faster. This means that our method can save researchers a significant amount of time and resources. By including landmark information as an additional input, our model could be better trained and achieved as high accuracy as the \textit{larvalign} method. This is a novel approach that is expected to have a positive impact on image registration. Overall, our research has important implications for the field of image registration and the study of the larval brain of Drosophila.
+	
+	However, there is certainly room for improvement. First, since Voxelmorph is inherently a resource-intensive model, we could not use the brain scans at full resolution, but had to downscale them to 25\% and then do the training. One way to deal with this would be to handle the downsizing within the network by using a large strided convolution at the beginning and a corresponding strided deconvolution. In this way, we could feed the input images at their original resolution and let the network scale them down internally. The layer on which to introduce the strided convolution can be experimented with. For example, scaling down by 4 using a strided convolution immediately after the input may be an option, or the scaling down may be done in 2 steps. However, the longer we stay at a larger image size, the greater the resource consumption would be. This needs to be evaluated empirically. Another approach could be to scale up the predicted deformation field from a 25\% scale to a 100\% scale and use it to warp the full size moving image. Again, however, empirical evaluation is required to determine if this results in blurring in the output due to the fourfold scaling of the deformation field.
+	
+	We have found that the Voxelmorph model, when fed with anisotropic images, gives a blurry registered output. This means that the size of the image must be the same in all directions. We verified this by comparing the output of the model trained with isotropic images to the output trained with anisotropic images. This is also consistent with the data used in the Voxelmorph research paper, where the image size in the training data was 160x192x224 (nearly isotropic), in contrast to our images, which are 256x512x64. This is a new discovery we made, and the anisotropy of the image dimensions must be taken into account. Care must also be taken when creating multiple resolutions, as the voxel resolution of our data is 0.45x0.45x2.0 \textmu m, so with Gaussian blurring, the filtering to be used should also be anisotropic. Otherwise, the blur in the z-direction would be too large compared to the blur in the xy-directions. With this care and these considerations, the output of the model must be sharp and might give better results than those that are obtained currently.
+	
+	
+	
 	
 	% bibiliography
 	\newpage
@@ -1642,219 +1673,10 @@ linkcolor=red
 	\listoftables
 	\lstlistoflistings % Generate list of listings
 	
-	\appendix
-	\chapter{Results}
-	\section{Quantitative Analysis}
-	\subsection{Landmark Registration Error (LRE)}	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left A6 nerve entry.png}
-		\caption{LRE plot distribution for "left A6 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark1}
-	\end{figure}
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T2.png}
-		\caption{LRE plot distribution for "left thoracic nerve entry T2" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark2}
-	\end{figure}
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/center SEZ neuropil fusion.png}
-		\caption{LRE plot distribution for "center SEZ neuropil fusion" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark3}
-	\end{figure}
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right basal brain neuropil border posterior.png}
-		\caption{LRE plot distribution for "right basal brain neuropil border posterior" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark4}
-	\end{figure}
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T2.png}
-		\caption{LRE plot distribution for "right thoracic nerve entry T2" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark5}
-	\end{figure}
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left tip of vertical lobe.png}
-		\caption{LRE plot distribution for "left tip of vertical lobe" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark6}
-	\end{figure}
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right A8 nerve entry.png}
-		\caption{LRE plot distribution for "right A8 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark7}
-	\end{figure}
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T3.png}
-		\caption{LRE plot distribution for "right thoracic nerve entry T3" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark8}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right antennal nerve.png}
-		\caption{LRE plot distribution for "right antennal nerve" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark9}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left anterior LON nerve.png}
-		\caption{LRE plot distribution for "left anterior LON nerve" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark10}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right thoracic nerve entry T1.png}
-		\caption{LRE plot distribution for "right thoracic nerve entry T1" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark11}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/Left MB vertical medial lobe connection.png}
-		\caption{LRE plot distribution for "Left MB vertical medial lobe connection" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark12}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right anterior LON nerve.png}
-		\caption{LRE plot distribution for "right anterior LON nerve" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark13}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left upper peduncle.png}
-		\caption{LRE plot distribution for "left upper peduncle" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark14}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/end of ventral nerve cord.png}
-		\caption{LRE plot distribution for "end of ventral nerve cord" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark15}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T3.png}
-		\caption{LRE plot distribution for "left thoracic nerve entry T3" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark16}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right upper most anterior nerve entry.png}
-		\caption{LRE plot distribution for "right upper most anterior nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark17}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/anterior upper commisure.png}
-		\caption{LRE plot distribution for "anterior upper commisure" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark18}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right upper peduncle.png}
-		\caption{LRE plot distribution for "right upper peduncle" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark19}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right MB vertical medial lobe connection.png}
-		\caption{LRE plot distribution for "right MB vertical medial lobe connection" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark20}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left upper most anterior nerve entry.png}
-		\caption{LRE plot distribution for "left upper most anterior nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark21}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left A7 nerve entry.png}
-		\caption{LRE plot distribution for "left A7 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark22}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right tip of vertical lobe.png}
-		\caption{LRE plot distribution for "right tip of vertical lobe" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark23}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right A6 nerve entry.png}
-		\caption{LRE plot distribution for "right A6 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark24}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left basal brain neuropil border posterior.png}
-		\caption{LRE plot distribution for "left basal brain neuropil border posterior" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark25}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left A8 nerve entry.png}
-		\caption{LRE plot distribution for "left A8 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark26}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/right A7 nerve entry.png}
-		\caption{LRE plot distribution for "right A7 nerve entry" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark27}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/posterior upper commisure.png}
-		\caption{LRE plot distribution for "posterior upper commisure" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark28}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left antennal nerve.png}
-		\caption{LRE plot distribution for "left antennal nerve" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark29}
-	\end{figure}
-	
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.75\columnwidth]{resources/chapter5_fresh/output/left thoracic nerve entry T1.png}
-		\caption{LRE plot distribution for "left thoracic nerve entry T1" landmark point measured across different scans from the "medium" quality \texttt{Larvalign dataset}.}
-		\label{fig:landmark30}
-	\end{figure}
+	\begin{appendix}
+		\include{appendix}
+		\cleardoublepage
+	\end{appendix}
 	
 	\bibliographystyle{ieeetr}
 	\bibliography{./references}
